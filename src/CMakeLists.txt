@@ -1,3 +1,3 @@
 cmake_minimum_required(VERSION 3.10)
-add_subdirectory(AdjacencyMatrix)
-add_subdirectory(AdjacencyList)
+add_subdirectory(structure)
+add_subdirectory(algorithms)
