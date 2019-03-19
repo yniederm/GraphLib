@@ -80,7 +80,7 @@ namespace gl
   }
 
   template <typename T>
-  std::ostream operator<< (std::ostream& s, const LGraph<T>& g) {
+  std::ostream& operator<< (std::ostream& s, const LGraph<T>& rhs) {
     // stuff
     return s;
   }
