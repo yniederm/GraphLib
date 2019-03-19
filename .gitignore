@@ -1,0 +1,14 @@
+# compiler files
+*.i
+*.s
+*.o
+*.out
+
+# compiled libraries
+*.a
+*.so
+
+# folders
+.vscode
+build/
+doc/html
