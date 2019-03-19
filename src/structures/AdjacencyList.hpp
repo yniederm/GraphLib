@@ -1,11 +1,12 @@
-#ifndef GL_ADJACENCY_LIST_H
-#define GL_ADJACENCY_LIST_H
+#ifndef GL_ADJACENCY_LIST_HPP
+#define GL_ADJACENCY_LIST_HPP
 
 #include <vector>
 #include <iostream>
 
 namespace gl
 {
+  template <typename T>
   class LGraph
   {
     using val_t = int;
@@ -16,10 +17,10 @@ namespace gl
       idx_t _end;
       struct Node* next;
     };
-    template <T>
+    template <typename S>
     struct List {
-      struct T* head;
-    }
+      struct S* head;
+    };
     
     using node_t = Node;
     using rootList_t = List<List>;
@@ -39,7 +40,8 @@ namespace gl
       val_t getWeight (idx_t start, idx_t end) const;
   };
   
-  LGraph::LGraph(idx_t numNodes) : _numNodes(numNodes) {
+  template <typename T>
+  LGraph<T>::LGraph(idx_t numNodes) : _numNodes(numNodes) {
     _edges = new rootList_t;
     auto rootPointer = _edges.head;
     for(idx_t i = 0; i < _numNodes-1; i++)
@@ -48,34 +50,41 @@ namespace gl
     }
     
   }
-  LGraph::LGraph(const LGraph& rhs) {
+  template <typename T>
+  LGraph<T>::LGraph(const LGraph& rhs) {
 
   }
-  LGraph::~LGraph() {}
+  template <typename T>
+  LGraph<T>::~LGraph() {}
 
-  void LGraph::setEdge(idx_t start, idx_t end, val_t value) {
+  template <typename T>
+  void LGraph<T>::setEdge(idx_t start, idx_t end, val_t value) {
     
   }
 
-  void LGraph::delEdge(idx_t start, idx_t end) {
+  template <typename T>
+  void LGraph<T>::delEdge(idx_t start, idx_t end) {
     _weight[start][end] = 0;
     _adjacency[start][end] = false;
   }
 
-  bool LGraph::hasEdge (idx_t start, idx_t end) const {
+  template <typename T>
+  bool LGraph<T>::hasEdge (idx_t start, idx_t end) const {
 
     return _edges();
   }
 
-  val_t LGraph::getWeight (idx_t start, idx_t end) const {
+  template <typename T>
+  typename LGraph<T>::val_t LGraph<T>::getWeight (idx_t start, idx_t end) const {
     return _weight[start][end];
   }
 
-  std::ostream operator<< (std::ostream& s, const LGraph& g) {
+  template <typename T>
+  std::ostream operator<< (std::ostream& s, const LGraph<T>& g) {
     // stuff
     return s;
   }
 
 } // Namespace gl
 
-#endif /* GL_ADJACENCY_LIST_H */
+#endif /* GL_ADJACENCY_LIST_HPP */

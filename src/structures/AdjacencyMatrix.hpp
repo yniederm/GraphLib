@@ -1,5 +1,5 @@
-#ifndef GL_ADJACENCY_MATRIX_H
-#define GL_ADJACENCY_MATRIX_H
+#ifndef GL_ADJACENCY_MATRIX_HPP
+#define GL_ADJACENCY_MATRIX_HPP
 
 #include <vector>
 #include <iostream>
@@ -162,4 +162,4 @@ namespace gl
 
 } // Namespace gl
 
-#endif /* GL_ADJACENCY_MATRIX_H */
+#endif /* GL_ADJACENCY_MATRIX_HPP */
