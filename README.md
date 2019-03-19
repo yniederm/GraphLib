@@ -18,7 +18,7 @@ Hereafter, the term _finding <sth.>_ stands for some combination of counting and
 #### Algorithms
 - BFS
   1. basic algorithm
-  2. finding 
+  2. finding vertices at the same distance from source
 - DFS
 - Shortest Paths
   1. Dijkstra
