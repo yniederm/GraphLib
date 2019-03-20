@@ -18,15 +18,15 @@ void writeTikzToStream(std::ostream& s, gl::Graph<SCALAR> &g)
       << "\\usepackage{tkz-graph}\n"
       << "\\GraphInit[vstyle = Shade]\n"
       << "\\tikzset{\n"
-      << "  LabelStyle/.style = { rectangle, rounded corners, draw, minimum width = 2em,\n"
+      << "  LabelStyle/.style = { rectangle, rounded corners, draw,\n"
       << "      fill = yellow!50, text = red, font = \\bfseries },\n"
-      << "  VertexStyle/.append style = { inner sep=5pt,\n"
+      << "  VertexStyle/.append style = { inner sep=2pt,\n"
       << "      font = \\Large\\bfseries},\n"
       << "  EdgeStyle/.append style = {->, bend left} }\n"
       << "\\thispagestyle{empty}\n"
       << "\\begin{document}\n"
       << "\\begin{tikzpicture}\n"
-      << "\\SetGraphUnit{5}\n";
+      << "\\SetGraphUnit{2}\n";
     for (int i = 0; i < g.numNodes(); i++)
     {
         if (i == 0)
@@ -35,7 +35,6 @@ void writeTikzToStream(std::ostream& s, gl::Graph<SCALAR> &g)
             s << "\\WE(" << i - 1 << "){" << i << "}" << std::endl;
     }
 
-    int count = 0;
     for (int i = 0; i < g.numNodes(); i++)
     {
         for (int j = 0; j < g.numNodes(); j++)
@@ -44,13 +43,12 @@ void writeTikzToStream(std::ostream& s, gl::Graph<SCALAR> &g)
             {
                 if (i == j)
                 {
-                    s << "\\Loop[dist=4cm,dir=NO,label=" << count << "](" << i << ".west)\n";
+                    s << "\\Loop[dist=4cm,dir=NO,label=" << g.getWeight(i,j) << "](" << i << ".west)\n";
                 }
                 else
                 {
-                    s << "\\Edge[label=" << count << "](" << i << ")(" << j << ")\n";
+                    s << "\\Edge[label=" << g.getWeight(i,j) << "](" << i << ")(" << j << ")\n";
                 }
-                count++;
             }
         }
     }
