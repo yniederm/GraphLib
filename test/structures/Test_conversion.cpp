@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
   m_in.setEdge(0,2,5.56);
   m_in.setEdge(3,2,3.4);
   m_in.setEdge(2,1,73);
-  mgraph l_out(m_in);
+  lgraph l_out = m_in.toList();
 
   std::cout << "l_in:\n" << l_in << std::endl; 
   std::cout << "m_out:\n" << m_out << std::endl; 

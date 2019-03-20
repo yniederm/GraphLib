@@ -2,12 +2,20 @@
 #define GL_MATRIX_GRAPH_HPP
 
 #include "Graph.hpp"
-#include "ListGraph.hpp"
 
 #include <vector>
 
 namespace gl 
 {
+  template <class SCALAR>
+  class LGraph;
+}
+#include "ListGraph.hpp"
+namespace gl 
+{
+  /** Explanations for MGraph
+   @brief Derived class, inherits from Graph. It implements an adjancency matrix data structure.
+   */
   template <class SCALAR>
   class MGraph : public Graph<SCALAR>
   {

@@ -9,7 +9,7 @@ namespace gl
 {
 
   /** Explanations for Graph
-  /* @brief Implementation of a graph based on an adjacency matrix data structure
+   @brief Abstract base class that features a few member functions that             are the same for both an Adjacency Matrix and List structure.
    */
 
   template <class SCALAR>

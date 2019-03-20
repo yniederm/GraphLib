@@ -8,9 +8,18 @@
 #include <list>
 #include <algorithm>
 
+namespace gl 
+{
+  template <class SCALAR>
+  class MGraph;
+}
+#include "MatrixGraph.hpp"
 namespace gl
 {
   
+  /** Explanations for LGraph
+   @brief Derived class, inherits from Graph. It implements an adjancency list data structure.
+   */
   template <class SCALAR>
   class LGraph : public Graph<SCALAR>
   {
