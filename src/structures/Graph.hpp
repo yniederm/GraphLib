@@ -4,6 +4,8 @@
 #include <vector>
 #include <iostream>
 #include <cassert>
+#include <cstdint>
+#include <bitset>
 
 namespace gl
 {
@@ -17,9 +19,11 @@ namespace gl
   {
   public:
     using val_t = SCALAR;
-    using idx_t = unsigned int;
+    using idx_t = std::size_t;
+    using dest_vec_t = std::vector<std::pair<idx_t,val_t>>;
   protected:
     idx_t _numNodes;
+
   public: 
     explicit Graph(idx_t numNodes) : _numNodes(numNodes) {}
     virtual ~Graph() {}
@@ -28,6 +32,9 @@ namespace gl
     virtual void delEdge (const idx_t, const idx_t) = 0;
     virtual bool hasEdge (const idx_t, const idx_t) const = 0;
     virtual val_t getWeight (const idx_t, const idx_t) const = 0;
+    virtual dest_vec_t getNeighbours (const idx_t) const = 0; 
+
+    // printEdge (?)
 
     /**
      * @brief Returns the number of nodes currently in the graph.
@@ -64,19 +71,18 @@ namespace gl
   std::ostream& operator<< (std::ostream& s, const Graph<SCALAR>& rhs) {
     using idx_t = typename Graph<SCALAR>::idx_t;
     idx_t counter = 0;
-    for (idx_t i = 0; i < rhs.numNodes(); ++i){
-      for(idx_t j = 0; j < rhs.numNodes(); ++j)
+    for(idx_t start = 0; start < rhs.numNodes(); start++)
+    {
+      auto neighbours = rhs.getNeighbours(start);
+      for(const auto& edge : neighbours)
       {
-        if (rhs.hasEdge(i,j)) {
-          s << i << "--" << rhs.getWeight(i,j) << "->" << j << std::endl;
-          ++counter;
-        }
-      }      
-    }    
+        s << start << "--" << edge.second << "->" << edge.first << std::endl;
+        ++counter;
+      }
+    }
     s << "Total Edges: " << counter << std::endl;
     return s;
   }
-
 } /* Namespace gl */
 
 #endif /* GL_GRAPH_HPP */

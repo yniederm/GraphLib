@@ -22,15 +22,20 @@ namespace gl
     public: 
       using idx_t = typename Graph<SCALAR>::idx_t;
       using val_t = typename Graph<SCALAR>::val_t;
-    protected:
-      using adj_row_t = std::vector<bool>;
-      using adj_mat_t = std::vector<adj_row_t>;
-      using weight_row_t = std::vector<val_t>;
-      using weight_mat_t = std::vector<weight_row_t>;
+      using dest_vec_t = typename Graph<SCALAR>::dest_vec_t;
+
+    struct Node {
+      bool _edge;
+      val_t _weight;
+      Node (bool edge = false, val_t weight = 0) : _edge(edge),_weight(weight) {}
+    };
 
     protected:
-      adj_mat_t _adjacency;
-      weight_mat_t _weight;
+      using matrix_row_t = std::vector<Node>;
+      using matrix_t = std::vector<matrix_row_t>;
+
+    protected:
+      matrix_t _matrix;
       
     public:
       MGraph(idx_t);
@@ -40,23 +45,20 @@ namespace gl
       void delEdge (const idx_t,const idx_t);
       bool hasEdge (const idx_t, const idx_t) const;
       val_t getWeight (const idx_t, const idx_t) const;
+      dest_vec_t getNeighbours (const idx_t) const;       
       LGraph<SCALAR> toList (); 
   };
 
   template <class SCALAR>
   MGraph<SCALAR>::MGraph(idx_t numNodes) : Graph<SCALAR>(numNodes) {
-        adj_mat_t adjacency;
-        weight_mat_t weight;
+        matrix_t matrix;
 
-        adj_row_t tempAdj (numNodes,0);
-        weight_row_t tempWeight (numNodes,false);
-
+        Node emptyNode;
+        matrix_row_t tempRow(numNodes,emptyNode);
         for (idx_t col = 0; col < numNodes; ++col) {
-          adjacency.emplace_back(tempAdj);
-          weight.emplace_back(tempWeight);
+          matrix.emplace_back(tempRow);
         }
-        _adjacency = adjacency;
-        _weight = weight;
+        _matrix = matrix;
   }
 
   /**
@@ -68,7 +70,7 @@ namespace gl
     LGraph<SCALAR> out(numNodes);
     for (idx_t i = 0; i < numNodes; ++i) {
       for (idx_t j = 0; j < numNodes; ++j) {
-        if (hasEdge(i,j)) out.setEdge(i,j,_weight[i][j]); 
+        if (hasEdge(i,j)) out.setEdge(i,j,_matrix[i][j]._weight); 
       }
     }
     return out;
@@ -83,8 +85,8 @@ namespace gl
   template <class SCALAR>
   void MGraph<SCALAR>::setEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start, end);
-    _weight[start][end] = weight;
-    _adjacency[start][end] = true;
+    _matrix[start][end]._weight = weight;
+    _matrix[start][end]._edge = true;
   }
 /**
  * @brief Updates the weight of an edge from start to end.
@@ -95,7 +97,7 @@ namespace gl
   template <class SCALAR>
   void MGraph<SCALAR>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start, end);    
-    _weight[start][end] = weight;
+    _matrix[start][end]._weight = weight;
   }
 
 /**
@@ -106,8 +108,8 @@ namespace gl
   template <class SCALAR>
   void MGraph<SCALAR>::delEdge(const idx_t start, const idx_t end) {
     Graph<SCALAR>::checkRange(start, end);
-    _weight[start][end] = SCALAR(0);
-    _adjacency[start][end] = false;
+    _matrix[start][end]._weight = SCALAR(0);
+    _matrix[start][end]._edge = false;
   }
 
 /**
@@ -119,7 +121,7 @@ namespace gl
   template <class SCALAR>
   bool MGraph<SCALAR>::hasEdge (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start, end);
-    return _adjacency[start][end];
+    return _matrix[start][end]._edge;
   }
 
 /**
@@ -135,7 +137,17 @@ namespace gl
       std::cout << "There is no edge between " << start << " and " << end << ", returning 0." << std::endl;
       return SCALAR(0);
     }
-    return _weight[start][end];
+    return _matrix[start][end]._weight;
+  }
+
+  template <class SCALAR>
+  typename MGraph<SCALAR>::dest_vec_t MGraph<SCALAR>::getNeighbours (const idx_t start) const {
+    dest_vec_t out;
+    for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
+      if(hasEdge(start, end)) 
+        out.push_back(std::make_pair(end,getWeight(start,end)));
+    }
+    return out; 
   }
 } /* Namespace gl */
 

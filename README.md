@@ -4,17 +4,22 @@
 
 ## Currently implemented is the following:
 #### Data structures
-- Adjacency Matrix
+- Graph Class
+  - Adjacency Matrix
+  - Adjacency List
+  - conversion between the two
 #### Algorithms
 ## To-Do list
 Hereafter, the term _finding <sth.>_ stands for some combination of counting and outputting <sth.>
 #### Data structures
+- output stream optimization
+- advanced initialization (file input, stream operators)
 - simple undirected graph support
 - multigraph support
-- conversion between Adjacency Matrix & List
 - bipartite graphs
 - trees (a.k.a. acyclic graphs)
 - combining and editing graphs post-initialization
+- threshold graphs, split graphs
 #### Algorithms
 - BFS
   1. basic algorithm
@@ -42,3 +47,6 @@ Hereafter, the term _finding <sth.>_ stands for some combination of counting and
   1. flow problems 
 - vertex degree things (to be determined)
   1. centralities (?)
+- Split graph
+  1. find constructing degree sequence
+  2. splittance

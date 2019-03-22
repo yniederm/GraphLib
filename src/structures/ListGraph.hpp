@@ -2,7 +2,6 @@
 #define GL_LIST_GRAPH_HPP
 
 #include "Graph.hpp"
-#include "MatrixGraph.hpp"
 
 #include <vector>
 #include <list>
@@ -26,9 +25,18 @@ namespace gl
     public: 
       using idx_t = typename Graph<SCALAR>::idx_t;
       using val_t = typename Graph<SCALAR>::val_t;
+      using dest_vec_t = typename Graph<SCALAR>::dest_vec_t;
+
+    struct Node {
+      idx_t _end;
+      val_t _weight;
+      Node (idx_t end = 0, val_t weight = 0) : _end(end),_weight(weight) {}
+    };
+
     protected:
-      using node_t = std::pair<idx_t,val_t>;
-      using nodeList_t = std::list<node_t>;
+      // using node_t = std::pair<idx_t,val_t>;
+      // using nodeList_t = std::list<node_t>;
+      using nodeList_t = std::list<Node>;
       using rootList_t = std::vector<nodeList_t>;
 
     protected:
@@ -42,6 +50,7 @@ namespace gl
       void delEdge(const idx_t, const idx_t);
       bool hasEdge (const idx_t, const idx_t) const;
       val_t getWeight (const idx_t, const idx_t) const;
+      dest_vec_t getNeighbours (const idx_t) const;    
       MGraph<SCALAR> toMatrix () const;
   };
   
@@ -53,7 +62,8 @@ namespace gl
     gl::MGraph<SCALAR> out(Graph<SCALAR>::numNodes());
     for (idx_t start = 0; start < _edges.size(); ++start) {
       for (auto & end: _edges[start]) {
-        out.setEdge(start,end.first,end.second);
+        // out.setEdge(start,end.first,end.second);
+        out.setEdge(start,end._end,end._weight);
       }
     }
     return out;
@@ -65,7 +75,7 @@ namespace gl
     if (hasEdge(start,end)) {
       updateEdge(start,end,weight);
     } else {
-      _edges[start].push_back(std::make_pair(end,weight));
+      _edges[start].push_back(Node(end,weight));
     }
   }
 
@@ -73,15 +83,15 @@ namespace gl
   void LGraph<SCALAR>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start,end);
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const std::pair<idx_t,val_t>& node){ return node.first == end;});
-    (*it).second = weight;
+    [&end](const Node& node){ return node._end == end;});
+    (*it)._weight = weight;
   }
 
   template <class SCALAR>
   void LGraph<SCALAR>::delEdge(const idx_t start, const idx_t end) {
     Graph<SCALAR>::checkRange(start,end);
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const std::pair<idx_t,val_t>& node){ return node.first == end;});
+    [&end](const Node& node){ return node._end == end;});
     _edges[start].erase(it);
   }
 
@@ -89,7 +99,7 @@ namespace gl
   bool LGraph<SCALAR>::hasEdge (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start,end);
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const std::pair<idx_t,val_t>& node){ return node.first == end;});
+    [&end](const Node& node){ return node._end == end;});
     return it != _edges[start].end();
   }
 
@@ -97,8 +107,18 @@ namespace gl
   typename LGraph<SCALAR>::val_t LGraph<SCALAR>::getWeight (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start,end);
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const std::pair<idx_t,val_t>& node){ return node.first == end;});
-    return (*it).second;
+    [&end](const Node& node){ return node._end == end;});
+    return (*it)._weight;
+  }
+
+  template <class SCALAR>
+  typename LGraph<SCALAR>::dest_vec_t LGraph<SCALAR>::getNeighbours (const idx_t start) const {
+    dest_vec_t out;
+    for (const auto& edge : _edges[start]) {
+        out.push_back(std::make_pair(edge._end,edge._weight));
+    }
+    return out;
+    
   }
 } /* Namespace gl */
 
