@@ -12,7 +12,7 @@ namespace gl
 {
 
   /** Explanations for Graph
-   @brief Abstract base class that features a few member functions that             are the same for both an Adjacency Matrix and List structure.
+   @brief Abstract base class that features a few member functions that are the same for both an Adjacency Matrix and List structure.
    */
 
   template <class SCALAR>
@@ -22,6 +22,7 @@ namespace gl
     using val_t = SCALAR;
     using idx_t = std::size_t;
     using dest_vec_t = std::vector<std::pair<idx_t,val_t>>;
+    using idx_list_t = std::vector<idx_t>;
   protected:
     idx_t _numNodes;
 
@@ -33,8 +34,12 @@ namespace gl
     virtual void delEdge (const idx_t, const idx_t) = 0;
     virtual bool hasEdge (const idx_t, const idx_t) const = 0;
     virtual val_t getWeight (const idx_t, const idx_t) const = 0;
-    virtual dest_vec_t getNeighbours (const idx_t) const = 0; 
+    virtual idx_list_t getNeighbours (const idx_t) const = 0;
+    virtual idx_list_t getUnvisitedNeighbours (const idx_t, const std::vector<bool>) const = 0;
+    virtual dest_vec_t getNeighbourWeights (const idx_t) const = 0; 
     virtual idx_t getDegree (const idx_t) const = 0;
+    
+    idx_list_t transitiveClosure (const idx_t node) const;
 
     // printEdge (?)
 
@@ -97,7 +102,7 @@ namespace gl
     idx_t counter = 0;
     for(idx_t start = 0; start < rhs.numNodes(); start++)
     {
-      auto neighbours = rhs.getNeighbours(start);
+      auto neighbours = rhs.getNeighbourWeights(start);
       for(const auto& edge : neighbours)
       {
         os << start << "--" << edge.second << "->" << edge.first << std::endl;

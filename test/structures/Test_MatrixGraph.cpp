@@ -14,9 +14,16 @@ int main(int argc, char const *argv[])
   std::cout << "numNodes: " << g.numNodes() << std::endl
             << g << std::endl;
   g.updateEdge(1,2,5); // update via setEdge
+
   auto neighbours_of_2 = g.getNeighbours(2);
+  auto neighbourWeights_of_2 = g.getNeighbourWeights(2);
+
   std::cout << "Neighbours of 2: ";
   for (auto x : neighbours_of_2) {
+    std::cout << x << " ";
+  }
+  std::cout << std::endl;
+  for (auto x : neighbourWeights_of_2) {
     std::cout << "(" << x.first << "," << x.second << ") ";
   }
   std::cout << std::endl;

@@ -8,12 +8,13 @@
   - Adjacency Matrix
   - Adjacency List
   - conversion between the two
+  - file input to add edges
 #### Algorithms
 ## To-Do list
 Hereafter, the term _finding <sth.>_ stands for some combination of counting and outputting <sth.>
 #### Data structures
 - output stream optimization
-- advanced initialization (file input, stream operators)
+- advanced initialization (stream operators)
 - simple undirected graph support
 - multigraph support
 - bipartite graphs
