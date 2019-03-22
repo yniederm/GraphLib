@@ -192,6 +192,11 @@ namespace gl
     return out;
   }
 
+  /**
+   * @brief Finds the degree of the given node (i.e. count of all outgoing edges).
+   * @param node node whose degree is to be found
+   * @return Degree of node
+   */
   template <class SCALAR>
   typename LGraph<SCALAR>::idx_t LGraph<SCALAR>::getDegree (const idx_t node) const {
     return _edges[node].size();

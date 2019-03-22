@@ -4,14 +4,15 @@
 
 ## Currently implemented is the following:
 #### Data structures
-- Graph Class
+- Graph Base Class
   - Adjacency Matrix
   - Adjacency List
   - conversion between the two
   - file input to add edges
 #### Algorithms
+- Transitive closure of a node
 ## To-Do list
-Hereafter, the term _finding <sth.>_ stands for some combination of counting and outputting <sth.>
+Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
 #### Data structures
 - output stream optimization
 - advanced initialization (stream operators)
@@ -42,8 +43,7 @@ Hereafter, the term _finding <sth.>_ stands for some combination of counting and
 - Connectivity
   1. finding the connected component
   2. Eulerian paths
-  3. transitive closures
-  4. finding all possible walks from source to destination
+  3. finding all possible walks from source to destination
 - Network algorithms
   1. flow problems 
 - vertex degree things (to be determined)

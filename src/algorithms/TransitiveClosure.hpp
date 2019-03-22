@@ -1,5 +1,5 @@
-#ifndef GL_BFS_HPP
-#define GL_BFS_HPP
+#ifndef GL_TRANSITIVE_CLOSURE_HPP
+#define GL_TRANSITIVE_CLOSURE_HPP
 
 #include "../structures/Graph.hpp"
 #include <queue>
@@ -38,4 +38,4 @@ namespace gl
 
 } /* Namespace gl */
 
-#endif /* GL_BFS_HPP */
+#endif /* GL_TRANSITIVE_CLOSURE_HPP */
