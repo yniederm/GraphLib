@@ -4,7 +4,7 @@ int main(int argc, char const *argv[])
 {
   using graph_t = gl::MGraph<int>;
 
-  graph_t g (3);
+  graph_t g (5);
   g.setEdge(0,1,4); // initial set
   g.setEdge(1,2);   // set as simple undirected
   g.setEdge(2,0);
@@ -22,7 +22,8 @@ int main(int argc, char const *argv[])
   std::cout << std::endl;
   std::cout << "Degree of 2: " << g.getDegree(2) << std::endl;
   g.delEdge(2,0);   // remove edge
-  // g.setEdge(5,2,1);  // test out of range check
+  g.readFile("../test/io/singleInput.txt"); // assumes running from build folder
+  // g.setEdge(-1,2,1);  // test out of range check
   std::cout << g << std::endl;
 
   return 0;

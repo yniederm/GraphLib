@@ -2,9 +2,11 @@
 #define GL_GRAPH_HPP
 
 #include <vector>
+#include <fstream>
 #include <iostream>
 #include <cassert>
 #include <cstdint>
+#include <string>
 
 namespace gl
 {
@@ -36,6 +38,28 @@ namespace gl
 
     // printEdge (?)
 
+
+    /**
+     * @brief Adds edges in the format "<start> <end> <weight>" found in inFile to the graph.
+     * @param inFile file name of input file
+     */
+    void readFile(const std::string& inFile)
+    {
+      std::ifstream is;
+      is.open(inFile, std::ios::in);
+      if (!is.is_open()) {
+        std::cout << "failed to open " << inFile << '\n';
+      } else {
+        idx_t start;
+        idx_t end;
+        val_t weight;
+        while (is >> start >> end >> weight) {
+          setEdge(start,end,weight);
+        }
+      }
+    }
+
+
     /**
      * @brief Returns the number of nodes currently in the graph.
      * @return number of nodes in the graph
@@ -64,11 +88,11 @@ namespace gl
 
     /**
      * @brief Prints all edges in the format start--weight->end & total edge number.
-     * @param s Stream that will be used for output
+     * @param os Stream that will be used for output
      * @param rhs Graph that will be printed
      */
   template <class SCALAR>
-  std::ostream& operator<< (std::ostream& s, const Graph<SCALAR>& rhs) {
+  std::ostream& operator<< (std::ostream& os, const Graph<SCALAR>& rhs) {
     using idx_t = typename Graph<SCALAR>::idx_t;
     idx_t counter = 0;
     for(idx_t start = 0; start < rhs.numNodes(); start++)
@@ -76,12 +100,12 @@ namespace gl
       auto neighbours = rhs.getNeighbours(start);
       for(const auto& edge : neighbours)
       {
-        s << start << "--" << edge.second << "->" << edge.first << std::endl;
+        os << start << "--" << edge.second << "->" << edge.first << std::endl;
         ++counter;
       }
     }
-    s << "Total Edges: " << counter << std::endl;
-    return s;
+    os << "Total Edges: " << counter << std::endl;
+    return os;
   }
 } /* Namespace gl */
 

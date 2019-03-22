@@ -21,5 +21,3 @@ if(BUILD_DOC)
   # Run doxygen
   add_subdirectory(doc)
 endif()
-
-add_subdirectory(src)
