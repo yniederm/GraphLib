@@ -32,6 +32,7 @@ namespace gl
     virtual bool hasEdge (const idx_t, const idx_t) const = 0;
     virtual val_t getWeight (const idx_t, const idx_t) const = 0;
     virtual dest_vec_t getNeighbours (const idx_t) const = 0; 
+    virtual idx_t getDegree (const idx_t) const = 0;
 
     // printEdge (?)
 

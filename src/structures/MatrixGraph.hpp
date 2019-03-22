@@ -45,7 +45,8 @@ namespace gl
       void delEdge (const idx_t,const idx_t);
       bool hasEdge (const idx_t, const idx_t) const;
       val_t getWeight (const idx_t, const idx_t) const;
-      dest_vec_t getNeighbours (const idx_t) const;       
+      dest_vec_t getNeighbours (const idx_t) const;   
+      idx_t getDegree (const idx_t) const;    
       LGraph<SCALAR> toList (); 
   };
 
@@ -148,6 +149,15 @@ namespace gl
         out.push_back(std::make_pair(end,getWeight(start,end)));
     }
     return out; 
+  }
+
+  template <class SCALAR>
+  typename MGraph<SCALAR>::idx_t MGraph<SCALAR>::getDegree (const idx_t node) const {
+    idx_t count = 0;
+    for (const auto end : _matrix[node]) {
+      if (end._edge) ++count;
+    }
+    return count;
   }
 } /* Namespace gl */
 

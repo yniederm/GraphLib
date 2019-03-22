@@ -51,6 +51,7 @@ namespace gl
       bool hasEdge (const idx_t, const idx_t) const;
       val_t getWeight (const idx_t, const idx_t) const;
       dest_vec_t getNeighbours (const idx_t) const;    
+      idx_t getDegree (const idx_t) const;    
       MGraph<SCALAR> toMatrix () const;
   };
   
@@ -118,7 +119,11 @@ namespace gl
         out.push_back(std::make_pair(edge._end,edge._weight));
     }
     return out;
-    
+  }
+
+  template <class SCALAR>
+  typename LGraph<SCALAR>::idx_t LGraph<SCALAR>::getDegree (const idx_t node) const {
+    return _edges[node].size();
   }
 } /* Namespace gl */
 
