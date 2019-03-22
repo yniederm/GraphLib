@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <cassert>
-
+#include <cstdint>
 namespace gl
 {
 
@@ -17,7 +17,7 @@ namespace gl
   {
   public:
     using val_t = SCALAR;
-    using idx_t = unsigned int;
+    using idx_t = std::size_t;
   protected:
     idx_t _numNodes;
   public: 
