@@ -5,7 +5,6 @@
 #include <iostream>
 #include <cassert>
 #include <cstdint>
-#include <bitset>
 
 namespace gl
 {
