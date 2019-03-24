@@ -66,19 +66,11 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR> &g)
 template <class SCALAR>
 void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = true)
 {
-    if(s.rdbuf() == std::cout.rdbuf()) {
-        std::cout << "ERROR: Provide filestream." << std::endl;
-        return;
-    }
-
-    std::cout << "Starting writing to stream" << std::endl;
     s << "\\documentclass{amsart}" << std::endl;
     s << "\\usepackage{tikz}" << std::endl;
     s << "\\begin{document}" << std::endl;
     s << "\\begin{center}" << std::endl;
     s << "\\begin{tikzpicture}" << std::endl;
-
-    std::cout << "Calculating EigenVectors of graph with " << g.numNodes() << " nodes." << std::endl;
 
     // draw all vertices
 
@@ -124,17 +116,14 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = tru
         pos.normalize();
         pos *= (1 + g.getDegree(i));
 
-        std::cout << "  node " << i;
         s << "  \\node (" << i << ") at (" << pos(0) << ", "
           << pos(1) << ") {";
         if (writeNodes)
             s << i;
         s << "};" << std::endl;
-        std::cout << "    done" << std::endl;
     }
 
     // draw all edges
-    std::cout << "Writing edges." << std::endl;
     s << "  \\begin{scope}[every path/.style={->}]" << std::endl;
     for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
     {
@@ -144,7 +133,6 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = tru
             if (i == n)
                 continue; // removing circle to itself
             s << "    \\draw (" << i << ") -- (" << n << ");" << std::endl;
-            std::cout << "  Edge " << i << " to " << n << " written." << std::endl;
         }
     }
 
@@ -152,7 +140,6 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = tru
     s << "\\end{tikzpicture}" << std::endl;
     s << "\\end{center}" << std::endl;
     s << "\\end{document}" << std::endl;
-    std::cout << "ALL DONE." << std::endl;
 }
 
 } /* namespace gl */
