@@ -1,7 +1,7 @@
 from random import randint, random
 
-edges = 200
-nodes = 100
+edges = 50
+nodes = 20
 
 with open("edges.txt","w") as wr:
     for i in range(edges):
