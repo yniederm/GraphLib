@@ -107,8 +107,14 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g)
 
     for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
     {
-        s << "\\node (" << i << ") at (" << solver.eigenvectors()(0, i).real() * 5 << ", "
-          << solver.eigenvectors()(1, i).real() * 5 << ") {" << i << "};" << std::endl;
+        Eigen::Vector2d pos;
+        pos << solver.eigenvectors()(0, i).real(), solver.eigenvectors()(1, i).real();
+        pos.normalize();
+
+        pos *= g.getDegree(i);
+
+        s << "\\node (" << i << ") at (" << pos(0) << ", "
+          << pos(1) << ") {" << i << "};" << std::endl;
     }
 
     // draw all edges
