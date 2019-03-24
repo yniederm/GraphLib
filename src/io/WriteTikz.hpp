@@ -61,15 +61,24 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR> &g)
    @brief Write structure to stream
    @param s stream to which it should write
    @param g should be a undirected graph, with at least 2 nodes
+   @param writeNodes wheter it should write nodes (numbers)
    */
 template <class SCALAR>
-void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g)
+void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = true)
 {
+    if(s.rdbuf() == std::cout.rdbuf()) {
+        std::cout << "ERROR: Provide filestream." << std::endl;
+        return;
+    }
+
+    std::cout << "Starting writing to stream" << std::endl;
     s << "\\documentclass{amsart}" << std::endl;
     s << "\\usepackage{tikz}" << std::endl;
     s << "\\begin{document}" << std::endl;
     s << "\\begin{center}" << std::endl;
     s << "\\begin{tikzpicture}" << std::endl;
+
+    std::cout << "Calculating EigenVectors of graph with " << g.numNodes() << " nodes." << std::endl;
 
     // draw all vertices
 
@@ -96,6 +105,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g)
         for (auto n : neighbours)
         {
             adjMat(i, n) = 1;
+            adjMat(n, i) = 1; // undirected
         }
     }
 
@@ -109,30 +119,40 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g)
     {
         Eigen::Vector2d pos;
         pos << solver.eigenvectors()(0, i).real(), solver.eigenvectors()(1, i).real();
+
+        // Scale by degree
         pos.normalize();
+        pos *= (1 + g.getDegree(i));
 
-        pos *= g.getDegree(i);
-
-        s << "\\node (" << i << ") at (" << pos(0) << ", "
-          << pos(1) << ") {" << i << "};" << std::endl;
+        std::cout << "  node " << i;
+        s << "  \\node (" << i << ") at (" << pos(0) << ", "
+          << pos(1) << ") {";
+        if (writeNodes)
+            s << i;
+        s << "};" << std::endl;
+        std::cout << "    done" << std::endl;
     }
 
     // draw all edges
-    s << "\\begin{scope}[every path/.style={->}]" << std::endl;
+    std::cout << "Writing edges." << std::endl;
+    s << "  \\begin{scope}[every path/.style={->}]" << std::endl;
     for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
     {
         typename Graph<SCALAR>::idx_list_t neighbours = g.getNeighbours(i);
         for (auto n : neighbours)
         {
-            s << "\\draw (" << i << ") -- (" << n << ");" << std::endl;
+            if (i == n)
+                continue; // removing circle to itself
+            s << "    \\draw (" << i << ") -- (" << n << ");" << std::endl;
+            std::cout << "  Edge " << i << " to " << n << " written." << std::endl;
         }
     }
 
-    s << "\\end{scope}" << std::endl;
-
+    s << "  \\end{scope}" << std::endl;
     s << "\\end{tikzpicture}" << std::endl;
     s << "\\end{center}" << std::endl;
     s << "\\end{document}" << std::endl;
+    std::cout << "ALL DONE." << std::endl;
 }
 
 } /* namespace gl */
