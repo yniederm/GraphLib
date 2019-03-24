@@ -3,6 +3,7 @@
 
 #include "../structures/Graph.hpp"
 #include <iostream>
+#include <Eigen/Dense>
 
 namespace gl
 {
@@ -12,7 +13,7 @@ namespace gl
    which then can be runned through pdflatex to generate a pdf.
    */
 template <class SCALAR>
-void writeTikzToStream(std::ostream& s, gl::Graph<SCALAR> &g)
+void writeTikzToStream(std::ostream &s, Graph<SCALAR> &g)
 {
     s << "\\documentclass[border=10pt]{standalone}\n"
       << "\\usepackage{tkz-graph}\n"
@@ -43,17 +44,95 @@ void writeTikzToStream(std::ostream& s, gl::Graph<SCALAR> &g)
             {
                 if (i == j)
                 {
-                    s << "\\Loop[dist=4cm,dir=NO,label=" << g.getWeight(i,j) << "](" << i << ".west)\n";
+                    s << "\\Loop[dist=4cm,dir=NO,label=" << g.getWeight(i, j) << "](" << i << ".west)\n";
                 }
                 else
                 {
-                    s << "\\Edge[label=" << g.getWeight(i,j) << "](" << i << ")(" << j << ")\n";
+                    s << "\\Edge[label=" << g.getWeight(i, j) << "](" << i << ")(" << j << ")\n";
                 }
             }
         }
     }
 
     s << "\\end{tikzpicture}\n\\end{document}" << std::endl;
+}
+
+/**
+   @brief Write structure to stream
+   @param s stream to which it should write
+   @param g should be a undirected graph, with at least 2 nodes
+   */
+template <class SCALAR>
+void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g)
+{
+    s << "\\documentclass{amsart}" << std::endl;
+    s << "\\usepackage{tikz}" << std::endl;
+    s << "\\begin{document}" << std::endl;
+    s << "\\begin{center}" << std::endl;
+    s << "\\begin{tikzpicture}" << std::endl;
+
+    // draw all vertices
+
+    // calculate x,y positions
+    using E_MAT = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>;
+    Eigen::Matrix<double, Eigen::Dynamic, 1> degs(g.numNodes());
+    E_MAT adjMat(g.numNodes(), g.numNodes());
+    E_MAT degMat;
+
+    degMat.setZero();
+    adjMat.setZero();
+
+    // build degree matrix
+    for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+    {
+        degs(i) = g.getDegree(i);
+    }
+    degMat = degs.asDiagonal();
+
+    // build adjacency matrix
+    for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+    {
+        typename Graph<SCALAR>::idx_list_t neighbours = g.getNeighbours(i);
+        for (auto n : neighbours)
+        {
+            adjMat(i, n) = 1;
+        }
+    }
+
+    E_MAT laplacian = degMat - adjMat;
+
+    // calculate eigen vectors
+    Eigen::EigenSolver<E_MAT> solver;
+    solver.compute(laplacian);
+
+    for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+    {
+        Eigen::Vector2d pos;
+        pos << solver.eigenvectors()(0, i).real(), solver.eigenvectors()(1, i).real();
+        pos.normalize();
+
+        pos *= g.getDegree(i);
+
+        s << "\\node (" << i << ") at (" << pos(0) << ", "
+          << pos(1) << ") {" << i << "};" << std::endl;
+    }
+
+    // draw all edges
+    s << "\\begin{scope}[every path/.style={->}]" << std::endl;
+    for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+    {
+        typename Graph<SCALAR>::idx_list_t neighbours = g.getNeighbours(i);
+        for (auto n : neighbours)
+        {
+            s << "\\draw (" << i << ") -- (" << n << ");" << std::endl;
+        }
+    }
+
+    s << "\\end{scope}" << std::endl;
+
+    s << "\\end{tikzpicture}" << std::endl;
+    s << "\\end{center}" << std::endl;
+    s << "\\end{document}" << std::endl;
 }
 
 } /* namespace gl */
