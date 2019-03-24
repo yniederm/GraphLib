@@ -31,6 +31,7 @@ int main(int argc, char const *argv[])
   g.delEdge(2,0);   // remove edge
   g.readFile("../test/io/singleInput.txt"); // assumes running from build folder
   // g.setEdge(-1,2,1);  // test out of range check
+  // g.setEdge(1000,2,1);
   std::cout << g << std::endl;
 
   return 0;

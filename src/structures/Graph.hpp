@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <cassert>
+#include <exception>
 #include <cstdint>
 #include <string>
 
@@ -77,8 +77,14 @@ namespace gl
      * @param idx index that will be range checked
      */
     void checkRange (const idx_t idx) const {
-      assert(0 <= idx);
-      assert(idx < _numNodes);
+      if (!(0 <= idx)) {
+        std::string errorMessage (std::string("Negative index: ") + std::to_string(idx) + std::string("< 0"));
+        throw std::range_error(errorMessage);
+      } 
+      else if (!(idx < _numNodes)) {
+        std::string errorMessage (std::string("Index too large: ") + std::to_string(idx) + std::string("<") + std::to_string(_numNodes));
+        throw std::range_error(errorMessage);
+      }
     }
     /**
      * @brief Asserts that the given indices are within the graph.
