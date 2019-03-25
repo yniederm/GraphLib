@@ -27,6 +27,8 @@ namespace gl
       using val_t = typename Graph<SCALAR>::val_t;
       using dest_vec_t = typename Graph<SCALAR>::dest_vec_t;
       using idx_list_t = typename Graph<SCALAR>::idx_list_t;
+      using visit_list_t = typename Graph<SCALAR>::visit_list_t;
+      using queue_t = typename Graph<SCALAR>::queue_t;
 
     struct Node {
       idx_t _end;
