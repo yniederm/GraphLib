@@ -12,6 +12,8 @@ option(ENABLE_TESTING "The tests will be built" ON)
 if(ENABLE_TESTING) 
   # Enable testing
   enable_testing()
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules/")
+  message(STATUS ${CMAKE_MODULE_PATH})
   add_subdirectory(test)
 endif()
 
