@@ -14,10 +14,10 @@ if(EIGEN3_INCLUDE_DIR)
 
   # MGL needed for second test
   find_package(MathGL)
-  if(NOT MathGL_INCLUDE_DIR)
+  if(NOT MathGL_INCLUDE_DIRS)
     message("MathGL package path not found.")
-  endif(NOT MathGL_INCLUDE_DIR)
-  if(MATHGL_INCLUDE_DIR)
+  endif(NOT MathGL_INCLUDE_DIRS)
+  if(MathGL_INCLUDE_DIRS)
     add_executable(TestMathGL Test_MathGL.cpp)
     target_link_libraries(TestMathGL ${MathGL_LIBRARIES})
     add_test(NAME MathGL_test COMMAND TestMathGL)
