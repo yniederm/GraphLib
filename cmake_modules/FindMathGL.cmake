@@ -5,18 +5,19 @@ FIND_PATH(MathGL_INCLUDE_DIRS NAMES mgl2/mgl.h
   /usr/local/include
 )
 
-FIND_LIBRARY(MathGL_LIB NAMES mgl
+FIND_LIBRARY(MathGL_LIB NAMES mgl mgl2
   PATHS
   /opt/local/lib
   /usr/local/lib
   /usr/lib
 )
-FIND_LIBRARY(MathGL_QT_LIB NAMES mgl-qt
+FIND_LIBRARY(MathGL_QT_LIB NAMES mgl-qt mgl2-qt
   PATHS
   /opt/local/lib
   /usr/local/lib
   /usr/lib
 )
+
 
 SET(MathGL_LIBRARIES ${MathGL_LIB} ${MathGL_QT_LIB})
 

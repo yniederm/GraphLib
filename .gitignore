@@ -8,6 +8,11 @@
 *.a
 *.so
 
+# other files
+*.tex
+*.png
+*.pdf
+
 # folders
 .vscode
 build/

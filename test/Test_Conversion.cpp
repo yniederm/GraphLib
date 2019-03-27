@@ -1,5 +1,4 @@
-#include "../../src/structures/ListGraph.hpp"
-#include "../../src/structures/MatrixGraph.hpp"
+#include <graphlib/structures>
 
 int main(int argc, char const *argv[])
 {

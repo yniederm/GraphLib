@@ -78,12 +78,7 @@ namespace gl
     return out;
   }
 
-/**
- * @brief Sets an edge including start/end points and weight.
- * @param start edge origin point
- * @param end edge end point
- * @param weight new edge weight
- */
+  /** @copydoc Graph<SCALAR>::setEdge() */
   template <class SCALAR>
   void LGraph<SCALAR>::setEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start,end);
@@ -94,12 +89,7 @@ namespace gl
     }
   }
 
-/**
- * @brief Updates the weight of an edge from start to end.
- * @param start edge origin point
- * @param end edge end point
- * @param weight new edge weight
- */
+  /** @copydoc Graph<SCALAR>::updateEdge() */
   template <class SCALAR>
   void LGraph<SCALAR>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start,end);
@@ -108,11 +98,7 @@ namespace gl
     (*it)._weight = weight;
   }
 
-/**
- * @brief Deletes the edge going from start to end.
- * @param start edge origin point
- * @param end edge end point
- */
+  /** @copydoc Graph<SCALAR>::delEdge() */
   template <class SCALAR>
   void LGraph<SCALAR>::delEdge(const idx_t start, const idx_t end) {
     Graph<SCALAR>::checkRange(start,end);
@@ -121,12 +107,7 @@ namespace gl
     _edges[start].erase(it);
   }
 
-/**
- * @brief Checks whether an edge exists from start to end.
- * @param start edge origin point
- * @param end edge end point
- * @return true if there exists an edge, false otherwise
- */
+  /** @copydoc Graph<SCALAR>::hasEdge() */
   template <class SCALAR>
   bool LGraph<SCALAR>::hasEdge (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start,end);
@@ -135,12 +116,7 @@ namespace gl
     return it != _edges[start].end();
   }
 
-/**
- * @brief Finds the weight of the edge going from start to end.
- * @param start edge origin point
- * @param end edge end point
- * @return weight of the selected edge
- */
+  /** @copydoc Graph<SCALAR>::getWeight() */
   template <class SCALAR>
   typename LGraph<SCALAR>::val_t LGraph<SCALAR>::getWeight (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start,end);
@@ -149,56 +125,39 @@ namespace gl
     return (*it)._weight;
   }
 
-  /**
-   * @brief Returns a list of all endpoints of outgoing edges from start.
-   * @param start edge origin point
-   * @return List of all direct neighbours
-   */
+  /** @copydoc Graph<SCALAR>::getNeighbours() */
   template <class SCALAR>
-  typename LGraph<SCALAR>::idx_list_t LGraph<SCALAR>::getNeighbours (const idx_t start) const {
+  typename LGraph<SCALAR>::idx_list_t LGraph<SCALAR>::getNeighbours (const idx_t node) const {
     idx_list_t out;
     for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
-      if(hasEdge(start, end)) 
+      if(hasEdge(node, end)) 
         out.push_back(end);
     }
     return out; 
   }
 
-  /**
-   * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
-   * @param start edge origin point
-   * @param visited boolean list of previously visited nodes
-   * @return List of all direct neighbours + weights
-   */
+  /** @copydoc Graph<SCALAR>::getUnvisitedNeighbours() */
   template <class SCALAR>
-  typename LGraph<SCALAR>::idx_list_t LGraph<SCALAR>::getUnvisitedNeighbours (const idx_t start, const std::vector<bool> visited) const {
+  typename LGraph<SCALAR>::idx_list_t LGraph<SCALAR>::getUnvisitedNeighbours (const idx_t node, const std::vector<bool> visited) const {
     idx_list_t out;
     for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
-      if(hasEdge(start, end) && !visited[end]) 
+      if(hasEdge(node, end) && !visited[end]) 
         out.push_back(end);
     }
     return out; 
   }
 
-  /**
-   * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
-   * @param start edge origin point
-   * @return List of all direct neighbours + weights
-   */
+  /** @copydoc Graph<SCALAR>::getNeighbourWeights() */
   template <class SCALAR>
-  typename LGraph<SCALAR>::dest_vec_t LGraph<SCALAR>::getNeighbourWeights (const idx_t start) const {
+  typename LGraph<SCALAR>::dest_vec_t LGraph<SCALAR>::getNeighbourWeights (const idx_t node) const {
     dest_vec_t out;
-    for (const auto& edge : _edges[start]) {
+    for (const auto& edge : _edges[node]) {
         out.push_back(std::make_pair(edge._end,edge._weight));
     }
     return out;
   }
 
-  /**
-   * @brief Finds the degree of the given node (i.e. count of all outgoing edges).
-   * @param node node whose degree is to be found
-   * @return Degree of node
-   */
+  /** @copydoc Graph<SCALAR>::getDegree() */
   template <class SCALAR>
   typename LGraph<SCALAR>::idx_t LGraph<SCALAR>::getDegree (const idx_t node) const {
     return _edges[node].size();

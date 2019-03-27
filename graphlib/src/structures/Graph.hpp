@@ -32,15 +32,75 @@ namespace gl
   public: 
     explicit Graph(idx_t numNodes) : _numNodes(numNodes) {}
     virtual ~Graph() {}
-    virtual void setEdge (const idx_t, const idx_t, const val_t = 1) = 0;
-    virtual void updateEdge (const idx_t, const idx_t, val_t) = 0;
-    virtual void delEdge (const idx_t, const idx_t) = 0;
-    virtual bool hasEdge (const idx_t, const idx_t) const = 0;
-    virtual val_t getWeight (const idx_t, const idx_t) const = 0;
-    virtual idx_list_t getNeighbours (const idx_t) const = 0;
-    virtual idx_list_t getUnvisitedNeighbours (const idx_t, const visit_list_t) const = 0;
-    virtual dest_vec_t getNeighbourWeights (const idx_t) const = 0; 
-    virtual idx_t getDegree (const idx_t) const = 0;
+
+    /**
+     * @brief Sets an edge including start/end points and weight.
+     * @param start edge origin point
+     * @param end edge end point
+     * @param weight new edge weight
+     */
+    virtual void setEdge (const idx_t start, const idx_t end, const val_t weight = 1) = 0;
+
+    /**
+     * @brief Updates the weight of an edge from start to end.
+     * @param start edge origin point
+     * @param end edge end point
+     * @param weight new edge weight
+     */
+    virtual void updateEdge (const idx_t start, const idx_t end, val_t weight) = 0;
+
+    /**
+     * @brief Deletes the edge going from start to end.
+     * @param start edge origin point
+     * @param end edge end point
+     */
+    virtual void delEdge (const idx_t start, const idx_t end) = 0;
+
+    /**
+     * @brief Checks whether an edge exists from start to end.
+     * @param start edge origin point
+     * @param end edge end point
+     * @return true if there exists an edge, false otherwise
+     */
+    virtual bool hasEdge (const idx_t start, const idx_t end) const = 0;
+
+    /**
+     * @brief Finds the weight of the edge going from start to end.
+     * @param start edge origin point
+     * @param end edge end point
+     * @return weight of the selected edge
+     */
+    virtual val_t getWeight (const idx_t start, const idx_t end) const = 0;
+
+    /**
+     * @brief Returns a list of all endpoints of outgoing edges from start.
+     * @param node edge origin point
+     * @return List of all direct neighbours
+     */
+    virtual idx_list_t getNeighbours (const idx_t node) const = 0;
+
+    /**
+     * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
+     * @param node edge origin point
+     * @param visited boolean list of previously visited nodes
+     * @return List of all direct neighbours + weights
+     */
+    virtual idx_list_t getUnvisitedNeighbours (const idx_t node, const visit_list_t visited) const = 0;
+
+
+    /**
+     * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
+     * @param node edge origin point
+     * @return List of all direct neighbours + weights
+     */
+    virtual dest_vec_t getNeighbourWeights (const idx_t node) const = 0; 
+
+    /**
+     * @brief Finds the degree of the given node (i.e. count of all outgoing edges).
+     * @param node node whose degree is to be found
+     * @return Degree of node
+     */
+    virtual idx_t getDegree (const idx_t node) const = 0;
     
     idx_list_t transitiveClosure (const idx_t node) const;
 
@@ -56,11 +116,8 @@ namespace gl
       std::ifstream is;
       is.open(inFile, std::ios::in);
       if (!is.is_open()) {
-        std::cout << "failed to open " << inFile << '\n';
+        std::cout << "Error: failed to open " << inFile << '\n';
       } else {
-        idx_t numNodes;
-        is >> numNodes;
-        _numNodes = numNodes;
         idx_t start;
         idx_t end;
         val_t weight;

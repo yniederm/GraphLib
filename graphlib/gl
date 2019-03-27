@@ -1,0 +1,8 @@
+#ifndef GL_GL_HPP
+#define GL_GL_HPP
+
+#include "structures"
+#include "algorithms"
+#include "io"
+
+#endif /* GL_GL_HPP */

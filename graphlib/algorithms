@@ -1,0 +1,7 @@
+#ifndef GL_ALGORITHMS_HPP
+#define GL_ALGORITHMS_HPP
+
+#include "structures"
+#include "src/algorithms/TransitiveClosure.hpp"
+
+#endif /* GL_ALGORITHMS_HPP */

@@ -23,3 +23,11 @@ if(BUILD_DOC)
   # Run doxygen
   add_subdirectory(doc)
 endif()
+
+# set release build type
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+add_subdirectory(graphlib)
+

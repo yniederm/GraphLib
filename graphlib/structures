@@ -1,0 +1,8 @@
+#ifndef GL_STRUCTURES_HPP
+#define GL_STRUCTURES_HPP
+
+#include "src/structures/Graph.hpp"
+#include "src/structures/ListGraph.hpp"
+#include "src/structures/MatrixGraph.hpp"
+
+#endif /* GL_STRUCTURES_HPP */

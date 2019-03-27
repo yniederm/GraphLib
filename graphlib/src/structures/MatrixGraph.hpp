@@ -81,35 +81,22 @@ namespace gl
     return out;
   }
 
-/**
- * @brief Sets an edge including start/end points and weight.
- * @param start edge origin point
- * @param end edge end point
- * @param weight new edge weight
- */
+  /** @copydoc Graph<SCALAR>::setEdge() */
   template <class SCALAR>
   void MGraph<SCALAR>::setEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start, end);
     _matrix[start][end]._weight = weight;
     _matrix[start][end]._edge = true;
   }
-/**
- * @brief Updates the weight of an edge from start to end.
- * @param start edge origin point
- * @param end edge end point
- * @param weight new edge weight
- */
+
+  /** @copydoc Graph<SCALAR>::updateEdge() */
   template <class SCALAR>
   void MGraph<SCALAR>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start, end);    
     _matrix[start][end]._weight = weight;
   }
 
-/**
- * @brief Deletes the edge going from start to end.
- * @param start edge origin point
- * @param end edge end point
- */
+  /** @copydoc Graph<SCALAR>::delEdge() */
   template <class SCALAR>
   void MGraph<SCALAR>::delEdge(const idx_t start, const idx_t end) {
     Graph<SCALAR>::checkRange(start, end);
@@ -117,24 +104,14 @@ namespace gl
     _matrix[start][end]._edge = false;
   }
 
-/**
- * @brief Checks whether an edge exists from start to end.
- * @param start edge origin point
- * @param end edge end point
- * @return true if there exists an edge, false otherwise
- */
+  /** @copydoc Graph<SCALAR>::hasEdge() */
   template <class SCALAR>
   bool MGraph<SCALAR>::hasEdge (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start, end);
     return _matrix[start][end]._edge;
   }
 
-/**
- * @brief Finds the weight of the edge going from start to end.
- * @param start edge origin point
- * @param end edge end point
- * @return weight of the selected edge
- */
+  /** @copydoc Graph<SCALAR>::getWeight() */
   template <class SCALAR>
   typename MGraph<SCALAR>::val_t MGraph<SCALAR>::getWeight (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start, end);
@@ -145,57 +122,40 @@ namespace gl
     return _matrix[start][end]._weight;
   }
 
-  /**
-   * @brief Returns a list of all endpoints of outgoing edges from start.
-   * @param start edge origin point
-   * @return List of all direct neighbours
-   */
+  /** @copydoc Graph<SCALAR>::getNeighbours() */
   template <class SCALAR>
-  typename MGraph<SCALAR>::idx_list_t MGraph<SCALAR>::getNeighbours (const idx_t start) const {
+  typename MGraph<SCALAR>::idx_list_t MGraph<SCALAR>::getNeighbours (const idx_t node) const {
     idx_list_t out;
     for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
-      if(hasEdge(start, end)) 
+      if(hasEdge(node, end)) 
         out.push_back(end);
     }
     return out; 
   }
 
-  /**
-   * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
-   * @param start edge origin point
-   * @param visited boolean list of previously visited nodes
-   * @return List of all direct neighbours + weights
-   */
+  /** @copydoc Graph<SCALAR>::getUnvisitedNeighbours() */
   template <class SCALAR>
-  typename MGraph<SCALAR>::idx_list_t MGraph<SCALAR>::getUnvisitedNeighbours (const idx_t start, const std::vector<bool> visited) const {
+  typename MGraph<SCALAR>::idx_list_t MGraph<SCALAR>::getUnvisitedNeighbours (const idx_t node, const std::vector<bool> visited) const {
     idx_list_t out;
     for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
-      if(hasEdge(start, end) && !visited[end]) 
+      if(hasEdge(node, end) && !visited[end]) 
         out.push_back(end);
     }
     return out; 
   }
 
-  /**
-   * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
-   * @param start edge origin point
-   * @return List of all direct neighbours + weights
-   */
+  /** @copydoc Graph<SCALAR>::getNeighbourWeights() */
   template <class SCALAR>
-  typename MGraph<SCALAR>::dest_vec_t MGraph<SCALAR>::getNeighbourWeights (const idx_t start) const {
+  typename MGraph<SCALAR>::dest_vec_t MGraph<SCALAR>::getNeighbourWeights (const idx_t node) const {
     dest_vec_t out;
     for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
-      if(hasEdge(start, end)) 
-        out.push_back(std::make_pair(end,getWeight(start,end)));
+      if(hasEdge(node, end)) 
+        out.push_back(std::make_pair(end,getWeight(node,end)));
     }
     return out; 
   }
 
-  /**
-   * @brief Finds the degree of the given node (i.e. count of all outgoing edges).
-   * @param node node whose degree is to be found
-   * @return Degree of node
-   */
+  /** @copydoc Graph<SCALAR>::getDegree() */
   template <class SCALAR>
   typename MGraph<SCALAR>::idx_t MGraph<SCALAR>::getDegree (const idx_t node) const {
     idx_t count = 0;
