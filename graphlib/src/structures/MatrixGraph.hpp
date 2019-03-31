@@ -33,8 +33,8 @@ namespace gl
     };
 
     protected:
-      using matrix_row_t = std::vector<Node>;
-      using matrix_t = std::vector<matrix_row_t>;
+      using matrix_t = std::vector<Node>;
+      // using matrix_t = std::vector<matrix_row_t>;
 
     protected:
       matrix_t _matrix;
@@ -55,27 +55,18 @@ namespace gl
   };
 
   template <class SCALAR>
-  MGraph<SCALAR>::MGraph(idx_t numNodes) : Graph<SCALAR>(numNodes) {
-        matrix_t matrix;
-
-        Node emptyNode;
-        matrix_row_t tempRow(numNodes,emptyNode);
-        for (idx_t col = 0; col < numNodes; ++col) {
-          matrix.emplace_back(tempRow);
-        }
-        _matrix = matrix;
-  }
+  MGraph<SCALAR>::MGraph(idx_t numNodes) : Graph<SCALAR>(numNodes), _matrix(numNodes*numNodes, Node()) {}
 
   /**
    * @brief Outputs an LGraph<SCALAR> with the same edges as *this.
    */
   template <class SCALAR>
   LGraph<SCALAR> MGraph<SCALAR>::toList () {
-    idx_t numNodes = Graph<SCALAR>::numNodes();
+    const idx_t numNodes = Graph<SCALAR>::numNodes();
     LGraph<SCALAR> out(numNodes);
     for (idx_t i = 0; i < numNodes; ++i) {
       for (idx_t j = 0; j < numNodes; ++j) {
-        if (hasEdge(i,j)) out.setEdge(i,j,_matrix[i][j]._weight); 
+        if (hasEdge(i,j)) out.setEdge(i,j,_matrix[i*numNodes+j]._weight); 
       }
     }
     return out;
@@ -83,43 +74,48 @@ namespace gl
 
   /** @copydoc Graph<SCALAR>::setEdge() */
   template <class SCALAR>
-  void MGraph<SCALAR>::setEdge(const idx_t start, const idx_t end, const val_t weight) {
+  inline void MGraph<SCALAR>::setEdge(const idx_t start, const idx_t end, const val_t weight) {
     Graph<SCALAR>::checkRange(start, end);
-    _matrix[start][end]._weight = weight;
-    _matrix[start][end]._edge = true;
+    const idx_t numNodes = Graph<SCALAR>::numNodes();
+    _matrix[start*numNodes+end]._weight = weight;
+    _matrix[start*numNodes+end]._edge = true;
   }
 
   /** @copydoc Graph<SCALAR>::updateEdge() */
   template <class SCALAR>
-  void MGraph<SCALAR>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
-    Graph<SCALAR>::checkRange(start, end);    
-    _matrix[start][end]._weight = weight;
+  inline void MGraph<SCALAR>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
+    Graph<SCALAR>::checkRange(start, end); 
+    const idx_t numNodes = Graph<SCALAR>::numNodes();   
+    _matrix[start*numNodes+end]._weight = weight;
   }
 
   /** @copydoc Graph<SCALAR>::delEdge() */
   template <class SCALAR>
-  void MGraph<SCALAR>::delEdge(const idx_t start, const idx_t end) {
+  inline void MGraph<SCALAR>::delEdge(const idx_t start, const idx_t end) {
     Graph<SCALAR>::checkRange(start, end);
-    _matrix[start][end]._weight = SCALAR(0);
-    _matrix[start][end]._edge = false;
+    const idx_t numNodes = Graph<SCALAR>::numNodes();
+    _matrix[start*numNodes+end]._weight = SCALAR(0);
+    _matrix[start*numNodes+end]._edge = false;
   }
 
   /** @copydoc Graph<SCALAR>::hasEdge() */
   template <class SCALAR>
-  bool MGraph<SCALAR>::hasEdge (const idx_t start, const idx_t end) const {
+  inline bool MGraph<SCALAR>::hasEdge (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start, end);
-    return _matrix[start][end]._edge;
+    const idx_t numNodes = Graph<SCALAR>::numNodes();
+    return _matrix[start*numNodes+end]._edge;
   }
 
   /** @copydoc Graph<SCALAR>::getWeight() */
   template <class SCALAR>
   typename MGraph<SCALAR>::val_t MGraph<SCALAR>::getWeight (const idx_t start, const idx_t end) const {
     Graph<SCALAR>::checkRange(start, end);
+    const idx_t numNodes = Graph<SCALAR>::numNodes();
     if (!hasEdge(start, end)) {
       std::cout << "There is no edge between " << start << " and " << end << ", returning 0." << std::endl;
       return SCALAR(0);
     }
-    return _matrix[start][end]._weight;
+    return _matrix[start*numNodes+end]._weight;
   }
 
   /** @copydoc Graph<SCALAR>::getNeighbours() */
@@ -158,9 +154,10 @@ namespace gl
   /** @copydoc Graph<SCALAR>::getDegree() */
   template <class SCALAR>
   typename MGraph<SCALAR>::idx_t MGraph<SCALAR>::getDegree (const idx_t node) const {
+    const idx_t numNodes = Graph<SCALAR>::numNodes();
     idx_t count = 0;
-    for (const auto end : _matrix[node]) {
-      if (end._edge) ++count;
+    for (idx_t end = 0; end < numNodes; ++end) {
+      if (_matrix[node*numNodes+end]._edge) ++count;
     }
     return count;
   }
