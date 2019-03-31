@@ -101,8 +101,6 @@ namespace gl
      * @return Degree of node
      */
     virtual idx_t getDegree (const idx_t node) const = 0;
-    
-    idx_list_t transitiveClosure (const idx_t node) const;
 
     // printEdge (?)
 

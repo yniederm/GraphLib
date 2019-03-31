@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
   graph::idx_list_t tc;
   for(graph::idx_t i = 0; i < g.numNodes(); i++)
   {
-    tc = g.transitiveClosure(i);
+    tc = gl::algorithm::transitiveClosure(g, i);
     std::cout << "Transitive Closure of " << i << ": ";
     for (auto v : tc) {
       std::cout << v << " ";
