@@ -15,7 +15,10 @@ set(TESTS
     MathGL
     ListGraph
     MatrixGraph
-    TransitiveClosure)
+    TransitiveClosure
+    Traversal
+    PrintContainer
+    )
 
 set(EIGEN_TESTS
     IOTikz

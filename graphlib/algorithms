@@ -1,7 +1,9 @@
-#ifndef GL_ALGORITHMS_HPP
-#define GL_ALGORITHMS_HPP
+#ifndef GL_ALGORITHMS
+#define GL_ALGORITHMS
 
 #include "structures"
 #include "src/algorithms/TransitiveClosure.hpp"
+#include "src/algorithms/DFS.hpp"
+#include "src/algorithms/BFS.hpp"
 
-#endif /* GL_ALGORITHMS_HPP */
+#endif /* GL_ALGORITHMS */

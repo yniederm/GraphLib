@@ -1,0 +1,9 @@
+#ifndef GL_EXTERNAL
+#define GL_EXTERNAL
+
+#include "structures"
+
+#include "src/io/WriteImage.hpp"
+#include "src/io/WriteTikz.hpp"
+
+#endif /* GL_EXTERNAL */

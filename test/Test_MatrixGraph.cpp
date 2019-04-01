@@ -1,4 +1,4 @@
-#include <graphlib/structures>
+#include <graphlib/gl>
 
 int main(int argc, char const *argv[])
 {

@@ -1,8 +1,8 @@
-#ifndef GL_IO_HPP
-#define GL_IO_HPP
+#ifndef GL_IO
+#define GL_IO
 
 #include "structures"
-#include "src/io/WriteImage.hpp"
-#include "src/io/WriteTikz.hpp"
+#include "src/io/StreamOverload.hpp"
+#include "src/io/PrintContainer.hpp"
 
-#endif /* GL_IO_HPP */
+#endif /* GL_IO */
