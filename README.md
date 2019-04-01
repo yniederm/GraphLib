@@ -11,11 +11,14 @@
   - file input to add edges
 #### Algorithms
 - Transitive closure of a node
+- DFS
+  - Basic graph traversal
+- BFS
+  - Basic graph traversal
 ## To-Do list
 Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
 #### Data structures
-- output stream optimization
-- advanced initialization (stream operators)
+- advanced initialization (stream operators, input file constructor)
 - simple undirected graph support
 - multigraph support
 - bipartite graphs
@@ -24,9 +27,7 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 - threshold graphs, split graphs
 #### Algorithms
 - BFS
-  1. basic algorithm
-  2. finding vertices at the same distance from source
-- DFS
+  1. finding vertices at the same distance from source
 - Shortest Paths
   1. Dijkstra
   2. Floyd-Warshall
