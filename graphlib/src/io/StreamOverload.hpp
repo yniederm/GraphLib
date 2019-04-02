@@ -33,10 +33,11 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR>& rhs) {
  * @brief Prints all elements of an std::list.
  */
 template <class SCALAR>
-std::ostream& operator<< (std::ostream & os, std::list<SCALAR> rhs) {
-  for (auto elem : rhs)
-    os << elem << " ";
-  os << '\n';
+std::ostream& operator<< (std::ostream & os, const std::list<SCALAR>& rhs) {
+  os << "[ ";
+  for (auto it : rhs)
+    os << it << " ";
+  os << "]\n";
   return os;
 }
 
@@ -44,36 +45,41 @@ std::ostream& operator<< (std::ostream & os, std::list<SCALAR> rhs) {
  * @brief Prints all elements of an std::vector.
  */
 template <class SCALAR>
-std::ostream& operator<< (std::ostream & os, std::vector<SCALAR> rhs) {
-  for (auto elem : rhs)
-    os << elem << " ";
-  os << '\n';
+std::ostream& operator<< (std::ostream & os, const std::vector<SCALAR>& rhs) {
+  os << "[ ";
+  for (auto it : rhs)
+    os << it << " ";
+  os << "]\n";
   return os;
 }
 
 /**
- * @brief Prints all elements of an std::queue.
+ * @brief Prints all elements of an std::deque.
  */
 template <typename SCALAR>
-std::ostream& operator<< (std::ostream & os, std::queue<SCALAR> rhs) {
-  while(!rhs.empty()) //body
-  {
-    os << rhs.front() << " ";
-    rhs.pop();
+std::ostream& operator<< (std::ostream & os, const std::deque<SCALAR>& rhs) {
+  os << "[ ";
+  for (auto it : rhs) {
+    os << it << " ";
   }
+
+  os << "]\n";
   return os;
 }
 
 /**
+ * Only supports copying the stack, due to its implementation.
  * @brief Prints all elements of an std::stack.
  */
 template <typename SCALAR>
 std::ostream& operator<< (std::ostream & os, std::stack<SCALAR> rhs) {
-  while(!rhs.empty()) //body
-  {
-    os << rhs.top() << " ";
-    rhs.pop();
-  }
+  os << "[ ";
+  while (!rhs.empty()) { 
+    os << rhs.top() << " "; 
+    rhs.pop(); 
+  } 
+
+  os << "]\n";
   return os;
 }
 //@}

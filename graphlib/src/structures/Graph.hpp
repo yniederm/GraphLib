@@ -32,7 +32,7 @@ public:
   using idx_list_t = std::vector<idx_t>;
   using ordered_list_t = std::list<idx_t>;
   using visit_list_t = std::vector<bool>;
-  using BFS_queue_t = std::queue<idx_t>;
+  using BFS_queue_t = std::deque<idx_t>;
   using DFS_queue_t = std::stack<idx_t>;
 protected:
   idx_t _numNodes;

@@ -20,16 +20,16 @@ namespace algorithm {
     auto v = node;
 
     // traversal
-    queue.push(v);
+    queue.push_front(v);
     visited[v] = true;
     while(!queue.empty()) {
       v = queue.front();
-      queue.pop();
+      queue.pop_front();
       out.push_back(v);
       tempList = graph.getUnvisitedNeighbours(v,visited);
       for (auto elem : tempList) {
         visited[elem] = true;
-        queue.push(elem);
+        queue.push_front(elem);
       }
     }
     return out;
