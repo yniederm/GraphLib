@@ -2,8 +2,7 @@
 
 ### A simple header-only C++ library that aims to showcase and implement various data structures and algorithms that are based on graph theory.
 
-An up-to-date documentation of the source code is available [here](https://codedocs.xyz/guetzli32/GraphLib/index.html).
-
+An up-to-date documentation of the source code is available here: [![Documentation](https://codedocs.xyz/guetzli32/GraphLib.svg)](https://codedocs.xyz/guetzli32/GraphLib/)
 ## Currently implemented is the following:
 #### Data structures
 - Graph Base Class
