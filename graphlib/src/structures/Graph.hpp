@@ -138,15 +138,39 @@ public:
    * @brief Returns the number of nodes currently in the graph.
    * @return number of nodes in the graph
    */
-  idx_t numNodes () const {
+  inline idx_t numNodes () const {
     return _numNodes;
+  }
+  
+  /**
+   * A quick algorithm that finds cycles in a graph.
+   * A cycle in a graph is defined by a back edge (self-loop or edge connecting to an ancestor of the tree given by DFS).
+   * An acyclic graph is also known as a tree.
+   * @brief Checks whether the given graph containes cycles.
+   * @return true if cyclic, false if acyclic
+   */
+  bool hasCycle () const {
+    visit_list_t visited(_numNodes, false);
+    idx_list_t neighbourList;
+
+    for(idx_t i = 0; i < _numNodes; i++) {
+      neighbourList = getNeighbours(i);
+      for(auto neighbour : neighbourList) {
+        if (visited[neighbour]) {
+          return true;
+        } else {
+          visited[neighbour] = true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
    * @brief Asserts that the given index is within the graph.
    * @param idx index that will be range checked
    */
-  void checkRange (const idx_t idx) const {
+  inline void checkRange (const idx_t idx) const {
     if (!(0 <= idx)) {
       std::string errorMessage (std::string("Negative index: ") + std::to_string(idx) + std::string("< 0"));
       throw std::range_error(errorMessage);
@@ -162,7 +186,7 @@ public:
    * @param start first index that will be range checked
    * @param end second index that will be range checked
    */
-  void checkRange (const idx_t start, const idx_t end) const {
+  inline void checkRange (const idx_t start, const idx_t end) const {
     checkRange(start);
     checkRange(end);
   }

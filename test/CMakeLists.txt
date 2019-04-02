@@ -18,6 +18,7 @@ set(TESTS
     TransitiveClosure
     Traversal
     PrintContainer
+    CycleDetection
     )
 
 set(EIGEN_TESTS
