@@ -22,8 +22,8 @@ void saveImage(mglGraph* gr, gl::Graph<SCALAR> &g, const char* lineArgs = "B")
 {
   //using E_MAT = Eigen::SparseMatrix;
 
-  std::vector<Eigen::Triplet<double> > triplets;
-  Eigen::Matrix<double, Eigen::Dynamic, 1> degs(g.numNodes());
+  std::vector<Eigen::Triplet<float> > triplets;
+  Eigen::Matrix<float, Eigen::Dynamic, 1> degs(g.numNodes());
   //E_MAT adjMat(g.numNodes(), g.numNodes());
   //E_MAT degMat;
 
@@ -56,14 +56,14 @@ void saveImage(mglGraph* gr, gl::Graph<SCALAR> &g, const char* lineArgs = "B")
   std::cout << "Adjacency matrix built" << std::endl;
 
   //E_MAT laplacian = degMat - adjMat;
-  Eigen::SparseMatrix<double> laplacian(g.numNodes(), g.numNodes());
+  Eigen::SparseMatrix<float> laplacian(g.numNodes(), g.numNodes());
   laplacian.setFromTriplets(triplets.begin(), triplets.end());
   laplacian.makeCompressed();
 
   std::cout << "Laplacian matrix built" << std::endl;
 
   // calculate eigen vectors
-  Eigen::SelfAdjointEigenSolver<Eigen::SparseMatrix<double>> solver;
+  Eigen::SelfAdjointEigenSolver<Eigen::SparseMatrix<float>> solver;
   solver.compute(laplacian);
 
   std::cout << "Eigenvectors computed" << std::endl;

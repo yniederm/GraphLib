@@ -11,11 +11,14 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - conversion between the two
   - file input to add edges
 #### Algorithms
-- Transitive closure of a node
+- Closure
+  - Finding the connected component / transitive closure of a node
 - DFS
   - Basic graph traversal
 - BFS
   - Basic graph traversal
+- Graph cycles
+  - general cycle detection
 ## To-Do list
 Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
 #### Data structures
@@ -36,14 +39,12 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
   4. Johnson
   5. Betweenness centrality
 - Graph cycles
-  1. general cycle detection
   2. cycles of specific length (e.g. triad census)
 - Minimum spanning trees
   1. Kruskal
   2. Prim
   3. Total # of spanning trees
 - Connectivity
-  1. finding the connected component
   2. Eulerian paths
   3. finding all possible walks from source to destination
 - Network algorithms

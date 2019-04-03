@@ -1,5 +1,5 @@
 
-mkdir build
+mkdir -p build
 set -e
 cd build
 cmake ..

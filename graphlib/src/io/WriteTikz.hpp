@@ -75,8 +75,8 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = tru
   // draw all vertices
 
   // calculate x,y positions
-  using E_MAT = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>;
-  Eigen::Matrix<double, Eigen::Dynamic, 1> degs(g.numNodes());
+  using E_MAT = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>;
+  Eigen::Matrix<float, Eigen::Dynamic, 1> degs(g.numNodes());
   E_MAT adjMat(g.numNodes(), g.numNodes());
   E_MAT degMat;
 
