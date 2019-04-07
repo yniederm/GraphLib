@@ -7,9 +7,10 @@ namespace gl {
 namespace algorithm {
 
 /**
- * @brief Traverses the connected component of node using BFS
+ * @brief Traverses the connected component of node using BFS (Breadth First Search)
  * @param graph The graph to run the algorithm on
  * @param node Start point of the graph search
+ * @return Sequence of all nodes visited by a BFS run.
  */
 template <class GRAPH>
 typename GRAPH::ordered_list_t BFS (const GRAPH& graph, const typename GRAPH::idx_t node) {

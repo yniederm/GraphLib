@@ -8,8 +8,10 @@ namespace gl {
 namespace algorithm {
 
 /**
- * @brief Traverses the connected component of node using BFS
+ * @brief Computes the out-degree of all nodes in an undirected graph.
+ * The resulting list is sorted by descending degree.
  * @param graph The graph to run the algorithm on
+ * @return Sorted idx_list_t of all node degrees in the graph.
  */
 template <class GRAPH>
 typename GRAPH::idx_list_t degreeSequence (const GRAPH& graph) {

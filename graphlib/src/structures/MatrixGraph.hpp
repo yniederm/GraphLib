@@ -5,6 +5,7 @@
 
 #include <vector>
 
+// necessary forward declaration to prevent linker cycles
 namespace gl {
   template <class SCALAR>
   class LGraph;
