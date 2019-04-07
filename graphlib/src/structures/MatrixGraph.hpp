@@ -17,7 +17,7 @@ namespace gl {
 ///////////////////////////////////////////////////////////
 
 /** Explanations for MGraph
- @brief Derived class, inherits from Graph. It implements an adjancency matrix data structure.
+ @brief Derived class, inherits from Graph. It implements an adjacency matrix data structure.
   */
 template <class SCALAR>
 class MGraph : public Graph<SCALAR>
@@ -45,7 +45,7 @@ class MGraph : public Graph<SCALAR>
     matrix_t _matrix;
     
   public:
-    MGraph(idx_t);
+    MGraph(idx_t, bool = 0);
     ~MGraph() {};
     void setEdge (const idx_t, const idx_t, const val_t = 1);
     void updateEdge (const idx_t, const idx_t, const val_t);
@@ -56,6 +56,7 @@ class MGraph : public Graph<SCALAR>
     idx_list_t getUnvisitedNeighbours (const idx_t, const std::vector<bool>) const;
     dest_vec_t getNeighbourWeights (const idx_t) const;   
     idx_t getDegree (const idx_t) const;    
+    void makeUndirected ();
     LGraph<SCALAR> toList (); 
 };
 
@@ -65,12 +66,16 @@ class MGraph : public Graph<SCALAR>
 
 /**
  * @brief Creates an empty Graph using an adjacency matrix storage format.
+ * @copydoc Graph<SCALAR>::Graph()
  */
 template <class SCALAR>
-MGraph<SCALAR>::MGraph(idx_t numNodes) : Graph<SCALAR>(numNodes), _matrix(numNodes*numNodes, Node()) {}
+MGraph<SCALAR>::MGraph(idx_t numNodes, bool undirected) : 
+                       Graph<SCALAR>(numNodes, undirected), 
+                       _matrix(numNodes*numNodes, Node()) {}
 
 /**
  * @brief Outputs an LGraph<SCALAR> with the same edges as *this.
+ * @return MGraph with the same edges and nodes as *this.
  */
 template <class SCALAR>
 LGraph<SCALAR> MGraph<SCALAR>::toList () {

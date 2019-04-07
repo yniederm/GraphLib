@@ -11,14 +11,15 @@ link_directories(
 
 set(TESTS
     Conversion
+    CycleDetection
+    DegreeSequence
     IOTikz
-    MathGL
     ListGraph
+    MathGL
     MatrixGraph
+    PrintContainer
     TransitiveClosure
     Traversal
-    PrintContainer
-    CycleDetection
     )
 
 set(EIGEN_TESTS

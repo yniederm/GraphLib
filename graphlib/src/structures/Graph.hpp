@@ -36,9 +36,17 @@ public:
   using DFS_queue_t = std::stack<idx_t>;
 protected:
   idx_t _numNodes;
+  bool _undirected;
 
 public: 
-  explicit Graph(idx_t numNodes) : _numNodes(numNodes) {}
+
+  /**
+   * @param numNodes Number of nodes/vertices in the graph.
+   * @param undirected True if graph is undirected, false if directed.
+   */
+  explicit Graph(idx_t numNodes, bool undirected = 0) : 
+                 _numNodes(numNodes), 
+                 _undirected(undirected) {}
   virtual ~Graph() {}
 
   /**
@@ -164,6 +172,14 @@ public:
       }
     }
     return false;
+  }
+
+  /**
+   * @brief Returns true if the graph is undirected, false if not.
+   * @return true if the graph is undirected, false if not.
+   */
+  bool isUndirected () const {
+    return _undirected;
   }
 
   /**

@@ -20,6 +20,7 @@ An up-to-date documentation of the source code is available here: [![Documentati
 - Graph cycles
   - general cycle detection
 ## To-Do list
+- Document algorithm purpose in doxygen files
 Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
 #### Data structures
 - advanced initialization (stream operators, input file constructor)

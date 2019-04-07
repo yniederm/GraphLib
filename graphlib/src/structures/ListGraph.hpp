@@ -19,7 +19,7 @@ namespace gl {
 ///////////////////////////////////////////////////////////
 
 /** Explanations for LGraph
- @brief Derived class, inherits from Graph. It implements an adjancency list data structure.
+ @brief Derived class, inherits from Graph. It implements an adjacency list data structure.
   */
 template <class SCALAR>
 class LGraph : public Graph<SCALAR>
@@ -48,7 +48,7 @@ class LGraph : public Graph<SCALAR>
     rootList_t _edges;
     
   public:
-    LGraph(idx_t);
+    LGraph(idx_t, bool = 0);
     ~LGraph() {};
     void setEdge(const idx_t, const idx_t, const val_t = 1);
     void updateEdge(const idx_t, const idx_t, const val_t);
@@ -68,10 +68,12 @@ class LGraph : public Graph<SCALAR>
 
 /**
  * @brief Creates an empty Graph using an adjacency list storage format.
+ * @copydoc Graph<SCALAR>::Graph()
  */
 template <class SCALAR>
-LGraph<SCALAR>::LGraph(idx_t numNodes) : Graph<SCALAR>(numNodes),
-                                          _edges(numNodes) {}
+LGraph<SCALAR>::LGraph(idx_t numNodes, bool undirected) : 
+                       Graph<SCALAR>(numNodes, undirected),
+                       _edges(numNodes) {}
 
 
 /**

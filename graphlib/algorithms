@@ -5,6 +5,7 @@
 #include "src/algorithms/TransitiveClosure.hpp"
 #include "src/algorithms/DFS.hpp"
 #include "src/algorithms/BFS.hpp"
-#include "src/algorithms/Cycles.hpp"
+#include "src/algorithms/Degrees.hpp"
+#include "src/algorithms/DegreeSequence.hpp"
 
 #endif /* GL_ALGORITHMS */
