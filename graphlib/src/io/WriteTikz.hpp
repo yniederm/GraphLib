@@ -12,8 +12,8 @@ namespace external {
    @brief Simple function, writes structure to the given stream,
    which then can be run through pdflatex to generate a pdf.
    */
-template <class SCALAR>
-void writeTikzToStream(std::ostream &s, Graph<SCALAR> &g)
+template <class SCALAR, class DIRECTION>
+void writeTikzToStream(std::ostream &s, Graph<SCALAR,DIRECTION> &g)
 {
   s << "\\documentclass[border=10pt]{standalone}\n"
     << "\\usepackage{tkz-graph}\n"
@@ -63,8 +63,8 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR> &g)
    @param g should be a undirected graph, with at least 2 nodes
    @param writeNodes wheter it should write nodes (numbers)
    */
-template <class SCALAR>
-void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = true)
+template <class SCALAR, class DIRECTION>
+void writeTikzToStream2(std::ostream &s, Graph<SCALAR,DIRECTION> &g, bool writeNodes = true)
 {
   s << "\\documentclass{amsart}" << std::endl;
   s << "\\usepackage{tikz}" << std::endl;
@@ -84,16 +84,16 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = tru
   adjMat.setZero();
 
   // build degree matrix
-  for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
     degs(i) = g.getDegree(i);
   }
   degMat = degs.asDiagonal();
 
   // build adjacency matrix
-  for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
-    typename Graph<SCALAR>::idx_list_t neighbours = g.getNeighbours(i);
+    typename Graph<SCALAR,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
     for (auto n : neighbours)
     {
       adjMat(i, n) = 1;
@@ -107,7 +107,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = tru
   Eigen::EigenSolver<E_MAT> solver;
   solver.compute(laplacian);
 
-  for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
     Eigen::Vector2d pos;
     pos << solver.eigenvectors()(0, i).real(), solver.eigenvectors()(1, i).real();
@@ -125,9 +125,9 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR> &g, bool writeNodes = tru
 
   // draw all edges
   s << "  \\begin{scope}[every path/.style={->}]" << std::endl;
-  for (typename Graph<SCALAR>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
-    typename Graph<SCALAR>::idx_list_t neighbours = g.getNeighbours(i);
+    typename Graph<SCALAR,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
     for (auto n : neighbours)
     {
       if (i == n)

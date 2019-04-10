@@ -1,13 +1,17 @@
 #ifndef GL_MATRIX_GRAPH_HPP
 #define GL_MATRIX_GRAPH_HPP
 
+#define GL_ENABLE_IF_DIRECTED(RETURN_TYPE) template <typename DIR = DIRECTION> typename std::enable_if<std::is_same<DIR, Directed>::value, RETURN_TYPE>::type
+
+#define GL_ENABLE_IF_UNDIRECTED(RETURN_TYPE) template <typename DIR = DIRECTION> typename std::enable_if<std::is_same<DIR, Undirected>::value, RETURN_TYPE>::type
+
 #include "Graph.hpp"
 
 #include <vector>
 
 // necessary forward declaration to prevent linker cycles
 namespace gl {
-  template <class SCALAR>
+  template <class SCALAR, class DIRECTION>
   class LGraph;
 }
 #include "ListGraph.hpp"
@@ -20,18 +24,18 @@ namespace gl {
 /** Explanations for MGraph
  @brief Derived class, inherits from Graph. It implements an adjacency matrix data structure.
   */
-template <class SCALAR>
-class MGraph : public Graph<SCALAR>
+template <class SCALAR, class DIRECTION>
+class MGraph : public Graph<SCALAR,DIRECTION>
 {
   public: 
-    using idx_t = typename Graph<SCALAR>::idx_t;
-    using val_t = typename Graph<SCALAR>::val_t;
-    using dest_vec_t = typename Graph<SCALAR>::dest_vec_t;
-    using idx_list_t = typename Graph<SCALAR>::idx_list_t;
-    using ordered_list_t = typename Graph<SCALAR>::ordered_list_t;
-    using visit_list_t = typename Graph<SCALAR>::visit_list_t;
-    using BFS_queue_t = typename Graph<SCALAR>::BFS_queue_t;
-    using DFS_queue_t = typename Graph<SCALAR>::DFS_queue_t;
+    using idx_t = typename Graph<SCALAR,DIRECTION>::idx_t;
+    using val_t = typename Graph<SCALAR,DIRECTION>::val_t;
+    using dest_vec_t = typename Graph<SCALAR,DIRECTION>::dest_vec_t;
+    using idx_list_t = typename Graph<SCALAR,DIRECTION>::idx_list_t;
+    using ordered_list_t = typename Graph<SCALAR,DIRECTION>::ordered_list_t;
+    using visit_list_t = typename Graph<SCALAR,DIRECTION>::visit_list_t;
+    using BFS_queue_t = typename Graph<SCALAR,DIRECTION>::BFS_queue_t;
+    using DFS_queue_t = typename Graph<SCALAR,DIRECTION>::DFS_queue_t;
 
   struct Node {
     bool _edge;
@@ -46,7 +50,7 @@ class MGraph : public Graph<SCALAR>
     matrix_t _matrix;
     
   public:
-    MGraph(idx_t, bool = 0);
+    MGraph(idx_t);
     ~MGraph() {};
     void setEdge (const idx_t, const idx_t, const val_t = 1);
     void updateEdge (const idx_t, const idx_t, const val_t);
@@ -58,7 +62,7 @@ class MGraph : public Graph<SCALAR>
     dest_vec_t getNeighbourWeights (const idx_t) const;   
     idx_t getDegree (const idx_t) const;    
     void makeUndirected ();
-    LGraph<SCALAR> toList (); 
+    LGraph<SCALAR, DIRECTION> toList (); 
 };
 
 ///////////////////////////////////////////////////////////
@@ -67,21 +71,21 @@ class MGraph : public Graph<SCALAR>
 
 /**
  * @brief Creates an empty Graph using an adjacency matrix storage format.
- * @copydoc Graph<SCALAR>::Graph()
+ * @copydoc Graph<SCALAR,DIRECTION>::Graph()
  */
-template <class SCALAR>
-MGraph<SCALAR>::MGraph(idx_t numNodes, bool undirected) : 
-                       Graph<SCALAR>(numNodes, undirected), 
+template <class SCALAR, class DIRECTION>
+MGraph<SCALAR, DIRECTION>::MGraph(idx_t numNodes) : 
+                       Graph<SCALAR, DIRECTION>(numNodes), 
                        _matrix(numNodes*numNodes, Node()) {}
 
 /**
- * @brief Outputs an LGraph<SCALAR> with the same edges as *this.
+ * @brief Outputs an LGraph<SCALAR, DIRECTION> with the same edges as *this.
  * @return MGraph with the same edges and nodes as *this.
  */
-template <class SCALAR>
-LGraph<SCALAR> MGraph<SCALAR>::toList () {
-  const idx_t numNodes = Graph<SCALAR>::numNodes();
-  LGraph<SCALAR> out(numNodes);
+template <class SCALAR, class DIRECTION>
+LGraph<SCALAR, DIRECTION> MGraph<SCALAR, DIRECTION>::toList () {
+  const idx_t numNodes = Graph<SCALAR, DIRECTION>::numNodes();
+  LGraph<SCALAR, DIRECTION> out(numNodes);
   for (idx_t i = 0; i < numNodes; ++i) {
     for (idx_t j = 0; j < numNodes; ++j) {
       if (hasEdge(i,j)) out.setEdge(i,j,_matrix[i*numNodes+j]._weight); 
@@ -90,45 +94,45 @@ LGraph<SCALAR> MGraph<SCALAR>::toList () {
   return out;
 }
 
-/** @copydoc Graph<SCALAR>::setEdge() */
-template <class SCALAR>
-inline void MGraph<SCALAR>::setEdge(const idx_t start, const idx_t end, const val_t weight) {
-  Graph<SCALAR>::checkRange(start, end);
-  const idx_t numNodes = Graph<SCALAR>::numNodes();
+/** @copydoc Graph<SCALAR,DIRECTION>::setEdge() */
+template <class SCALAR, class DIRECTION>
+inline void MGraph<SCALAR, DIRECTION>::setEdge(const idx_t start, const idx_t end, const val_t weight) {
+  Graph<SCALAR, DIRECTION>::checkRange(start, end);
+  const idx_t numNodes = Graph<SCALAR, DIRECTION>::numNodes();
   _matrix[start*numNodes+end]._weight = weight;
   _matrix[start*numNodes+end]._edge = true;
 }
 
-/** @copydoc Graph<SCALAR>::updateEdge() */
-template <class SCALAR>
-inline void MGraph<SCALAR>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
-  Graph<SCALAR>::checkRange(start, end); 
-  const idx_t numNodes = Graph<SCALAR>::numNodes();   
+/** @copydoc Graph<SCALAR,DIRECTION>::updateEdge() */
+template <class SCALAR, class DIRECTION>
+inline void MGraph<SCALAR, DIRECTION>::updateEdge(const idx_t start, const idx_t end, const val_t weight) {
+  Graph<SCALAR, DIRECTION>::checkRange(start, end); 
+  const idx_t numNodes = Graph<SCALAR, DIRECTION>::numNodes();   
   _matrix[start*numNodes+end]._weight = weight;
 }
 
-/** @copydoc Graph<SCALAR>::delEdge() */
-template <class SCALAR>
-inline void MGraph<SCALAR>::delEdge(const idx_t start, const idx_t end) {
-  Graph<SCALAR>::checkRange(start, end);
-  const idx_t numNodes = Graph<SCALAR>::numNodes();
+/** @copydoc Graph<SCALAR,DIRECTION>::delEdge() */
+template <class SCALAR, class DIRECTION>
+inline void MGraph<SCALAR, DIRECTION>::delEdge(const idx_t start, const idx_t end) {
+  Graph<SCALAR, DIRECTION>::checkRange(start, end);
+  const idx_t numNodes = Graph<SCALAR, DIRECTION>::numNodes();
   _matrix[start*numNodes+end]._weight = SCALAR(0);
   _matrix[start*numNodes+end]._edge = false;
 }
 
-/** @copydoc Graph<SCALAR>::hasEdge() */
-template <class SCALAR>
-inline bool MGraph<SCALAR>::hasEdge (const idx_t start, const idx_t end) const {
-  Graph<SCALAR>::checkRange(start, end);
-  const idx_t numNodes = Graph<SCALAR>::numNodes();
+/** @copydoc Graph<SCALAR,DIRECTION>::hasEdge() */
+template <class SCALAR, class DIRECTION>
+inline bool MGraph<SCALAR, DIRECTION>::hasEdge (const idx_t start, const idx_t end) const {
+  Graph<SCALAR, DIRECTION>::checkRange(start, end);
+  const idx_t numNodes = Graph<SCALAR, DIRECTION>::numNodes();
   return _matrix[start*numNodes+end]._edge;
 }
 
-/** @copydoc Graph<SCALAR>::getWeight() */
-template <class SCALAR>
-typename MGraph<SCALAR>::val_t MGraph<SCALAR>::getWeight (const idx_t start, const idx_t end) const {
-  Graph<SCALAR>::checkRange(start, end);
-  const idx_t numNodes = Graph<SCALAR>::numNodes();
+/** @copydoc Graph<SCALAR,DIRECTION>::getWeight() */
+template <class SCALAR, class DIRECTION>
+typename MGraph<SCALAR, DIRECTION>::val_t MGraph<SCALAR, DIRECTION>::getWeight (const idx_t start, const idx_t end) const {
+  Graph<SCALAR, DIRECTION>::checkRange(start, end);
+  const idx_t numNodes = Graph<SCALAR, DIRECTION>::numNodes();
   if (!hasEdge(start, end)) {
     std::cout << "There is no edge between " << start << " and " << end << ", returning 0." << std::endl;
     return SCALAR(0);
@@ -136,43 +140,43 @@ typename MGraph<SCALAR>::val_t MGraph<SCALAR>::getWeight (const idx_t start, con
   return _matrix[start*numNodes+end]._weight;
 }
 
-/** @copydoc Graph<SCALAR>::getNeighbours() */
-template <class SCALAR>
-typename MGraph<SCALAR>::idx_list_t MGraph<SCALAR>::getNeighbours (const idx_t node) const {
+/** @copydoc Graph<SCALAR,DIRECTION>::getNeighbours() */
+template <class SCALAR, class DIRECTION>
+typename MGraph<SCALAR, DIRECTION>::idx_list_t MGraph<SCALAR, DIRECTION>::getNeighbours (const idx_t node) const {
   idx_list_t out;
-  for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
+  for (idx_t end = 0; end < Graph<SCALAR, DIRECTION>::numNodes(); ++end) {
     if(hasEdge(node, end)) 
       out.push_back(end);
   }
   return out; 
 }
 
-/** @copydoc Graph<SCALAR>::getUnvisitedNeighbours() */
-template <class SCALAR>
-typename MGraph<SCALAR>::idx_list_t MGraph<SCALAR>::getUnvisitedNeighbours (const idx_t node, const std::vector<bool> visited) const {
+/** @copydoc Graph<SCALAR,DIRECTION>::getUnvisitedNeighbours() */
+template <class SCALAR, class DIRECTION>
+typename MGraph<SCALAR, DIRECTION>::idx_list_t MGraph<SCALAR, DIRECTION>::getUnvisitedNeighbours (const idx_t node, const std::vector<bool> visited) const {
   idx_list_t out;
-  for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
+  for (idx_t end = 0; end < Graph<SCALAR, DIRECTION>::numNodes(); ++end) {
     if(hasEdge(node, end) && !visited[end]) 
       out.push_back(end);
   }
   return out; 
 }
 
-/** @copydoc Graph<SCALAR>::getNeighbourWeights() */
-template <class SCALAR>
-typename MGraph<SCALAR>::dest_vec_t MGraph<SCALAR>::getNeighbourWeights (const idx_t node) const {
+/** @copydoc Graph<SCALAR,DIRECTION>::getNeighbourWeights() */
+template <class SCALAR, class DIRECTION>
+typename MGraph<SCALAR, DIRECTION>::dest_vec_t MGraph<SCALAR, DIRECTION>::getNeighbourWeights (const idx_t node) const {
   dest_vec_t out;
-  for (idx_t end = 0; end < Graph<SCALAR>::numNodes(); ++end) {
+  for (idx_t end = 0; end < Graph<SCALAR, DIRECTION>::numNodes(); ++end) {
     if(hasEdge(node, end)) 
       out.push_back(std::make_pair(end,getWeight(node,end)));
   }
   return out; 
 }
 
-/** @copydoc Graph<SCALAR>::getDegree() */
-template <class SCALAR>
-typename MGraph<SCALAR>::idx_t MGraph<SCALAR>::getDegree (const idx_t node) const {
-  const idx_t numNodes = Graph<SCALAR>::numNodes();
+/** @copydoc Graph<SCALAR,DIRECTION>::getDegree() */
+template <class SCALAR, class DIRECTION>
+typename MGraph<SCALAR, DIRECTION>::idx_t MGraph<SCALAR, DIRECTION>::getDegree (const idx_t node) const {
+  const idx_t numNodes = Graph<SCALAR, DIRECTION>::numNodes();
   idx_t count = 0;
   for (idx_t end = 0; end < numNodes; ++end) {
     if (_matrix[node*numNodes+end]._edge) ++count;
@@ -180,6 +184,22 @@ typename MGraph<SCALAR>::idx_t MGraph<SCALAR>::getDegree (const idx_t node) cons
   return count;
 }
 
+
+#undef GL_ENABLE_IF_DIRECTED
+#undef GL_ENABLE_IF_UNDIRECTED
+
+#define GL_TYPEDEFS_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix) \
+using graphM##ScalarSuffix##DirectionSuffix = gl::MGraph<Scalar,Direction>;
+#define GL_TYPEDEFS(Scalar,ScalarSuffix) \
+GL_TYPEDEFS_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Directed,   d)\
+GL_TYPEDEFS_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Undirected, u)
+
+GL_TYPEDEFS(int,    i)
+GL_TYPEDEFS(float,  f)
+GL_TYPEDEFS(double, d)
+
+#undef GL_TYPEDEFS_FIXED_SCALAR
+#undef GL_TYPEDEFS
 } /* namespace gl */
 
 #endif /* GL_MATRIX_GRAPH_HPP */

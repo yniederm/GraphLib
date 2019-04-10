@@ -12,9 +12,9 @@
 /**
  * @brief Prints all edges in the format start--weight->end & total edge number.
  */
-template <class SCALAR>
-std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR>& rhs) {
-  using idx_t = typename gl::Graph<SCALAR>::idx_t;
+template <class SCALAR, class DIRECTION>
+std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, DIRECTION>& rhs) {
+  using idx_t = typename gl::Graph<SCALAR, DIRECTION>::idx_t;
   idx_t counter = 0;
   for(idx_t start = 0; start < rhs.numNodes(); start++)
   {
@@ -32,8 +32,8 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR>& rhs) {
 /**
  * @brief Prints all elements of an std::list.
  */
-template <class SCALAR>
-std::ostream& operator<< (std::ostream & os, const std::list<SCALAR>& rhs) {
+template <class idx_t>
+std::ostream& operator<< (std::ostream & os, const std::list<idx_t>& rhs) {
   os << "[ ";
   for (auto it : rhs)
     os << it << " ";
@@ -44,8 +44,8 @@ std::ostream& operator<< (std::ostream & os, const std::list<SCALAR>& rhs) {
 /**
  * @brief Prints all elements of an std::vector.
  */
-template <class SCALAR>
-std::ostream& operator<< (std::ostream & os, const std::vector<SCALAR>& rhs) {
+template <class idx_t>
+std::ostream& operator<< (std::ostream & os, const std::vector<idx_t>& rhs) {
   os << "[ ";
   for (auto it : rhs)
     os << it << " ";
@@ -56,8 +56,8 @@ std::ostream& operator<< (std::ostream & os, const std::vector<SCALAR>& rhs) {
 /**
  * @brief Prints all elements of an std::deque.
  */
-template <typename SCALAR>
-std::ostream& operator<< (std::ostream & os, const std::deque<SCALAR>& rhs) {
+template <class idx_t>
+std::ostream& operator<< (std::ostream & os, const std::deque<idx_t>& rhs) {
   os << "[ ";
   for (auto it : rhs) {
     os << it << " ";
@@ -71,8 +71,8 @@ std::ostream& operator<< (std::ostream & os, const std::deque<SCALAR>& rhs) {
  * Only supports copying the stack, due to its implementation.
  * @brief Prints all elements of an std::stack.
  */
-template <typename SCALAR>
-std::ostream& operator<< (std::ostream & os, std::stack<SCALAR> rhs) {
+template <class idx_t>
+std::ostream& operator<< (std::ostream & os, std::stack<idx_t> rhs) {
   os << "[ ";
   while (!rhs.empty()) { 
     os << rhs.top() << " "; 

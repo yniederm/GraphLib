@@ -2,14 +2,12 @@
 
 int main(int argc, char const *argv[])
 {
-  using mgraph = gl::MGraph<int>;
-  using lgraph = gl::LGraph<int>;
-  mgraph tree(12);
-  lgraph connected(10);
+  gl::graphMiu tree(12);
+  gl::graphLiu connected(10);
   tree.readFile("test/Input_tree12"); // assumes running from project root folder
   connected.readFile("test/Input_graph10"); // assumes running from project root folder
-  mgraph::ordered_list_t tree_search;
-  lgraph::ordered_list_t conn_search;
+  gl::graphMiu::ordered_list_t tree_search;
+  gl::graphLiu::ordered_list_t conn_search;
 
   std::cout << tree << std::endl;
   

@@ -1,18 +1,25 @@
 #ifndef GL_GRAPH_HPP
 #define GL_GRAPH_HPP
 
-#include <vector>
+#define GL_ENABLE_IF_DIRECTED(RETURN_TYPE) template <typename DIR = DIRECTION> typename std::enable_if<std::is_same<DIR, Directed>::value, RETURN_TYPE>::type
+
+#define GL_ENABLE_IF_UNDIRECTED(RETURN_TYPE) template <typename DIR = DIRECTION> typename std::enable_if<std::is_same<DIR, Undirected>::value, RETURN_TYPE>::type
+
 #include <fstream>
 #include <iostream>
 #include <exception>
+#include <type_traits>
 #include <cstdint>
+#include <vector>
 #include <string>
 #include <queue>
 #include <list>
 #include <stack>
 
-namespace gl
-{
+namespace gl {
+
+class Directed;
+class Undirected;
 
 ///////////////////////////////////////////////////////////
 //    Class declaration
@@ -22,7 +29,7 @@ namespace gl
  @brief Abstract base class that features a few member functions that are the same for both an Adjacency Matrix and List structure.
   */
 
-template <class SCALAR>
+template <class SCALAR, class DIRECTION>
 class Graph
 {
 public:
@@ -36,17 +43,14 @@ public:
   using DFS_queue_t = std::stack<idx_t>;
 protected:
   idx_t _numNodes;
-  bool _undirected;
 
 public: 
 
   /**
    * @param numNodes Number of nodes/vertices in the graph.
-   * @param undirected True if graph is undirected, false if directed.
    */
-  explicit Graph(idx_t numNodes, bool undirected = 0) : 
-                 _numNodes(numNodes), 
-                 _undirected(undirected) {}
+  Graph(idx_t numNodes) : 
+        _numNodes(numNodes) {}
   virtual ~Graph() {}
 
   /**
@@ -178,8 +182,11 @@ public:
    * @brief Returns true if the graph is undirected, false if not.
    * @return true if the graph is undirected, false if not.
    */
-  bool isUndirected () const {
-    return _undirected;
+  GL_ENABLE_IF_UNDIRECTED(bool) isUndirected () const {
+    return true;
+  }
+  GL_ENABLE_IF_DIRECTED(bool) isUndirected () const {
+    return false;
   }
 
   /**
@@ -207,6 +214,10 @@ public:
     checkRange(end);
   }
 };
+
+
+#undef GL_ENABLE_IF_DIRECTED
+#undef GL_ENABLE_IF_UNDIRECTED
 
 } /* namespace gl */
 

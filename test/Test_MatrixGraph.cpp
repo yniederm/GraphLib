@@ -2,9 +2,8 @@
 
 int main(int argc, char const *argv[])
 {
-  using graph_t = gl::MGraph<int>;
 
-  graph_t g (5);
+  gl::graphMid g (5);
   g.setEdge(0,1,4); // initial set
   g.setEdge(1,2);   // set as simple undirected
   g.setEdge(2,0);
