@@ -188,18 +188,6 @@ typename MGraph<SCALAR, DIRECTION>::idx_t MGraph<SCALAR, DIRECTION>::getDegree (
 #undef GL_ENABLE_IF_DIRECTED
 #undef GL_ENABLE_IF_UNDIRECTED
 
-#define GL_TYPEDEFS_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix) \
-using graphM##ScalarSuffix##DirectionSuffix = gl::MGraph<Scalar,Direction>;
-#define GL_TYPEDEFS(Scalar,ScalarSuffix) \
-GL_TYPEDEFS_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Directed,   d)\
-GL_TYPEDEFS_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Undirected, u)
-
-GL_TYPEDEFS(int,    i)
-GL_TYPEDEFS(float,  f)
-GL_TYPEDEFS(double, d)
-
-#undef GL_TYPEDEFS_FIXED_SCALAR
-#undef GL_TYPEDEFS
 } /* namespace gl */
 
 #endif /* GL_MATRIX_GRAPH_HPP */
