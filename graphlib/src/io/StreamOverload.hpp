@@ -12,9 +12,9 @@
 /**
  * @brief Prints all edges in the format start--weight->end & total edge number.
  */
-template <class SCALAR, class DIRECTION>
-std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, DIRECTION>& rhs) {
-  using idx_t = typename gl::Graph<SCALAR, DIRECTION>::idx_t;
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND, DIRECTION>& rhs) {
+  using idx_t = typename gl::Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t;
   idx_t counter = 0;
   for(idx_t start = 0; start < rhs.numNodes(); start++)
   {

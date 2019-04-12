@@ -13,9 +13,10 @@ namespace algorithm {
  * @param graph The graph to run the algorithm on
  * @return Sorted idx_list_t of all node degrees in the graph.
  */
-template <class GRAPH>
-typename GRAPH::idx_list_t degreeSequence (const GRAPH& graph) {
-  if (!graph.isUndirected()) {
+template <class SCALAR, class STORAGE_KIND, class DIR, GL_ENABLE_IF_UNDIRECTED_T>
+typename Graph<SCALAR,STORAGE_KIND,DIR>::idx_list_t degreeSequence (const Graph<SCALAR,STORAGE_KIND,DIR>& graph) {
+  using GRAPH = Graph<SCALAR,STORAGE_KIND,DIR>;
+  if (graph.isDirected()) {
       throw std::logic_error("Graph is not undirected.");
   }
   typename GRAPH::idx_list_t out = gl::algorithm::degrees(graph);

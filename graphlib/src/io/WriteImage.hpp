@@ -17,8 +17,8 @@ namespace external {
    @param g the graph to plot
    @param lineArgs arguments for plotting the lines
    */
-template <class SCALAR, class DIRECTION>
-void saveImage(mglGraph* gr, gl::Graph<SCALAR,DIRECTION> &g, const char* lineArgs = "B")
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+void saveImage(mglGraph* gr, gl::Graph<SCALAR,STORAGE_KIND,DIRECTION> &g, const char* lineArgs = "B")
 {
   //using E_MAT = Eigen::SparseMatrix;
 
@@ -31,7 +31,7 @@ void saveImage(mglGraph* gr, gl::Graph<SCALAR,DIRECTION> &g, const char* lineArg
   //adjMat.setZero();
 
   // build degree matrix
-  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
     //degs(i) = g.getDegree(i);
     triplets.emplace_back(i, i, g.getDegree(i));
@@ -41,9 +41,9 @@ void saveImage(mglGraph* gr, gl::Graph<SCALAR,DIRECTION> &g, const char* lineArg
   std::cout << "Degree matrix built" << std::endl;
 
   // build adjacency matrix
-  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
-    typename Graph<SCALAR,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
+    typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
     for (auto n : neighbours)
     {
       //adjMat(i, n) = 1;
@@ -70,7 +70,7 @@ void saveImage(mglGraph* gr, gl::Graph<SCALAR,DIRECTION> &g, const char* lineArg
 
   Eigen::MatrixXd positions(2, g.numNodes());
 
-  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
     Eigen::Vector2d pos;
     auto current = solver.eigenvectors();
@@ -91,9 +91,9 @@ void saveImage(mglGraph* gr, gl::Graph<SCALAR,DIRECTION> &g, const char* lineArg
   gr->SetRange('y', positions.row(1).minCoeff(), positions.row(1).maxCoeff());
 
   // draw all edges
-  for (typename Graph<SCALAR,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
-    typename Graph<SCALAR,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
+    typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
     for (auto n : neighbours)
     {
       mglPoint p1(positions(0, i), positions(1, i));
