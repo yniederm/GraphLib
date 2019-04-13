@@ -6,8 +6,10 @@ An up-to-date documentation of the source code is available here: [![Documentati
 ## Currently implemented is the following:
 #### Data structures
 - Graph Base Class
-  - Adjacency Matrix
-  - Adjacency List
+  - Storage format
+    - Adjacency Matrix
+    - Adjacency List
+  - Directed/Undirected graphs
   - conversion between the two
   - file input to add edges
 #### Algorithms
@@ -19,39 +21,39 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - Basic graph traversal
 - Graph cycles
   - general cycle detection
+- Shortest Paths
+  - Dijkstra (distances + path)
 ## To-Do list
 - Document algorithm purpose in doxygen files
 Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
 #### Data structures
 - advanced initialization (stream operators, input file constructor)
-- simple undirected graph support
+- simple graph support
 - multigraph support
 - bipartite graphs
-- trees (a.k.a. acyclic graphs)
 - combining and editing graphs post-initialization
 - threshold graphs, split graphs
 #### Algorithms
 - BFS
-  1. finding vertices at the same distance from source
+  - finding vertices at the same distance from source
 - Shortest Paths
-  1. Dijkstra
-  2. Floyd-Warshall
-  3. Bellman-Ford
-  4. Johnson
-  5. Betweenness centrality
+  - Floyd-Warshall
+  - Bellman-Ford
+  - Johnson
+  - Betweenness centrality
 - Graph cycles
-  2. cycles of specific length (e.g. triad census)
+  - cycles of specific length (e.g. triad census)
 - Minimum spanning trees
-  1. Kruskal
-  2. Prim
-  3. Total # of spanning trees
+  - Kruskal
+  - Prim
+  - Total # of spanning trees
 - Connectivity
-  2. Eulerian paths
-  3. finding all possible walks from source to destination
+  - Eulerian paths
+  - finding all possible walks from source to destination
 - Network algorithms
-  1. flow problems 
+  - flow problems 
 - vertex degree things (to be determined)
-  1. centralities (?)
+  - centralities (?)
 - Split graph
-  1. find constructing degree sequence
-  2. splittance
+  - find constructing degree sequence
+  - splittance
