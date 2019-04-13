@@ -1,29 +1,6 @@
 #ifndef GL_GRAPH_HPP
 #define GL_GRAPH_HPP
 
-#define GL_IS_MATRIX std::is_same<STORAGE, Matrix>::value
-#define GL_IS_LIST std::is_same<STORAGE, List>::value
-
-#define GL_IS_DIRECTED std::is_same<DIR, Directed>::value
-#define GL_IS_UNDIRECTED std::is_same<DIR, Undirected>::value
-
-#define GL_IS_MATRIX_UNDIRECTED GL_IS_MATRIX && GL_IS_UNDIRECTED
-#define GL_IS_MATRIX_DIRECTED GL_IS_MATRIX && GL_IS_DIRECTED
-#define GL_IS_LIST_DIRECTED GL_IS_LIST && GL_IS_DIRECTED
-#define GL_IS_LIST_UNDIRECTED GL_IS_LIST && GL_IS_UNDIRECTED
-
-
-#define GL_ENABLE_IF_MATRIX template <typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_MATRIX, int>* = nullptr>
-#define GL_ENABLE_IF_LIST template <typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_LIST, int>* = nullptr>
-
-#define GL_ENABLE_IF_DIRECTED template <typename DIR = DIRECTION, std::enable_if_t<GL_IS_DIRECTED, int>* = nullptr>
-#define GL_ENABLE_IF_UNDIRECTED template <typename DIR = DIRECTION, std::enable_if_t<GL_IS_UNDIRECTED, int>* = nullptr>
-
-#define GL_ENABLE_IF_MATRIX_DIRECTED template <typename DIR = DIRECTION, typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_MATRIX_DIRECTED, int>* = nullptr>
-#define GL_ENABLE_IF_MATRIX_UNDIRECTED template <typename DIR = DIRECTION, typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_MATRIX_UNDIRECTED, int>* = nullptr>
-#define GL_ENABLE_IF_LIST_DIRECTED template <typename DIR = DIRECTION, typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_LIST_DIRECTED, int>* = nullptr>
-#define GL_ENABLE_IF_LIST_UNDIRECTED template <typename DIR = DIRECTION, typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_LIST_UNDIRECTED, int>* = nullptr>
-
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -661,24 +638,6 @@ public:
     checkRange(idx2);
   }
 };
-
-
-#undef GL_IS_MATRIX
-#undef GL_IS_LIST
-#undef GL_IS_DIRECTED
-#undef GL_IS_UNDIRECTED
-#undef GL_IS_MATRIX_DIRECTED
-#undef GL_IS_MATRIX_UNDIRECTED
-#undef GL_IS_LIST_DIRECTED
-#undef GL_IS_LIST_UNDIRECTED
-#undef GL_ENABLE_IF_MATRIX
-#undef GL_ENABLE_IF_LIST
-#undef GL_ENABLE_IF_DIRECTED
-#undef GL_ENABLE_IF_UNDIRECTED
-#undef GL_ENABLE_IF_MATRIX_DIRECTED
-#undef GL_ENABLE_IF_MATRIX_UNDIRECTED
-#undef GL_ENABLE_IF_LIST_DIRECTED
-#undef GL_ENABLE_IF_LIST_UNDIRECTED
 
 } /* namespace gl */
 

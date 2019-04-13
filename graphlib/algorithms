@@ -3,14 +3,7 @@
 
 #include "structures"
 
-#define GL_IS_DIRECTED std::is_same<DIR, Directed>::value
-#define GL_IS_UNDIRECTED std::is_same<DIR, Undirected>::value
-
-#define GL_ENABLE_IF_DIRECTED_T std::enable_if_t<GL_IS_DIRECTED, int>* = nullptr
-#define GL_ENABLE_IF_UNDIRECTED_T std::enable_if_t<GL_IS_UNDIRECTED, int>* = nullptr
-
-#define GL_ENABLE_IF_DIRECTED template <typename DIR = DIRECTION, GL_ENABLE_IF_DIRECTED_T>
-#define GL_ENABLE_IF_UNDIRECTED template <typename DIR = DIRECTION, GL_ENABLE_IF_UNDIRECTED_T>
+#include "src/partial_specialization_on"
 
 #include "src/algorithms/TransitiveClosure.hpp"
 #include "src/algorithms/DFS.hpp"
@@ -18,11 +11,6 @@
 #include "src/algorithms/Degrees.hpp"
 #include "src/algorithms/DegreeSequence.hpp"
 
-#undef GL_IS_DIRECTED
-#undef GL_IS_UNDIRECTED
-#undef GL_ENABLE_IF_DIRECTED_T
-#undef GL_ENABLE_IF_UNDIRECTED_T
-#undef GL_ENABLE_IF_DIRECTED
-#undef GL_ENABLE_IF_UNDIRECTED
+#include "src/partial_specialization_off"
 
 #endif /* GL_ALGORITHMS */

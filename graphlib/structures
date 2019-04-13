@@ -1,8 +1,11 @@
 #ifndef GL_STRUCTURES
 #define GL_STRUCTURES
 
+#include "src/partial_specialization_on"
 
 #include "src/structures/Graph.hpp"
+
+#include "src/partial_specialization_off"
 
 namespace gl {
 
