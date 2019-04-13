@@ -13,6 +13,7 @@ set(TESTS
     Conversion
     CycleDetection
     DegreeSequence
+    Dijkstra
     IOTikz
     ListGraph
     MathGL

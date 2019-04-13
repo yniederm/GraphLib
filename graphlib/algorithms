@@ -10,7 +10,33 @@
 #include "src/algorithms/BFS.hpp"
 #include "src/algorithms/Degrees.hpp"
 #include "src/algorithms/DegreeSequence.hpp"
+#include "src/algorithms/Dijkstra.hpp"
 
 #include "src/partial_specialization_off"
 
-#endif /* GL_ALGORITHMS */
+namespace gl {
+namespace algorithm {
+
+#define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar,ScalarSuffix,Storage,StorageSuffix,Direction,DirectionSuffix) \
+using dijkstra##StorageSuffix##ScalarSuffix##DirectionSuffix = Dijkstra<Scalar,Storage,Direction>;
+
+#define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix) \
+GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar, ScalarSuffix, gl::Matrix, M, Direction, DirectionSuffix) \
+GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar, ScalarSuffix, gl::List,   L, Direction, DirectionSuffix)
+
+#define GL_TYPEDEFS_ALGORITHM(Scalar,ScalarSuffix) \
+GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Directed,   d)\
+GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Undirected, u)
+
+GL_TYPEDEFS_ALGORITHM(int,    i)
+GL_TYPEDEFS_ALGORITHM(float,  f)
+GL_TYPEDEFS_ALGORITHM(double, d)
+
+#undef GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR
+#undef GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR
+#undef GL_TYPEDEFS_ALGORITHM
+
+} // namespace algorithm
+} // namespace gl
+
+#endif // GL_ALGORITHMS

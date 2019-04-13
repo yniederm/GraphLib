@@ -366,7 +366,7 @@ public:
   GL_ENABLE_IF_LIST
   val_t getWeight(const idx_t start, const idx_t end) const {
     if (!hasEdge(start,end)) {
-      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::string(end));
+      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
       throw std::range_error(errorMessage);
     }    
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
@@ -494,6 +494,39 @@ public:
     dest_vec_t out;
     for (idx_t end = 0; end < numNodes(); ++end) {
       if(hasEdge(node, end)) 
+        out.push_back(std::make_pair(end,getWeight(node,end)));
+    }
+    return out; 
+  }
+  //@}  
+  /**
+   * @name getUnvisitedEdges
+   * @brief Returns a list of endpoints + edge weights of unvisited outgoing edges from start.
+   * @param node edge origin point
+   * @param visited boolean list of previously visited nodes
+   * @return List of all direct neighbours + weights
+   */
+  //@{
+  /**
+   * @brief Gets a list of unvisited edges (weight + neighbour) in a List Graph.
+   */
+  GL_ENABLE_IF_LIST
+  dest_vec_t getUnvisitedEdges (const idx_t node, const std::vector<bool> visited) const {
+    dest_vec_t out;
+    for (idx_t end = 0; end < numNodes(); ++end) {
+      if(hasEdge(node, end) && !visited[end]) 
+        out.push_back(std::make_pair(end,getWeight(node,end)));
+    }
+    return out; 
+  }
+  /**
+   * @brief Gets a list of unvisited edges (weight + neighbour) in a Matrix Graph.
+   */
+  GL_ENABLE_IF_MATRIX
+  dest_vec_t getUnvisitedEdges (const idx_t node, const std::vector<bool> visited) const {
+    dest_vec_t out;
+    for (idx_t end = 0; end < numNodes(); ++end) {
+      if(hasEdge(node, end) && !visited[end]) 
         out.push_back(std::make_pair(end,getWeight(node,end)));
     }
     return out; 

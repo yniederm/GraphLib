@@ -10,7 +10,7 @@
 namespace gl {
 
 #define GL_TYPEDEFS_FIXED_SCALAR_DIR(Scalar,ScalarSuffix,Storage,StorageSuffix,Direction,DirectionSuffix) \
-using graph##StorageSuffix##ScalarSuffix##DirectionSuffix = gl::Graph<Scalar,Storage,Direction>;
+using graph##StorageSuffix##ScalarSuffix##DirectionSuffix = Graph<Scalar,Storage,Direction>;
 
 #define GL_TYPEDEFS_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix) \
 GL_TYPEDEFS_FIXED_SCALAR_DIR(Scalar, ScalarSuffix, gl::Matrix, M, Direction, DirectionSuffix) \
@@ -28,6 +28,6 @@ GL_TYPEDEFS(double, d)
 #undef GL_TYPEDEFS_FIXED_SCALAR
 #undef GL_TYPEDEFS
 
-} /* namespace gl */
+} // namespace gl
 
-#endif /* GL_STRUCTURES */
+#endif // GL_STRUCTURES
