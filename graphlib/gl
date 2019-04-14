@@ -2,7 +2,7 @@
 #define GL_GL
 
 #include "structures"
-#include "algorithms"
 #include "io"
+#include "algorithms"
 
 #endif /* GL_GL */

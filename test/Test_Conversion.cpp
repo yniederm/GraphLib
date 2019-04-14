@@ -6,6 +6,7 @@ int main(int argc, char const *argv[])
   ldd_in.setEdge(1,2,9.81);
   ldd_in.setEdge(2,3,-3.2);
   ldd_in.setEdge(3,0,.3);
+  ldd_in.setEdge(0,3,1.2);
   gl::graphMdd mdd_out = ldd_in.toMatrix();
   mdd_out.name("mdd_out");
 
@@ -13,6 +14,7 @@ int main(int argc, char const *argv[])
   mdd_in.setEdge(1,2,9.81);
   mdd_in.setEdge(2,3,-3.2);
   mdd_in.setEdge(3,0,.3);
+  mdd_in.setEdge(0,3,1.2);
   gl::graphLdd ldd_out = mdd_in.toList();
   ldd_out.name("ldd_out");
 

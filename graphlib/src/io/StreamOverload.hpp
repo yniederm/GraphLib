@@ -4,25 +4,24 @@
 #include "../structures/Graph.hpp"
 
 /**
- * @name Prints all contents of the given GraphLib container.
- * @param os Stream that will be used for output
- * @param rhs Graph that will be printed
- */
-//@{
-/** Prints various properties of the graph:
+ * @name Graph output to stream 
+ * Prints various properties of the graph:
  *  - Number of nodes
  *  - Number of edges
  *  - All edges
  *  - Direction, Storage format
- * @brief Prints all edges in the format start--(weight)->end & total edge number.
+ * /
+//@{
+/**  
+ * @brief Prints all info of a directed graph.
  */
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND, DIRECTION>& rhs) {
-  using idx_t = typename gl::Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t;
+template <class SCALAR, class STORAGE_KIND>
+std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND, gl::Directed>& rhs) {
+  using idx_t = typename gl::Graph<SCALAR, STORAGE_KIND, gl::Directed>::idx_t;
   os << "----- " << rhs.name() << " -----" << std::endl;
   os << "Total Nodes: " << rhs.numNodes() << std::endl;
   os << "Total Edges: " << rhs.numEdges() << std::endl;
-  os << (rhs.isDirected() ? "Directed" : "Undirected") << std::endl;
+  os << "Directed" << std::endl;
   for(idx_t start = 0; start < rhs.numNodes(); start++)
   {
     auto neighbours = rhs.getNeighbourWeights(start);
@@ -35,6 +34,38 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND
   return os;
 }
 
+/** 
+ * @brief Prints all info of an undirected graph.
+ */
+template <class SCALAR, class STORAGE_KIND>
+std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND, gl::Undirected>& rhs) {
+  using idx_t = typename gl::Graph<SCALAR, STORAGE_KIND, gl::Undirected>::idx_t;
+  os << "----- " << rhs.name() << " -----" << std::endl;
+  os << "Total Nodes: " << rhs.numNodes() << std::endl;
+  os << "Total Edges: " << rhs.numEdges() << std::endl;
+  os << "Undirected" << std::endl;
+  for(idx_t start = 0; start < rhs.numNodes(); start++)
+  {
+    auto neighbours = rhs.getNeighbourWeights(start);
+    for(const auto& edge : neighbours)
+    {
+      if (start < edge.first) {
+        os << start << "<-(" << edge.second << ")->" << edge.first << std::endl;
+      }
+    }
+  }
+  std::cout << std::endl;
+  return os;
+}
+//@}
+
+/**
+ * Prints all contents of the given GraphLib container.
+ * @name Container output to stream
+ * @param os Stream that will be used for output
+ * @param rhs Container that will be printed
+ */
+//@{
 /**
  * @brief Prints all elements of an std::list.
  */

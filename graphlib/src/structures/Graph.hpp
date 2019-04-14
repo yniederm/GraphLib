@@ -302,7 +302,6 @@ public:
     for (idx_t i = 0; i < numNodes(); ++i) {
       for (idx_t j = 0; j < numNodes(); ++j) {
         if (hasEdge(i,j)) {
-          std::cout << "set: " << i << "," << j << ":"<<_edges[i*numNodes()+j].weight()<< std::endl;
           out.setEdge(i,j,_edges[i*numNodes()+j].weight()); 
         }
       }

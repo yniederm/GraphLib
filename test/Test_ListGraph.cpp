@@ -27,6 +27,7 @@ int main(int argc, char const *argv[])
   std::cout << std::endl;
   std::cout << "Degree of 2: " << g.getDegree(2) << std::endl;
   g.delEdge(2,0);   // remove edge
+  std::cout << "deleted 2->0\n";
   // g.setEdge(5,2,1);  // test out of range check
   std::cout << g << std::endl;
 

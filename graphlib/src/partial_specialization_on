@@ -1,9 +1,9 @@
 
-#define GL_IS_MATRIX std::is_same<STORAGE, Matrix>::value
-#define GL_IS_LIST std::is_same<STORAGE, List>::value
+#define GL_IS_MATRIX std::is_same<STORAGE, gl::Matrix>::value
+#define GL_IS_LIST std::is_same<STORAGE, gl::List>::value
 
-#define GL_IS_DIRECTED std::is_same<DIR, Directed>::value
-#define GL_IS_UNDIRECTED std::is_same<DIR, Undirected>::value
+#define GL_IS_DIRECTED std::is_same<DIR, gl::Directed>::value
+#define GL_IS_UNDIRECTED std::is_same<DIR, gl::Undirected>::value
 
 
 #define GL_IS_MATRIX_UNDIRECTED GL_IS_MATRIX && GL_IS_UNDIRECTED

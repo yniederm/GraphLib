@@ -2,7 +2,12 @@
 #define GL_IO
 
 #include "structures"
+
+#include "src/partial_specialization_on"
+
 #include "src/io/StreamOverload.hpp"
 #include "src/io/PrintContainer.hpp"
+
+#include "src/partial_specialization_off"
 
 #endif /* GL_IO */
