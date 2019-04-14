@@ -22,12 +22,17 @@ class Directed;
 class Undirected;
 
 ///////////////////////////////////////////////////////////
-//    Class declaration
+//    Graph Class declaration
 ///////////////////////////////////////////////////////////
 
-/** Explanations for Graph
- @brief Abstract base class that features a few member functions that are the same for both an Adjacency Matrix and List structure.
-  */
+/** 
+ * This class has functions to create and edit the graph, as well as access certain properties of the graph. 
+ * @class Graph
+ * @brief Stores and implements a graph.
+ * @tparam SCALAR Number type used to store edge weights.
+ * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
+ * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
+ */
 
 template <class SCALAR = int, class STORAGE_KIND = gl::List, class DIRECTION = gl::Undirected>
 class Graph
@@ -44,25 +49,93 @@ public:
   using DFS_queue_t = std::stack<idx_t>;
 
   /** 
-   @brief Represents an edge in an adjacency matrix.
-    */
-  struct MatrixNode {
-    bool _edge;
-    val_t _weight;
-    MatrixNode (bool edge = false, val_t weight = 0) : _edge(edge),_weight(weight) {}
+   * @class Edge
+   * @brief Represents an edge in a Graph.
+   * @tparam SCALAR Number type used to store edge weights.
+   * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
+   * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
+   */
+  class Edge {
+  public:
+    Edge (idx_t src = 0, idx_t dest = 0, val_t weight = 0, bool exists = false) :
+      _src(src), _dest(dest), _weight(weight),_exists(exists) {}
+
+    /**
+     * @name exists
+     * @brief Access to boolean value exists.
+     * This signifies the existance of an edge in the graph.
+     */
+    //@{
+    /**
+     * @brief Checks whether an edge exists.
+     * @return True if exists, false otherwise.
+     */
+    bool exists() const;
+    /**
+     * @brief Allows changing of existance status of an edge.
+     * @param exists New value of boolean exists.
+     */
+    void exists(bool exists);
+    //@}
+    /**
+     * @name source
+     * @brief Access to index of source node.
+     */
+    //@{
+    /**
+     * @brief Gets the index of the source of the edge.
+     * @return index of edge source node.
+     */
+    idx_t source() const;
+    /**
+     * @brief Allows changing the source of an edge.
+     * @param src New value of source index.
+     */
+    void source(idx_t src);
+    //@}
+    /**
+     * @name dest
+     * @brief Access to index of destination node.
+     */
+    //@{
+    /**
+     * @brief Gets the index of the destination of the edge.
+     * @return index of edge destination node.
+     */
+    idx_t dest() const;
+    /**
+     * @brief Allows changing the destination of an edge.
+     * @param dest New value of destination index.
+     */
+    void dest(idx_t dest);
+    //@}
+    /**
+     * @name weight
+     * @brief Access to weight of the edge.
+     */
+    //@{
+    /**
+     * @brief Gets the weight of the edge.
+     * @return Weight of the edge.
+     */
+    val_t weight() const;
+    /**
+     * @brief Allows changing the weight of an edge.
+     * @param weight New value of edge weight.
+     */
+    void weight(val_t weight);
+    //@}
+    
+  private:
+    idx_t _src; /**< source index */
+    idx_t _dest; /**< destination index */ 
+    val_t _weight; /**< edge weight */
+    bool _exists; /**< edge existance */
   };
 
-  /** 
-   @brief Represents an edge in an adjacency list.
-    */
-  struct ListNode {
-    idx_t _end;
-    val_t _weight;
-    ListNode (idx_t end = 0, val_t weight = 0) : _end(end),_weight(weight) {}
-  };
 
-  using matrix_t = std::vector<MatrixNode>;
-  using nodeList_t = std::list<ListNode>;
+  using matrix_t = std::vector<Edge>;
+  using nodeList_t = std::list<Edge>;
   using rootList_t = std::vector<nodeList_t>;
 protected:
   int _numNodes;
@@ -85,7 +158,13 @@ private:
    */
   GL_ENABLE_IF_MATRIX
   void construct (const idx_t& numNodes) {
-    matrix_t matrix (numNodes*numNodes, MatrixNode()); 
+    matrix_t matrix (numNodes*numNodes, Edge()); 
+    for (idx_t i = 0; i < numNodes; ++i) {
+      for (idx_t j = 0; j < numNodes; ++j) {
+        matrix[i*numNodes+j].source(i);
+        matrix[i*numNodes+j].dest(j);
+      }
+    }
     _edges = matrix;
   }
 
@@ -114,7 +193,7 @@ public:
     gl::Graph<SCALAR,gl::Matrix,DIRECTION> out(numNodes());
     for (idx_t start = 0; start < _edges.size(); ++start) {
       for (auto & end: _edges[start]) {
-        out.setEdge(start,end._end,end._weight);
+        out.setEdge(start,end.dest(),end.weight());
       }
     }
     return out;
@@ -128,7 +207,7 @@ public:
     gl::Graph<SCALAR,gl::List,DIRECTION> out(numNodes());
     for (idx_t i = 0; i < numNodes(); ++i) {
       for (idx_t j = 0; j < numNodes(); ++j) {
-        if (hasEdge(i,j)) out.setEdge(i,j,_edges[i*numNodes()+j]._weight); 
+        if (hasEdge(i,j)) out.setEdge(i,j,_edges[i*numNodes()+j].weight()); 
       }
     }
     return out;
@@ -152,7 +231,7 @@ public:
       updateEdge(start,end,weight);
     }
     checkRange(start,end);
-    _edges[start].push_back(ListNode(end, weight));
+    _edges[start].push_back(Edge(end, weight));
   }
   
   /**
@@ -164,8 +243,8 @@ public:
     if (hasEdge(start,end)) {
       updateEdge(start,end,weight);
     }
-    _edges[start].push_back(ListNode(end, weight));
-    _edges[end].push_back(ListNode(start, weight));
+    _edges[start].push_back(Edge(start, end, weight));
+    _edges[end].push_back(Edge(end, start, weight));
   }
 
   /**
@@ -177,8 +256,8 @@ public:
       updateEdge(start,end,weight);
     }
     else {
-      _edges[start*numNodes()+end]._weight = weight;
-      _edges[start*numNodes()+end]._edge = true;
+      _edges[start*numNodes()+end].weight(weight);
+      _edges[start*numNodes()+end].exists(true);
     }
   }
   
@@ -193,8 +272,8 @@ public:
       updateEdge(start,end,weight);
     }
     else {
-      _edges[start*numNodes()+end]._weight = weight;
-      _edges[start*numNodes()+end]._edge = true;
+      _edges[start*numNodes()+end].weight(weight);
+      _edges[start*numNodes()+end].exists(true);
     }
   }
   //@}
@@ -214,8 +293,8 @@ public:
   void updateEdge(const idx_t start, const idx_t end, const val_t weight) {
     checkRange(start,end);
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const ListNode& node){ return node._end == end;});
-    (*it)._weight = weight;
+    [&end](const Edge& node){ return node.dest() == end;});
+    (*it).weight(weight);
   }
 
   /**
@@ -225,12 +304,12 @@ public:
   void updateEdge(const idx_t start, const idx_t end, const val_t weight) {
     checkRange(start,end);
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const ListNode& node){ return node._end == end;});
-    (*it)._weight = weight;
+    [&end](const Edge& node){ return node.dest() == end;});
+    (*it).weight(weight);
 
     it = std::find_if(_edges[end].begin(), _edges[end].end(),
-    [&start](const ListNode& node){ return node._end == start;});
-    (*it)._weight = weight;
+    [&start](const Edge& node){ return node.dest() == start;});
+    (*it).weight(weight);
   }
 
   /**
@@ -239,7 +318,7 @@ public:
   GL_ENABLE_IF_MATRIX_DIRECTED
   inline void updateEdge(const idx_t start, const idx_t end, const val_t weight) {
     checkRange(start,end);
-    _edges[start*numNodes()+end]._weight = weight;
+    _edges[start*numNodes()+end].weight(weight);
   }
 
   /**
@@ -249,7 +328,7 @@ public:
   inline void updateEdge(idx_t start, idx_t end, const val_t weight) {
     checkRange(start,end);
     if (start > end) std::swap(end, start);
-    _edges[start*numNodes()+end]._weight = weight;
+    _edges[start*numNodes()+end].weight(weight);
   }
   //@}
 
@@ -270,7 +349,7 @@ public:
       throw std::range_error(errorMessage);
     }
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const ListNode& node){ return node._end == end;});
+    [&end](const Edge& node){ return node.dest() == end;});
     _edges[start].erase(it);
   }
   
@@ -284,10 +363,10 @@ public:
       throw std::range_error(errorMessage);
     }
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const ListNode& node){ return node._end == end;});
+    [&end](const Edge& node){ return node.dest() == end;});
     _edges[start].erase(it);
     it = std::find_if(_edges[end].begin(), _edges[end].end(),
-    [&start](const ListNode& node){ return node._end == start;});
+    [&start](const Edge& node){ return node.dest() == start;});
     _edges[end].erase(it);
   }
 
@@ -297,8 +376,8 @@ public:
   GL_ENABLE_IF_MATRIX_DIRECTED
   inline void delEdge (const idx_t start, const idx_t end) {
     checkRange(start,end);
-    _edges[start*numNodes()+end]._weight = SCALAR(0);
-    _edges[start*numNodes()+end]._edge = false;
+    _edges[start*numNodes()+end].weight(SCALAR(0));
+    _edges[start*numNodes()+end].exists(false);
   }
 
   /**
@@ -308,8 +387,8 @@ public:
   inline void delEdge (idx_t start, idx_t end) {
     checkRange(start,end);
     if (start > end) std::swap(end, start);
-    _edges[start*numNodes()+end]._weight = SCALAR(0);
-    _edges[start*numNodes()+end]._edge = false;
+    _edges[start*numNodes()+end].weight(SCALAR(0));
+    _edges[start*numNodes()+end].exists(false);
   }
   //@}
 
@@ -328,7 +407,7 @@ public:
   bool hasEdge(const idx_t start, const idx_t end) const {
     checkRange(start,end);
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const ListNode& node){ return node._end == end;});
+    [&end](const Edge& node){ return node.dest() == end;});
     return it != _edges[start].end();
   }
 
@@ -338,7 +417,7 @@ public:
   GL_ENABLE_IF_MATRIX_DIRECTED
   inline bool hasEdge(const idx_t start, const idx_t end) const {
     checkRange(start,end);
-    return _edges[start*numNodes()+end]._edge;
+    return _edges[start*numNodes()+end].exists();
   }
 
   /**
@@ -348,7 +427,7 @@ public:
   inline bool hasEdge(idx_t start, idx_t end) const {
     checkRange(start,end);
     if (start > end) std::swap(end, start);
-    return _edges[start*numNodes()+end]._edge;
+    return _edges[start*numNodes()+end].exists();
   }
   //@}
 
@@ -370,8 +449,8 @@ public:
       throw std::range_error(errorMessage);
     }    
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
-    [&end](const ListNode& node){ return node._end == end;});
-    return (*it)._weight;
+    [&end](const Edge& node){ return node.dest() == end;});
+    return (*it).weight();
   }
 
   /**
@@ -383,7 +462,7 @@ public:
       std::cout << "There is no edge between " << start << " and " << end << ", returning 0." << std::endl;
       return SCALAR(0);
     }
-    return _edges[start*numNodes()+end]._weight;
+    return _edges[start*numNodes()+end].weight();
   }
 
   /**
@@ -396,7 +475,7 @@ public:
       std::cout << "There is no edge between " << start << " and " << end << ", returning 0." << std::endl;
       return SCALAR(0);
     }
-    return _edges[start*numNodes()+end]._weight;
+    return _edges[start*numNodes()+end].weight();
   }
   //@}
 
@@ -482,7 +561,7 @@ public:
   dest_vec_t getNeighbourWeights (const idx_t node) const {
     dest_vec_t out;
     for (const auto& edge : _edges[node]) {
-        out.push_back(std::make_pair(edge._end,edge._weight));
+        out.push_back(std::make_pair(edge.dest(),edge.weight()));
     }
     return out;
   }

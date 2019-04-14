@@ -4,6 +4,7 @@
 #include "src/partial_specialization_on"
 
 #include "src/structures/Graph.hpp"
+#include "src/structures/Edge.hpp"
 
 #include "src/partial_specialization_off"
 
