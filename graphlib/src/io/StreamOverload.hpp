@@ -4,24 +4,26 @@
 #include "../structures/Graph.hpp"
 
 /**
- * @name Graph output to stream 
  * Prints various properties of the graph:
  *  - Number of nodes
  *  - Number of edges
- *  - All edges
  *  - Direction, Storage format
- * /
+ *  - All edges
+ * @name Graph output to stream 
+ */
 //@{
 /**  
  * @brief Prints all info of a directed graph.
  */
-template <class SCALAR, class STORAGE_KIND>
-std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND, gl::Directed>& rhs) {
-  using idx_t = typename gl::Graph<SCALAR, STORAGE_KIND, gl::Directed>::idx_t;
-  os << "----- " << rhs.name() << " -----" << std::endl;
-  os << "Total Nodes: " << rhs.numNodes() << std::endl;
-  os << "Total Edges: " << rhs.numEdges() << std::endl;
-  os << "Directed" << std::endl;
+template <class SCALAR, class STORAGE>
+std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl::Directed>& rhs) {
+  using idx_t = typename gl::Graph<SCALAR, STORAGE, gl::Directed>::idx_t;
+  os << "----- " << rhs.name() << " -----" << std::endl
+     << "Total Nodes: " << rhs.numNodes() << std::endl
+     << "Total Edges: " << rhs.numEdges() << std::endl
+     << "Directed " 
+     << (GL_IS_MATRIX ? "Matrix" : (GL_IS_LIST ? "List" : "Unknown storage type"))
+     << std::endl;
   for(idx_t start = 0; start < rhs.numNodes(); start++)
   {
     auto neighbours = rhs.getNeighbourWeights(start);
@@ -37,13 +39,15 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND
 /** 
  * @brief Prints all info of an undirected graph.
  */
-template <class SCALAR, class STORAGE_KIND>
-std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND, gl::Undirected>& rhs) {
-  using idx_t = typename gl::Graph<SCALAR, STORAGE_KIND, gl::Undirected>::idx_t;
-  os << "----- " << rhs.name() << " -----" << std::endl;
-  os << "Total Nodes: " << rhs.numNodes() << std::endl;
-  os << "Total Edges: " << rhs.numEdges() << std::endl;
-  os << "Undirected" << std::endl;
+template <class SCALAR, class STORAGE>
+std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl::Undirected>& rhs) {
+  using idx_t = typename gl::Graph<SCALAR, STORAGE, gl::Undirected>::idx_t;
+  os << "----- " << rhs.name() << " -----" << std::endl
+     << "Total Nodes: " << rhs.numNodes() << std::endl
+     << "Total Edges: " << rhs.numEdges() << std::endl
+     << "Undirected " 
+     << (GL_IS_MATRIX ? "Matrix" : (GL_IS_LIST ? "List" : "Unknown storage type"))
+     << std::endl;
   for(idx_t start = 0; start < rhs.numNodes(); start++)
   {
     auto neighbours = rhs.getNeighbourWeights(start);
