@@ -9,59 +9,52 @@ namespace gl {
 //    Graph::Edge function implementations
 ///////////////////////////////////////////////////////////
 
-/* \internal */
-//@{
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-using idx_t = typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t;
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-using val_t = typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::val_t;
-//@}
 
-/* \internal */
+/* \internal getter for exists */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-bool Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::exists() const {
+inline bool Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::exists() const {
   return _exists;
 }
 
-/* \internal */
+/* \internal setter for exists */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::exists(bool exists) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::exists(bool exists) {
   _exists = exists;
 }
 
-/* \internal */
+/* \internal getter for src */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::source() const {
+inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::source() const {
   return _src;
 }
 
-/* \internal */
+/* \internal setter for src */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::source(idx_t src) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::source(idx_t src) {
   _src = src;
 }
 
-/* \internal */
+/* \internal getter for dest */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::dest() const {
+inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::dest() const {
   return _dest;
 }
 
-/* \internal */
+/* \internal setter for dest */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::dest(idx_t dest) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::dest(idx_t dest) {
   _dest = dest;
 }
 
-/* \internal */
+/* \internal getter for weight */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::val_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::weight() const {
+inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::val_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::weight() const {
   return _weight;
 }
 
-/* \internal */
+/* \internal setter for weight */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::weight(val_t weight) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::weight(val_t weight) {
   _weight = weight;
 }
 

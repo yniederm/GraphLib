@@ -133,36 +133,131 @@ public:
     bool _exists; /**< edge existance */
   };
 
+/** 
+   * @class Property
+   * @brief Stores the properties of a Graph.
+   * @tparam SCALAR Number type used to store edge weights.
+   * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
+   * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
+   */
+  class Property {
+  public:
+    Property (const idx_t& numNodes, const std::string& name = "Graph", const idx_t& numEdges = 0) :
+      _numNodes(numNodes), _name(name), _numEdges(0) {}
+    Property (const Property& property) :
+      _numNodes(property._numNodes), _name(property._name), _numEdges(property._numEdges) {}
+
+    /**
+     * @name numNodes
+     * @brief Access to the number of nodes in the graph.
+     */
+    //@{
+    /**
+     * @brief Gets the number of nodes in the graph.
+     * @return Number of nodes in the graph.
+     */
+    idx_t numNodes() const;
+    /**
+     * @brief Allows changing the number of nodes in the graph.
+     * @param numNodes New value of node count.
+     */
+    void numNodes(const idx_t& numNodes);
+    /**
+     * @brief Increments the number of nodes in the graph.
+     * @param increment Number of nodes that will be added to the graph.
+     */
+    void numNodesIncrement(const idx_t& increment = 1);
+    /**
+     * @brief Decrements the number of nodes in the graph.
+     * @param decrement Number of nodes that will be removed from the graph.
+     */
+    void numNodesDecrement(const idx_t& decrement = 1);
+    //@}
+    /**
+     * @name numEdges
+     * @brief Access to the number of edges in the graph.
+     */
+    //@{
+    /**
+     * @brief Gets the number of edges in the graph.
+     * @return Number of edges in the graph.
+     */
+    idx_t numEdges() const;
+    /**
+     * @brief Allows changing the number of edges in the graph.
+     * @param numEdges New value of edge count.
+     */
+    void numEdges(const idx_t& numEdges);
+    /**
+     * @brief Increments the number of edges in the graph.
+     * @param increment Number of nodes that will be added to the graph.
+     */
+    void numEdgesIncrement(const idx_t& increment = 1);
+    /**
+     * @brief Decrements the number of edges in the graph.
+     * @param decrement Number of edges that will be removed from the graph.
+     */
+    void numEdgesDecrement(const idx_t& decrement = 1);
+    //@}
+    /**
+     * @name name
+     * @brief Access to name of the graph.
+     */
+    //@{
+    /**
+     * @brief Gets the name of the graph.
+     * @return Graph name.
+     */
+    std::string name() const;
+    /**
+     * @brief Allows changing the name of the graph.
+     * @param name New graph name.
+     */
+    void name(const std::string& name);
+    //@}
+    
+  private:
+    idx_t _numNodes; /**< number of nodes in the graph */
+    idx_t _numEdges; /**< number of edges in the graph */ 
+    std::string _name; /**< name of the graph */
+  };
 
   using matrix_t = std::vector<Edge>;
   using nodeList_t = std::list<Edge>;
   using rootList_t = std::vector<nodeList_t>;
 protected:
-  int _numNodes;
+  // idx_t _numNodes;
+  // idx_t _numEdges;
+  Property _property;
 
   std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,matrix_t,rootList_t> _edges;
 
 public: 
   /**
    * @param numNodes Number of nodes/vertices in the graph.
+   * @param name Name of the graph.
    */
-  Graph(int numNodes) : 
-        _numNodes(numNodes) { construct(numNodes); }
+  Graph(const int& numNodes, const std::string& name = "Graph") : 
+        _property(numNodes,name,0) { construct(); }
+  /**
+   * @param property Properties for a graph.
+   */
+  Graph(const Property& property) : 
+        _property(property) { construct(); }
   ~Graph() {}
 
 private:
 
   /**
    * @brief Auxiliary function. Creates an empty Graph using an adjacency matrix storage format.
-   * @copydoc Graph<SCALAR,STORAGE_KIND,DIRECTION>::Graph()
    */
   GL_ENABLE_IF_MATRIX
-  void construct (const idx_t& numNodes) {
-    matrix_t matrix (numNodes*numNodes, Edge()); 
-    for (idx_t i = 0; i < numNodes; ++i) {
-      for (idx_t j = 0; j < numNodes; ++j) {
-        matrix[i*numNodes+j].source(i);
-        matrix[i*numNodes+j].dest(j);
+  void construct () {
+    matrix_t matrix (numNodes()*numNodes(), Edge()); 
+    for (idx_t i = 0; i < numNodes(); ++i) {
+      for (idx_t j = 0; j < numNodes(); ++j) {
+        matrix[i*numNodes()+j].source(i);
+        matrix[i*numNodes()+j].dest(j);
       }
     }
     _edges = matrix;
@@ -170,11 +265,10 @@ private:
 
   /**
    * @brief Auxiliary function. Creates an empty Graph using an adjacency list storage format.
-   * @copydoc Graph<SCALAR,STORAGE_KIND,DIRECTION>::Graph()
    */
   GL_ENABLE_IF_LIST
-  void construct (const idx_t& numNodes) {
-    rootList_t list (numNodes);
+  void construct () {
+    rootList_t list (numNodes());
     _edges = list;
   }
 
@@ -190,7 +284,7 @@ public:
    */
   GL_ENABLE_IF_LIST
   gl::Graph<SCALAR,gl::Matrix,DIRECTION> toMatrix() const {
-    gl::Graph<SCALAR,gl::Matrix,DIRECTION> out(numNodes());
+    gl::Graph<SCALAR,gl::Matrix,DIRECTION> out(numNodes(), name());
     for (idx_t start = 0; start < _edges.size(); ++start) {
       for (auto & end: _edges[start]) {
         out.setEdge(start,end.dest(),end.weight());
@@ -202,12 +296,30 @@ public:
   /**
    * @brief Outputs a graph in Adjacency List storage format with the same edges as this.
    */
-  GL_ENABLE_IF_MATRIX
-  gl::Graph<SCALAR,gl::List,DIRECTION> toList() const {
-    gl::Graph<SCALAR,gl::List,DIRECTION> out(numNodes());
+  GL_ENABLE_IF_MATRIX_DIRECTED
+  gl::Graph<SCALAR,List,Directed> toList() const {
+    gl::Graph<SCALAR,List,Directed> out(numNodes(), name());
     for (idx_t i = 0; i < numNodes(); ++i) {
       for (idx_t j = 0; j < numNodes(); ++j) {
-        if (hasEdge(i,j)) out.setEdge(i,j,_edges[i*numNodes()+j].weight()); 
+        if (hasEdge(i,j)) {
+          std::cout << "set: " << i << "," << j << ":"<<_edges[i*numNodes()+j].weight()<< std::endl;
+          out.setEdge(i,j,_edges[i*numNodes()+j].weight()); 
+        }
+      }
+    }
+    return out;
+  }
+  /**
+   * @brief Outputs a graph in Adjacency List storage format with the same edges as this.
+   */
+  GL_ENABLE_IF_MATRIX_UNDIRECTED
+  gl::Graph<SCALAR,List,Undirected> toList() const {
+    gl::Graph<SCALAR,List,Undirected> out(numNodes(), name());
+    for (idx_t i = 0; i < numNodes(); ++i) {
+      for (idx_t j = i; j < numNodes(); ++j) {
+        if (hasEdge(i,j)) {
+          out.setEdge(i,j,_edges[i*numNodes()+j].weight()); 
+        }
       }
     }
     return out;
@@ -230,8 +342,11 @@ public:
     if (hasEdge(start,end)) {
       updateEdge(start,end,weight);
     }
-    checkRange(start,end);
-    _edges[start].push_back(Edge(end, weight));
+    else {
+      checkRange(start,end);
+      _edges[start].push_back(Edge(start, end, weight, true));
+      _property.numEdgesIncrement();
+    }
   }
   
   /**
@@ -243,8 +358,11 @@ public:
     if (hasEdge(start,end)) {
       updateEdge(start,end,weight);
     }
-    _edges[start].push_back(Edge(start, end, weight));
-    _edges[end].push_back(Edge(end, start, weight));
+    else {
+      _edges[start].push_back(Edge(start, end, weight, true));
+      _edges[end].push_back(Edge(end, start, weight, true));
+      _property.numEdgesIncrement();
+    }
   }
 
   /**
@@ -258,6 +376,7 @@ public:
     else {
       _edges[start*numNodes()+end].weight(weight);
       _edges[start*numNodes()+end].exists(true);
+      _property.numEdgesIncrement();
     }
   }
   
@@ -274,6 +393,7 @@ public:
     else {
       _edges[start*numNodes()+end].weight(weight);
       _edges[start*numNodes()+end].exists(true);
+      _property.numEdgesIncrement();
     }
   }
   //@}
@@ -351,6 +471,7 @@ public:
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
     [&end](const Edge& node){ return node.dest() == end;});
     _edges[start].erase(it);
+    _property.numEdgesDecrement();
   }
   
   /**
@@ -368,6 +489,7 @@ public:
     it = std::find_if(_edges[end].begin(), _edges[end].end(),
     [&start](const Edge& node){ return node.dest() == start;});
     _edges[end].erase(it);
+    _property.numEdgesDecrement();
   }
 
   /**
@@ -378,6 +500,7 @@ public:
     checkRange(start,end);
     _edges[start*numNodes()+end].weight(SCALAR(0));
     _edges[start*numNodes()+end].exists(false);
+    _property.numEdgesDecrement();
   }
 
   /**
@@ -389,6 +512,7 @@ public:
     if (start > end) std::swap(end, start);
     _edges[start*numNodes()+end].weight(SCALAR(0));
     _edges[start*numNodes()+end].exists(false);
+    _property.numEdgesDecrement();
   }
   //@}
 
@@ -459,8 +583,8 @@ public:
   GL_ENABLE_IF_MATRIX_DIRECTED
   inline val_t getWeight(const idx_t start, const idx_t end) const {
     if (!hasEdge(start, end)) {
-      std::cout << "There is no edge between " << start << " and " << end << ", returning 0." << std::endl;
-      return SCALAR(0);
+      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+      throw std::range_error(errorMessage);
     }
     return _edges[start*numNodes()+end].weight();
   }
@@ -472,8 +596,8 @@ public:
   inline val_t getWeight(idx_t start, idx_t end) const {
     if (start > end) std::swap(end, start);
     if (!hasEdge(start, end)) {
-      std::cout << "There is no edge between " << start << " and " << end << ", returning 0." << std::endl;
-      return SCALAR(0);
+      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+      throw std::range_error(errorMessage);
     }
     return _edges[start*numNodes()+end].weight();
   }
@@ -493,8 +617,9 @@ public:
   idx_list_t getNeighbours (const idx_t node) const {
     idx_list_t out;
     for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end)) 
+      if(hasEdge(node, end)) {
         out.push_back(end);
+      }
     }
     return out; 
   }
@@ -614,7 +739,7 @@ public:
 
   /**
    * @name getDegree
-   * @brief Finds the degree of the given node (i.e. count of all outgoing edges).
+   * @brief Finds the degree numNodesof the given node (i.e. count of all outgoing edges).
    * @param node node whose degree is to be found
    * @return Degree of node
    */
@@ -668,11 +793,33 @@ public:
   //@}
 
   /**
+   * @brief Returns the name of the graph.
+   * @return name of the graph
+   */
+  inline std::string name () const {
+    return _property.name();
+  }
+  /**
+   * @brief Changes the name of the graph.
+   * @return New name of the graph
+   */
+  inline void name (const std::string& name) {
+    _property.name(name);
+  }
+  /**
    * @brief Returns the number of nodes currently in the graph.
    * @return number of nodes in the graph
    */
   inline idx_t numNodes () const {
-    return _numNodes;
+    return _property.numNodes();
+  }
+
+  /**
+   * @brief Returns the number of edges currently in the graph.
+   * @return number of edges in the graph
+   */
+  inline idx_t numEdges () const {
+    return _property.numEdges();
   }
 
   /**
@@ -683,10 +830,10 @@ public:
    * @return true if cyclic, false if acyclic
    */
   bool hasCycle () const {
-    visit_list_t visited(_numNodes, false);
+    visit_list_t visited(numNodes(), false);
     idx_list_t neighbourList;
 
-    for(idx_t i = 0; i < _numNodes; i++) {
+    for(idx_t i = 0; i < numNodes(); i++) {
       neighbourList = getNeighbours(i);
       for(auto neighbour : neighbourList) {
         if (visited[neighbour]) {
@@ -734,14 +881,14 @@ public:
       std::string errorMessage (std::string("Negative index: ") + std::to_string(idx1) + std::string("< 0"));
       throw std::range_error(errorMessage);
     } 
-    else if (!(idx1 < _numNodes)) {
-      std::string errorMessage (std::string("Index too large: ") + std::to_string(idx1) + std::string("<") + std::to_string(_numNodes));
+    else if (!(idx1 < numNodes())) {
+      std::string errorMessage (std::string("Index too large: ") + std::to_string(idx1) + std::string("<") + std::to_string(numNodes()));
       throw std::range_error(errorMessage);
     }
   }
 
   /**
-   * @brief Two indices that get range checked.
+   * @brief Two indices ("edge") that get range checked.
    * @param idx1 First index that will be range checked
    * @param idx2 Second index that will be range checked.
    */

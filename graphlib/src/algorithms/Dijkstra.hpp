@@ -3,11 +3,9 @@
 
 
 #include <queue>
-#include <functional>
 #include <limits>
 
-namespace gl {
-namespace algorithm {
+namespace gl::algorithm {
 
 ///////////////////////////////////////////////////////////
 //    Class declaration
@@ -120,7 +118,6 @@ typename gl::Graph<SCALAR,STORAGE,DIR>::ordered_list_t Dijkstra<SCALAR,STORAGE,D
   return out;
 }
 
-} // namespace algorithm  
-} // namespace gl
+} // namespace gl::algorithm  
 
 #endif // GL_DIJKSTRA_HPP

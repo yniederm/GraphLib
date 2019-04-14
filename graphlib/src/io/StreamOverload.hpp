@@ -9,23 +9,29 @@
  * @param rhs Graph that will be printed
  */
 //@{
-/**
- * @brief Prints all edges in the format start--weight->end & total edge number.
+/** Prints various properties of the graph:
+ *  - Number of nodes
+ *  - Number of edges
+ *  - All edges
+ *  - Direction, Storage format
+ * @brief Prints all edges in the format start--(weight)->end & total edge number.
  */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE_KIND, DIRECTION>& rhs) {
   using idx_t = typename gl::Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t;
-  idx_t counter = 0;
+  os << "----- " << rhs.name() << " -----" << std::endl;
+  os << "Total Nodes: " << rhs.numNodes() << std::endl;
+  os << "Total Edges: " << rhs.numEdges() << std::endl;
+  os << (rhs.isDirected() ? "Directed" : "Undirected") << std::endl;
   for(idx_t start = 0; start < rhs.numNodes(); start++)
   {
     auto neighbours = rhs.getNeighbourWeights(start);
     for(const auto& edge : neighbours)
     {
-      os << start << "--" << edge.second << "->" << edge.first << std::endl;
-      ++counter;
+      os << start << "--(" << edge.second << ")->" << edge.first << std::endl;
     }
   }
-  os << "Total Edges: " << counter << std::endl;
+  std::cout << std::endl;
   return os;
 }
 
