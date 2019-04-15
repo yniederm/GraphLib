@@ -1,11 +1,6 @@
 #include <vector>
 #include <graphlib/gl>
 
-void print_colors (const std::vector<gl::Color>& v) {
-  for (auto& c : v) {
-    printf("[%x,%x,%x,%x]\n", c.r(), c.g(), c.b(), c.a());
-  }
-}
 
 int main(int argc, char const *argv[])
 {
@@ -18,9 +13,18 @@ int main(int argc, char const *argv[])
   colors.push_back(gl::Color(0xF23456));
   colors.push_back(gl::Color(0xFFFFFF));
   colors.push_back(gl::Color(0x67131415));
+  colors.push_back(gl::Color());
+  colors.push_back(gl::Color());
+  colors.push_back(gl::Color());
+
+  colors[8].hex(0x123456);
+  colors[9].hex(0x78123456);
+  colors[10].r(0x1);
+  colors[10].g(0x2);
+  colors[10].b(0x3);
+  colors[10].a(0x4);
 
   std::cout << colors;
-  // print_colors(colors);
   
   return 0;
 }

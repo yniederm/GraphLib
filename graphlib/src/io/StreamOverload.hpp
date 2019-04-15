@@ -11,6 +11,8 @@
  *  - Direction, Storage format
  *  - All edges
  * @name Graph output to stream 
+ * @param os Stream that will be used for output
+ * @param[in] rhs Graph that will be printed
  */
 //@{
 /**  
@@ -68,7 +70,7 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl:
  * Prints all contents of the given GraphLib container.
  * @name Container output to stream
  * @param os Stream that will be used for output
- * @param rhs Container that will be printed
+ * @param[in] rhs Container that will be printed
  */
 //@{
 /**
@@ -131,9 +133,9 @@ std::ostream& operator<< (std::ostream& os, std::stack<idx_t> rhs)
 //@}
 
 /**
- * Prints a gl::Color element.
- * Format: [{Hex code};(R,G,B),{alpha/opacity}]
- * @brief Prints a gl::Color element.
+ * @brief Prints a gl::Color element. Format: [{Hex code};({R},{G},{B}),{alpha/opacity}]
+ * @param os Stream that will be used for output
+ * @param[in] rhs Color that will be printed
  */
 std::ostream& operator<< (std::ostream& os, const gl::Color& rhs) 
 {

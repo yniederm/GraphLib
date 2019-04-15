@@ -10,7 +10,7 @@ namespace gl {
   
 /**
  * @class Color
- * @brief Stores an RGBA color.
+ * @brief Stores an RGBA Color.
  */
 class Color {
 public:
@@ -105,6 +105,19 @@ public:
    * Tâkes the new value for the red/blue/green/alpha respectively.
    */
   //@{
+  /**
+   * @brief Sets all values of the RGBA color.
+   * @param[in] hex Input hexadecimal color code. 
+   */
+  void hex (const int hex) { 
+    r_ = (hex >> 16) & 0xFF;
+    g_ = (hex >> 8) & 0xFF;
+    b_ = (hex) & 0xFF;
+    if ((hex >> 24) > 0) {
+      const color_val_t a = (hex >> 24) & 0xFF;
+      a_ = a > 0x64 ? 0x64 : a;
+    }
+   }
   /**
    * @brief Sets the R-value of the RGBA color.
    */
