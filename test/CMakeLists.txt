@@ -10,6 +10,7 @@ link_directories(
 )
 
 set(TESTS
+    Color
     Conversion
     CycleDetection
     DegreeSequence

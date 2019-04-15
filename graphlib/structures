@@ -6,6 +6,7 @@
 #include "src/structures/Edge.hpp"
 #include "src/structures/Property.hpp"
 #include "src/structures/Graph.hpp"
+#include "src/structures/Color.hpp"
 
 #include "src/partial_specialization_off"
 

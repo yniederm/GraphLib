@@ -2,6 +2,7 @@
 #define GL_STREAM_OVERLOAD_HPP
 
 #include "../structures/Graph.hpp"
+#include "../structures/Color.hpp"
 
 /**
  * Prints various properties of the graph:
@@ -74,10 +75,12 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl:
  * @brief Prints all elements of an std::list.
  */
 template <class idx_t>
-std::ostream& operator<< (std::ostream & os, const std::list<idx_t>& rhs) {
+std::ostream& operator<< (std::ostream & os, const std::list<idx_t>& rhs)
+{
   os << "[ ";
-  for (auto it : rhs)
+  for (const auto& it : rhs) {
     os << it << " ";
+  }
   os << "]\n";
   return os;
 }
@@ -86,10 +89,11 @@ std::ostream& operator<< (std::ostream & os, const std::list<idx_t>& rhs) {
  * @brief Prints all elements of an std::vector.
  */
 template <class idx_t>
-std::ostream& operator<< (std::ostream & os, const std::vector<idx_t>& rhs) {
+std::ostream& operator<< (std::ostream& os, const std::vector<idx_t>& rhs) {
   os << "[ ";
-  for (auto it : rhs)
+  for (const auto& it : rhs) {
     os << it << " ";
+  }
   os << "]\n";
   return os;
 }
@@ -98,12 +102,12 @@ std::ostream& operator<< (std::ostream & os, const std::vector<idx_t>& rhs) {
  * @brief Prints all elements of an std::deque.
  */
 template <class idx_t>
-std::ostream& operator<< (std::ostream & os, const std::deque<idx_t>& rhs) {
+std::ostream& operator<< (std::ostream& os, const std::deque<idx_t>& rhs) 
+{
   os << "[ ";
-  for (auto it : rhs) {
+  for (const auto& it : rhs) {
     os << it << " ";
   }
-
   os << "]\n";
   return os;
 }
@@ -113,7 +117,8 @@ std::ostream& operator<< (std::ostream & os, const std::deque<idx_t>& rhs) {
  * @brief Prints all elements of an std::stack.
  */
 template <class idx_t>
-std::ostream& operator<< (std::ostream & os, std::stack<idx_t> rhs) {
+std::ostream& operator<< (std::ostream& os, std::stack<idx_t> rhs) 
+{
   os << "[ ";
   while (!rhs.empty()) { 
     os << rhs.top() << " "; 
@@ -124,5 +129,21 @@ std::ostream& operator<< (std::ostream & os, std::stack<idx_t> rhs) {
   return os;
 }
 //@}
+
+/**
+ * Prints a gl::Color element.
+ * Format: [{Hex code};(R,G,B),{alpha/opacity}]
+ * @brief Prints a gl::Color element.
+ */
+std::ostream& operator<< (std::ostream& os, const gl::Color& rhs) 
+{
+  os << "[" << std::hex << +rhs.hex() 
+     << ";(" << std::dec 
+     << +rhs.r() << ","
+     << +rhs.g() << "," 
+     << +rhs.b() << ")," 
+     << +rhs.a() << "%]";
+  return os;
+}
 
 #endif /* GL_STREAM_OVERLOAD_HPP */
