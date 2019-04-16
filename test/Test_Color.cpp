@@ -16,6 +16,7 @@ int main(int argc, char const *argv[])
   colors.push_back(gl::Color());
   colors.push_back(gl::Color());
   colors.push_back(gl::Color());
+  colors.push_back(gl::Color("orange"));
 
   colors[8].hex(0x123456);
   colors[9].hex(0x78123456);

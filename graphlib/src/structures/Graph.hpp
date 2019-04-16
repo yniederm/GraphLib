@@ -13,6 +13,8 @@
 #include <list>
 #include <stack>
 
+#include "Color.hpp"
+
 namespace gl {
 
 class Matrix;
@@ -28,7 +30,7 @@ class Undirected;
 /** 
  * This class has functions to create and edit the graph, as well as access certain properties of the graph. 
  * @class Graph
- * @brief Stores and implements a graph.
+ * @brief Stores and implements a Graph.
  * @tparam SCALAR Number type used to store edge weights.
  * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
  * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
@@ -57,8 +59,8 @@ public:
    */
   class Edge {
   public:
-    Edge (idx_t src = 0, idx_t dest = 0, val_t weight = 0, bool exists = false) :
-      _src(src), _dest(dest), _weight(weight),_exists(exists) {}
+    Edge (const idx_t& src = 0, const idx_t& dest = 0, const val_t& weight = 0, const Color& color = {}, const bool& exists = false) :
+      src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
 
     /**
      * @name exists
@@ -70,12 +72,12 @@ public:
      * @brief Checks whether an edge exists.
      * @return True if exists, false otherwise.
      */
-    bool exists() const;
+    inline bool exists() const;
     /**
      * @brief Allows changing of existance status of an edge.
-     * @param exists New value of boolean exists.
+     * @param[in] exists New value of boolean exists.
      */
-    void exists(bool exists);
+    inline void exists(bool exists);
     //@}
     /**
      * @name source
@@ -86,12 +88,12 @@ public:
      * @brief Gets the index of the source of the edge.
      * @return index of edge source node.
      */
-    idx_t source() const;
+    inline idx_t source() const;
     /**
      * @brief Allows changing the source of an edge.
-     * @param src New value of source index.
+     * @param[in] src New value of source index.
      */
-    void source(idx_t src);
+    inline void source(idx_t src);
     //@}
     /**
      * @name dest
@@ -102,12 +104,12 @@ public:
      * @brief Gets the index of the destination of the edge.
      * @return index of edge destination node.
      */
-    idx_t dest() const;
+    inline idx_t dest() const;
     /**
      * @brief Allows changing the destination of an edge.
-     * @param dest New value of destination index.
+     * @param[in] dest New value of destination index.
      */
-    void dest(idx_t dest);
+    inline void dest(idx_t dest);
     //@}
     /**
      * @name weight
@@ -118,19 +120,35 @@ public:
      * @brief Gets the weight of the edge.
      * @return Weight of the edge.
      */
-    val_t weight() const;
+    inline val_t weight() const;
     /**
      * @brief Allows changing the weight of an edge.
-     * @param weight New value of edge weight.
+     * @param[in] weight New value of edge weight.
      */
-    void weight(val_t weight);
+    inline void weight(val_t weight);
+    /**
+     * @name color
+     * @brief Access to the edge's RGBA color value.
+     */
+    //@{
+    /**
+     * @brief Gets the edge's color.
+     * @return Color of the edge.
+     */
+    inline Color color() const;
+    /**
+     * @brief Allows changing the edge's RGBA color value.
+     * @param[in] color New color object. 
+     */
+    inline void color (const Color& color);
     //@}
     
   private:
-    idx_t _src; /**< source index */
-    idx_t _dest; /**< destination index */ 
-    val_t _weight; /**< edge weight */
-    bool _exists; /**< edge existance */
+    idx_t src_; /**< @brief Source index */
+    idx_t dest_; /**< @brief Destination index */ 
+    val_t weight_; /**< @brief Edge weight */
+    bool exists_; /**< @brief Edge existance */
+    Color color_; /**< @brief Edge color */
   };
 
 /** 
@@ -287,7 +305,7 @@ public:
     gl::Graph<SCALAR,gl::Matrix,DIRECTION> out(numNodes(), name());
     for (idx_t start = 0; start < _edges.size(); ++start) {
       for (auto & end: _edges[start]) {
-        out.setEdge(start,end.dest(),end.weight());
+        out.setEdge(start,end.dest(),end.weight(),end.color());
       }
     }
     return out;
@@ -302,7 +320,7 @@ public:
     for (idx_t i = 0; i < numNodes(); ++i) {
       for (idx_t j = 0; j < numNodes(); ++j) {
         if (hasEdge(i,j)) {
-          out.setEdge(i,j,_edges[i*numNodes()+j].weight()); 
+          out.setEdge(i,j,_edges[i*numNodes()+j].weight(),_edges[i*numNodes()+j].color()); 
         }
       }
     }
@@ -317,7 +335,7 @@ public:
     for (idx_t i = 0; i < numNodes(); ++i) {
       for (idx_t j = i; j < numNodes(); ++j) {
         if (hasEdge(i,j)) {
-          out.setEdge(i,j,_edges[i*numNodes()+j].weight()); 
+          out.setEdge(i,j,_edges[i*numNodes()+j].weight(),_edges[i*numNodes()+j].color()); 
         }
       }
     }
@@ -330,20 +348,20 @@ public:
    * @param start edge origin point
    * @param end edge end point
    * @param weight new edge weight
+   * @param color (Optional) new edge color
    */
   //@{
   /**
    * @brief Adds edge in a Directed List Graph.
    */
   GL_ENABLE_IF_LIST_DIRECTED
-  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1) {
+  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color& color = Color()) {
     checkRange(start,end);
     if (hasEdge(start,end)) {
       updateEdge(start,end,weight);
     }
     else {
-      checkRange(start,end);
-      _edges[start].push_back(Edge(start, end, weight, true));
+      _edges[start].push_back(Edge(start, end, weight, color, true));
       _property.numEdgesIncrement();
     }
   }
@@ -352,14 +370,14 @@ public:
    * @brief Adds edge in an Undirected List Graph.
    */
   GL_ENABLE_IF_LIST_UNDIRECTED
-  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1) {
+  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color& color = Color()) {
     checkRange(start,end);
     if (hasEdge(start,end)) {
       updateEdge(start,end,weight);
     }
     else {
-      _edges[start].push_back(Edge(start, end, weight, true));
-      _edges[end].push_back(Edge(end, start, weight, true));
+      _edges[start].push_back(Edge(start, end, weight, color, true));
+      _edges[end].push_back(Edge(end, start, weight, color, true));
       _property.numEdgesIncrement();
     }
   }
@@ -368,13 +386,14 @@ public:
    * @brief Adds edge in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1) {
+  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color& color = Color()) {
     if (hasEdge(start,end)) {
       updateEdge(start,end,weight);
     }
     else {
       _edges[start*numNodes()+end].weight(weight);
       _edges[start*numNodes()+end].exists(true);
+      _edges[start*numNodes()+end].color(color);
       _property.numEdgesIncrement();
     }
   }
@@ -383,14 +402,12 @@ public:
    * @brief Adds edge in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  void setEdge(idx_t start, idx_t end, const val_t weight = 1) {
+  void setEdge(idx_t start, idx_t end, const val_t weight = 1, const Color& color = {}) {
     checkRange(start, end);
     if (start > end) std::swap(end, start);
-    if (hasEdge(start,end)) {
-      updateEdge(start,end,weight);
-    }
-    else {
-      _edges[start*numNodes()+end].weight(weight);
+    _edges[start*numNodes()+end].color(color);
+    _edges[start*numNodes()+end].weight(weight);
+    if (!hasEdge(start,end)) {
       _edges[start*numNodes()+end].exists(true);
       _property.numEdgesIncrement();
     }

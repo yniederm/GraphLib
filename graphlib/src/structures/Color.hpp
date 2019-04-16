@@ -2,6 +2,9 @@
 #define GL_COLOR_HPP
 
 #include <cmath>
+#include <unordered_map>
+#include <string>
+#include <functional>
 
 #define GL_FORCE_INTO_RANGE(VAR,LOWER,UPPER) \
 VAR < LOWER ? LOWER : (VAR > UPPER ? UPPER : VAR)
@@ -27,10 +30,10 @@ public:
   Color () = default;
   /**
    * @brief Constructor for integer R,G,B,A values.
-   * @param[in] r R value. \f$r \in \{0,...,255\}\f$
-   * @param[in] g G value. \f$g \in \{0,...,255\}\f$
-   * @param[in] b B value. \f$b \in \{0,...,255\}\f$
-   * @param[in] a Alpha value. \f$a \in \{0,...,100\}\f$
+   * @param[in] r R value. \f$r \in \{0,\ldots,255\}\f$
+   * @param[in] g G value. \f$g \in \{0,\ldots,255\}\f$
+   * @param[in] b B value. \f$b \in \{0,\ldots,255\}\f$
+   * @param[in] a Alpha value. \f$a \in \{0,\ldots,100\}\f$
    */
   Color (const int r, const int g,
          const int b, const int a = 100) :
@@ -39,7 +42,7 @@ public:
          b_(static_cast<color_val_t>(GL_FORCE_INTO_RANGE(b,0,255))), 
          a_(static_cast<color_val_t>(GL_FORCE_INTO_RANGE(a,0,100))) {}
   /**
-   * @brief Constructor for separate float R,G,B,A values.
+   * @brief Constructor for separate double R,G,B,A values.
    * @param[in] r R value. \f$r \in [0,1]\f$
    * @param[in] g G value. \f$g \in [0,1]\f$
    * @param[in] b B value. \f$b \in [0,1]\f$
@@ -64,12 +67,45 @@ public:
       a_ = a > 0x64 ? 0x64 : a;
     }
   }
+  /**
+   * @brief Constructor for combined hexadecimal R,G,B,A values.
+   * @param[in] name Name of color. Available are the following: \f$
+   * \{"black","gray","silver","white","orange","maroon",\\"red","olive","yellow","green","lime","teal",\\"aqua", "navy","blue","purple","fuchsia"\}\f$
+   * @param[in] a (optional) Opacity of the color. \f$ a\in\{0,\ldots,100\} \f$
+   */
+  Color (const char* name, color_val_t a = 100) : a_(a) {
+    const std::unordered_map<std::string,std::function<void()>> map {
+      {"black",    [&](){ hex(0x000000); }},
+      {"gray",     [&](){ hex(0x808080); }},
+      {"silver",   [&](){ hex(0xC0C0C0); }},
+      {"white",    [&](){ hex(0xFFFFFF); }},
+      {"orange",   [&](){ hex(0xED9121); }},
+      {"maroon",   [&](){ hex(0x800000); }},
+      {"red",      [&](){ hex(0xFF0000); }},
+      {"olive",    [&](){ hex(0x808000); }},
+      {"yellow",   [&](){ hex(0xFFFF00); }},
+      {"green",    [&](){ hex(0x008000); }},
+      {"lime",     [&](){ hex(0x00FF00); }},
+      {"teal",     [&](){ hex(0x008080); }},
+      {"aqua",     [&](){ hex(0x00FFFF); }},
+      {"navy",     [&](){ hex(0x000080); }},
+      {"blue",     [&](){ hex(0x0000FF); }},
+      {"purple",   [&](){ hex(0x800080); }},
+      {"fuchsia",  [&](){ hex(0xFF00FF); }},
+    };
+    auto it = map.find(name);
+    if (it != map.end()) {
+      it->second();
+    } else {
+      hex(0x000000);
+    }
+  }
   //@}
-
-   Color(Color &&) noexcept = default;
-   Color &operator=(const Color &) = default;
-   Color &operator=(Color &&) noexcept = default;
-  ~Color () = default;
+   Color(const Color&) = default; // copy constructor
+   Color(Color &&) noexcept = default;  // move constructor
+   Color &operator=(const Color &) = default; // copy assignment
+   Color &operator=(Color &&) noexcept = default; // move assignment
+  ~Color () = default;  // destructor
   /**
    * @name Read access to stored RGBA color values.
    * @brief Getters for stored color values.
@@ -78,38 +114,38 @@ public:
   /**
    * @brief Gets the hexadecimal value of the RGBA color.
    */
-  int hex() const { 
+  inline int hex() const { 
     return (a_ << 24) | (r_ << 16) | (g_ << 8) | b_;
     }
   /**
-   * @brief Gets the R-value of the RGBA color.
+   * @brief Gets the red value of the RGBA color.
    */
-  color_val_t r() const { return r_; }
+  inline color_val_t r() const { return r_; }
   /**
-   * @brief Gets the G-value of the RGBA color.
+   * @brief Gets the green value of the RGBA color.
    */
-  color_val_t g() const { return g_; }
+  inline color_val_t g() const { return g_; }
   /**
-   * @brief Gets the B-value of the RGBA color.
+   * @brief Gets the blue value of the RGBA color.
    */
-  color_val_t b() const { return b_; }
+  inline color_val_t b() const { return b_; }
   /**
-   * @brief Gets the Alpha-value of the RGBA color.
+   * @brief Gets the alpha/opacity value of the RGBA color.
    */
-  color_val_t a() const { return a_; }
+  inline color_val_t a() const { return a_; }
   //@}
 
   /**
    * @name Write access to stored RGBA color values.
    * @brief Setters for stored color values
-   * Tâkes the new value for the red/blue/green/alpha respectively.
+   * Takes the new value for the red/blue/green/alpha respectively.
    */
   //@{
   /**
    * @brief Sets all values of the RGBA color.
    * @param[in] hex Input hexadecimal color code. 
    */
-  void hex (const int hex) { 
+  inline void hex (const int hex) { 
     r_ = (hex >> 16) & 0xFF;
     g_ = (hex >> 8) & 0xFF;
     b_ = (hex) & 0xFF;
@@ -119,35 +155,35 @@ public:
     }
    }
   /**
-   * @brief Sets the R-value of the RGBA color.
+   * @brief Sets the red value of the RGBA color.
    */
-  void r (color_val_t r) { r_ = r; }
+  inline void r (color_val_t r) { r_ = r; }
   /**
-   * @brief Sets the G-value of the RGBA color.
+   * @brief Sets the green value of the RGBA color.
    */
-  void g (color_val_t g) { g_ = g; }
+  inline void g (color_val_t g) { g_ = g; }
   /**
-   * @brief Sets the B-value of the RGBA color.
+   * @brief Sets the blue value of the RGBA color.
    */
-  void b (color_val_t b) { b_ = b; }
+  inline void b (color_val_t b) { b_ = b; }
   /**
-   * @brief Sets the Alpha-value of the RGBA color.
+   * @brief Sets the alpha/opacity value of the RGBA color.
    */
-  void a (color_val_t a) { a_ = a; }
+  inline void a (color_val_t a) { a_ = a; }
   //@}
 
 private:
   color_val_t r_, /**< 
-                   * @brief Red value. \f$r \in \{0,...,255\}\f$
+                   * @brief Red value. \f$r \in \{0,\ldots,255\}\f$
                    */
               g_,  /**< 
-                   * @brief Green value.  \f$g \in \{0,...,255\}\f$
+                   * @brief Green value.  \f$g \in \{0,\ldots,255\}\f$
                    */
               b_,  /**< 
-                   * @brief Blue value. \f$b \in \{0,...,255\}\f$
+                   * @brief Blue value. \f$b \in \{0,\ldots,255\}\f$
                    */
               a_;  /**< 
-                   * @brief Alpha (opacity) value. \f$a \in \{0,...,100\}\f$
+                   * @brief Alpha/opacity value. \f$a \in \{0,\hdots,100\}\f$
                    */
 };
 

@@ -8,7 +8,7 @@ int main(int argc, char const *argv[])
   g.setEdge(1,2);   // set as simple undirected
   g.setEdge(2,0);
   g.setEdge(2,1,10);
-  g.setEdge(2,2,5);
+  g.setEdge(2,2,5,gl::Color("aqua"));
   g.numNodes();
   std::cout << "numNodes: " << g.numNodes() << std::endl
             << g << std::endl;
