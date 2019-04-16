@@ -244,8 +244,6 @@ public:
   using nodeList_t = std::list<Edge>;
   using rootList_t = std::vector<nodeList_t>;
 protected:
-  // idx_t _numNodes;
-  // idx_t _numEdges;
   Property _property;
 
   std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,matrix_t,rootList_t> _edges;
@@ -480,10 +478,7 @@ public:
    */
   GL_ENABLE_IF_LIST_DIRECTED
   void delEdge(const idx_t start, const idx_t end) {
-    if (!hasEdge(start,end)) {
-      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-      throw std::range_error(errorMessage);
-    }
+    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
     [&end](const Edge& node){ return node.dest() == end;});
     _edges[start].erase(it);
@@ -495,10 +490,7 @@ public:
    */
   GL_ENABLE_IF_LIST_UNDIRECTED
   void delEdge(const idx_t start, const idx_t end) {
-    if (!hasEdge(start,end)) {
-      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-      throw std::range_error(errorMessage);
-    }
+    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
     [&end](const Edge& node){ return node.dest() == end;});
     _edges[start].erase(it);
@@ -513,6 +505,7 @@ public:
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
   inline void delEdge (const idx_t start, const idx_t end) {
+    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     checkRange(start,end);
     _edges[start*numNodes()+end].weight(SCALAR(0));
     _edges[start*numNodes()+end].exists(false);
@@ -524,7 +517,7 @@ public:
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
   inline void delEdge (idx_t start, idx_t end) {
-    checkRange(start,end);
+    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     if (start > end) std::swap(end, start);
     _edges[start*numNodes()+end].weight(SCALAR(0));
     _edges[start*numNodes()+end].exists(false);
@@ -584,10 +577,7 @@ public:
    */
   GL_ENABLE_IF_LIST
   val_t getWeight(const idx_t start, const idx_t end) const {
-    if (!hasEdge(start,end)) {
-      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-      throw std::range_error(errorMessage);
-    }    
+    GL_ASSERT(hasEdge(start,end),(std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
     auto it = std::find_if(_edges[start].begin(), _edges[start].end(),
     [&end](const Edge& node){ return node.dest() == end;});
     return (*it).weight();
@@ -598,10 +588,7 @@ public:
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
   inline val_t getWeight(const idx_t start, const idx_t end) const {
-    if (!hasEdge(start, end)) {
-      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-      throw std::range_error(errorMessage);
-    }
+    GL_ASSERT(hasEdge(start,end),(std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
     return _edges[start*numNodes()+end].weight();
   }
 
@@ -611,10 +598,7 @@ public:
   GL_ENABLE_IF_MATRIX_UNDIRECTED
   inline val_t getWeight(idx_t start, idx_t end) const {
     if (start > end) std::swap(end, start);
-    if (!hasEdge(start, end)) {
-      std::string errorMessage (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-      throw std::range_error(errorMessage);
-    }
+    GL_ASSERT(hasEdge(start,end),(std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
     return _edges[start*numNodes()+end].weight();
   }
   //@}
@@ -893,14 +877,8 @@ public:
    * @param idx1 Index that will be range checked
    */
   inline void checkRange (const idx_t idx1) const {
-    if (!(0 <= idx1)) {
-      std::string errorMessage (std::string("Negative index: ") + std::to_string(idx1) + std::string("< 0"));
-      throw std::range_error(errorMessage);
-    } 
-    else if (!(idx1 < numNodes())) {
-      std::string errorMessage (std::string("Index too large: ") + std::to_string(idx1) + std::string("<") + std::to_string(numNodes()));
-      throw std::range_error(errorMessage);
-    }
+    GL_ASSERT((0 <= idx1),(std::string("Negative index: ") + std::to_string(idx1) + std::string(" < 0")))
+    GL_ASSERT((idx1 < numNodes()),("Index " + std::to_string(idx1) + " is larger than the max: " + std::to_string(numNodes()-1)))
   }
 
   /**

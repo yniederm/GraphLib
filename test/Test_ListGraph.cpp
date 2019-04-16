@@ -28,8 +28,19 @@ int main(int argc, char const *argv[])
   std::cout << "Degree of 2: " << g.getDegree(2) << std::endl;
   g.delEdge(2,0);   // remove edge
   std::cout << "deleted 2->0\n";
-  // g.setEdge(5,2,1);  // test out of range check
-  std::cout << g << std::endl;
+  try {
+    g.delEdge(2,4);   // triggers assert if compiled
+  } catch (const std::runtime_error& e) {
+    std::cout << "Caught exception: " << e.what() << "\n";
+  }
+  g.readFile("test/Input_singleEdge"); // assumes running from build folder
+
+  try {
+    g.setEdge(1000,2,1);  // test out of range check
+  } catch (const std::runtime_error& e) {
+    std::cout << "Caught exception: " << e.what() << "\n";
+  }
+  std::cout << std::endl << g << std::endl;
 
   return 0;
 }
