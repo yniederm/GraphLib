@@ -43,5 +43,16 @@ int main(int argc, char const *argv[])
   }
   std::cout << std::endl << g << std::endl;
 
+  // ConstEdgeIterator test
+  for (auto it = g.edge_cbegin(); it != g.edge_cend(); ++it) {
+    std::cout << "Weight of edge (" << it->source() << "->" << it->dest() << ") is " << it->weight() << "\n";
+  }
+  std::cout << std::endl;
+  // EdgeIterator test
+  for (auto it = g.edge_begin(); it != g.edge_end(); ++it) {
+    it->weight(6);
+    std::cout << "Weight of edge (" << it->source() << "->" << it->dest() << ") is " << it->weight() << "\n";
+  }
+
   return 0;
 }
