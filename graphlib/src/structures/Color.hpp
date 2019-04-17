@@ -125,7 +125,7 @@ public:
   inline std::string RGBA() const
   {
     std::stringstream ss;
-    ss << std::setfill('0') << std::setw(sizeof(int) * 2) << std::hex << (hex() | 0);
+    ss << std::setfill('0') << std::setw(8) << std::hex << (hex() | 0);
     return ss.str();
   }
   /**
@@ -134,7 +134,8 @@ public:
   inline std::string RGB() const
   {
     std::stringstream ss;
-    ss << std::setfill('0') << std::setw(6) << std::hex << (hex() >> 8 | 0);
+    int val = (hex() >> 8) & 0xffffff;
+    ss << std::setfill('0') << std::setw(6) << std::hex << (val | 0);
     return ss.str();
   }
   /**
