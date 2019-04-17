@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
     g.setEdge(0, 3, 1, gl::Color("blue"));
     g.setEdge(2, 3, 1, gl::Color("green"));
     g.setEdge(5, 7, 1, gl::Color("teal"));
-    g.setEdge(1, 9, 1, gl::Color("awua"));
+    g.setEdge(1, 9, 1, gl::Color("aqua"));
     g.setEdge(5, 3); // should default to black
     g.setEdge(6, 2, 1, gl::Color("purple"));
     g.setEdge(4, 2, 1, gl::Color("fuchsia"));

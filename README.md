@@ -9,9 +9,11 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - Storage format
     - Adjacency Matrix
     - Adjacency List
+    - conversion between the two
   - Directed/Undirected graphs
-  - conversion between the two
   - file input to add edges
+  - edges & nodes support individual colours
+  - edges & nodes support C++ STL conform iterators
 #### Algorithms
 - Closure
   - Finding the connected component / transitive closure of a node
@@ -19,7 +21,7 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - Basic graph traversal
 - BFS
   - Basic graph traversal
-- Graph cycles
+- Graph properties
   - general cycle detection
 - Shortest Paths
   - Dijkstra (distances + path)
@@ -27,7 +29,10 @@ An up-to-date documentation of the source code is available here: [![Documentati
 - Document algorithm purpose in doxygen files
 Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
 #### Data structures
-- advanced initialization (stream operators, input file constructor)
+- advanced initialization 
+  - stream operators
+  - JSON input file constructor
+  - degree sequence (for undirected graphs)
 - simple graph support
 - multigraph support
 - bipartite graphs
@@ -36,13 +41,15 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 #### Algorithms
 - BFS
   - finding vertices at the same distance from source
+  - power graphs (for undirected graphs)
 - Shortest Paths
   - Floyd-Warshall
   - Bellman-Ford
   - Johnson
   - Betweenness centrality
-- Graph cycles
+- Graph properties
   - cycles of specific length (e.g. triad census)
+  - eccentricity, radius, diameter
 - Minimum spanning trees
   - Kruskal
   - Prim
@@ -52,8 +59,16 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
   - finding all possible walks from source to destination
 - Network algorithms
   - flow problems 
-- vertex degree things (to be determined)
-  - centralities (?)
+- Cliques
+  - cliques of size k
+- vertex degree things
+  - centralities: 
+    - degree
+    - closeness
+    - betweenness
+    - eigenvector
+    - PageRank
+    - katz
 - Split graph
   - find constructing degree sequence
-  - splittance
+  - computing splittance

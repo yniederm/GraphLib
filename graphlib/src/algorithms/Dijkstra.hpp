@@ -34,9 +34,9 @@ public:
   ordered_list_t getPath(const idx_t) const;
 
 private:
-  Graph const& _graph;
-  idx_t _src;
-  result_t _final;
+  Graph const& graph_; /**< @brief reference to graph */
+  idx_t src_; /**< @brief source node */
+  result_t final_; /**< @brief Shortest Path lengths & predecessors */
 };
 
 ///////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ Dijkstra<SCALAR,STORAGE,DIR>::~Dijkstra() {}
    * @param src Source node. All shortest paths will be computed from here.
    */
 template <class SCALAR, class STORAGE, class DIR>
-Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : _graph(graph), _src(src) {
+Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {
 
   class prio {
     public:
@@ -88,7 +88,7 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : _g
       }
     }
   }
-  _final = out;
+  final_ = out;
 }
 
   /**
@@ -98,7 +98,7 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : _g
    */
 template <class SCALAR, class STORAGE, class DIR>
 typename gl::Graph<SCALAR,STORAGE,DIR>::val_t Dijkstra<SCALAR,STORAGE,DIR>::pathLength (const idx_t dest) const {
-  return _final[dest].first!=std::numeric_limits<val_t>::max() ? _final[dest].first : val_t(-1);
+  return final_[dest].first!=std::numeric_limits<val_t>::max() ? final_[dest].first : val_t(-1);
 }
 
   /**
@@ -110,11 +110,11 @@ template <class SCALAR, class STORAGE, class DIR>
 typename gl::Graph<SCALAR,STORAGE,DIR>::ordered_list_t Dijkstra<SCALAR,STORAGE,DIR>::getPath (const idx_t dest) const {
   typename gl::Graph<SCALAR,STORAGE,DIR>::ordered_list_t out;
   idx_t node = dest;
-  while (node != _src) {
+  while (node != src_) {
     out.push_front(node);
-    node = _final[node].second;
+    node = final_[node].second;
   }
-  out.push_front(_src);
+  out.push_front(src_);
   return out;
 }
 

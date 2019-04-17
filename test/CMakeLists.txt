@@ -28,7 +28,9 @@ set(TESTS
 
 set(EIGEN_TESTS
     IOTikz
-    MathGL)
+    MathGL
+    MathGLColors
+    )
 
 set(MATHGL_TESTS
     MathGL

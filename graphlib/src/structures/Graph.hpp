@@ -153,6 +153,132 @@ public:
     Color color_; /**< @brief Edge color */
   };
 
+  /** 
+   * @class Node
+   * @brief Represents a node in a Graph.
+   * @tparam SCALAR Number type used to store node capacities.
+   * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
+   * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
+   */
+  class Node {
+
+  public:
+    Node (idx_t id = 0, val_t capacity = 1, std::string name = "Node") :
+      id_(id), name_(name), capacity_(capacity), 
+      inDegree_(0), outDegree_(0) {}
+
+    /**
+     * @name id
+     * @brief Access to node ID.
+     */
+    //@{
+    /**
+     * @brief Checks whether an edge exists.
+     * @return True if exists, false otherwise.
+     */
+    inline idx_t id() const;
+    /**
+     * @brief Allows changing of node ID.
+     * @param id New value of node ID.
+     */
+    inline void id(idx_t id);
+    //@}
+    /**
+     * @name name
+     * @brief Access to the name of a node.
+     */
+    //@{
+    /**
+     * @brief Gets the name of a node.
+     * @return name of the node.
+     */
+    inline const char* name() const;
+    /**
+     * @brief Allows changing the name of a node.
+     * @param name New value of node name.
+     */
+    inline void name(const char* name);
+    //@}
+    /**
+     * @name capacity
+     * @brief Access to capacity of the edge.
+     */
+    //@{
+    /**
+     * @brief Gets the capacity of the node.
+     * @return Capacity of the node.
+     */
+    inline val_t capacity() const;
+    /**
+     * @brief Allows changing the capacity of a node.
+     * @param capacity New value of node capacity.
+     */
+    inline void capacity(val_t capacity);
+    //@}
+    /**
+     * @name color
+     * @brief Access to the edge's RGBA color value.
+     */
+    //@{
+    /**
+     * @brief Gets the edge's color.
+     * @return Color of the edge.
+     */
+    inline Color color() const;
+    /**
+     * @brief Allows changing the edge's RGBA color value.
+     * @param[in] color New color object. 
+     */
+    inline void color (const Color& color);
+    //@}
+    /**
+     * @name inDegree
+     * @brief Access to node in-degree.
+     */
+    //@{
+    /**
+     * @brief Gets the in-degree of a node.
+     * @return In-degree of a node.
+     */
+    inline idx_t inDegree() const;
+    /**
+     * @brief Increments the node in-degree.
+     */
+    inline void inDegreeIncrement();
+    /**
+     * @brief Decrements the node in-degree.
+     */
+    inline void inDegreeDecrement();
+    //@}
+    /**
+     * @name outDegree
+     * @brief Access to node out-degree.
+     */
+    //@{
+    /**
+     * @brief Gets the out-degree of a node.
+     * @return Out-degree of a node.
+     */
+    inline idx_t outDegree() const;
+    /**
+     * @brief Increments the node out-degree.
+     */
+    inline void outDegreeIncrement();
+    /**
+     * @brief Decrements the node out-degree.
+     */
+    inline void outDegreeDecrement();
+    //@}
+    
+  private:
+    idx_t id_; /**< @brief Node ID */
+    std::string name_; /**< @brief Node name */
+    val_t capacity_; /**< @brief Node capacity */
+    Color color_; /**< @brief Node color */
+    idx_t inDegree_; /**< @brief In-degree */
+    idx_t outDegree_; /**< @brief Out-degree */
+  };
+
 /** 
    * @class Property
    * @brief Stores the properties of a Graph.
@@ -1010,7 +1136,10 @@ public:
     using pointer_t = Edge*;
     using iterator_category = std::forward_iterator_tag;
     using diff_t = std::ptrdiff_t;
+    EdgeIterator() {}
+    GL_ENABLE_IF_MATRIX
     EdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2) { }
+    GL_ENABLE_IF_LIST
     EdgeIterator(typename nodeList_t::iterator ptr, typename rootList_t::iterator data1, Graph<SCALAR,STORAGE_KIND,DIRECTION>* data2) : ptr_(ptr), data1_(data1), data2_(data2) { }
     GL_ENABLE_IF_MATRIX
     self_t operator++() { 
@@ -1050,11 +1179,16 @@ public:
       }
       return i; 
     }
-    ref_t operator*() { return *ptr_; }
-    pointer_t operator->() { return &operator*(); }
+    val_t& operator*() { return *ptr_; }
+    val_t* operator->() { return &operator*(); }
 
+    self_t operator=(const self_t& rhs) { 
+      ptr_ = rhs.ptr_;
+      data1_ = rhs.data1_;
+      data2_ = rhs.data2_;
+    }
     bool operator==(const self_t& rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
-    bool operator!=(const self_t& rhs) { return ptr_ != rhs.ptr_ || data1_ != rhs.data1_ || data2_ != rhs.data2_; }
+    bool operator!=(const self_t& rhs) { return !operator==(rhs); }
   private:
     std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::iterator> ptr_;  //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
     std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,pointer_t, typename rootList_t::iterator> data1_;  //< @brief pointer to first element for Matrix, iterator over the rootList for List
@@ -1071,6 +1205,7 @@ public:
     using iterator_category = std::forward_iterator_tag;
     using diff_t = std::ptrdiff_t;
 
+    ConstEdgeIterator() {}
     GL_ENABLE_IF_MATRIX
     ConstEdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2) { }
     GL_ENABLE_IF_LIST
@@ -1115,10 +1250,15 @@ public:
       return i; 
     }
 
+    self_t operator=(const self_t& rhs) { 
+      ptr_ = rhs.ptr_;
+      data1_ = rhs.data1_;
+      data2_ = rhs.data2_;
+    }
     const val_t& operator*() { return *ptr_; }
     const val_t* operator->() { return &operator*(); }
     bool operator==(const self_t& rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
-    bool operator!=(const self_t& rhs) { return ptr_ != rhs.ptr_ || data1_ != rhs.data1_ || data2_ != rhs.data2_; }
+    bool operator!=(const self_t& rhs) { return !operator==(rhs); }
 
   private:
     std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::const_iterator> ptr_;  //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
