@@ -1,15 +1,14 @@
 #include <vector>
 #include <graphlib/gl>
 
-
 int main(int argc, char const *argv[])
 {
   std::vector<gl::Color> colors;
   colors.push_back(gl::Color());
-  colors.push_back(gl::Color(25,56,123));
-  colors.push_back(gl::Color(10,19,8));
-  colors.push_back(gl::Color(0.1,0.3,0.5,0.6123));
-  colors.push_back(gl::Color(-0.1,5.,12312.,1.));
+  colors.push_back(gl::Color(25, 56, 123));
+  colors.push_back(gl::Color(10, 19, 8));
+  colors.push_back(gl::Color(0.1, 0.3, 0.5, 0.6123));
+  colors.push_back(gl::Color(-0.1, 5., 12312., 1.));
   colors.push_back(gl::Color(0xF23456));
   colors.push_back(gl::Color(0xFFFFFF));
   colors.push_back(gl::Color(0x67131415));
@@ -27,6 +26,8 @@ int main(int argc, char const *argv[])
 
   std::cout << colors;
   
+  std::cout << colors[10].RGB() << std::endl;
+  std::cout << colors[10].RGBA() << std::endl;
+
   return 0;
 }
-
