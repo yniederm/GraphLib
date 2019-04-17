@@ -3,15 +3,16 @@
 int main(int argc, char const *argv[])
 {
 
-  gl::graphLid g (5);
+  gl::graphLid g (5,"ListGraph");
   g.setEdge(2,1,8); // initial set
   g.setEdge(1,0);   // set as simple undirected
   g.setEdge(2,0,5);
   g.numNodes();
   std::cout << "numNodes: " << g.numNodes() << std::endl
             << g << std::endl;
-  g.updateEdge(1,0,5); // update via updateEdge
-  g.setEdge(1,0,4); // update via setEdge
+  g.updateEdge(1,0,5); // update weight via updateEdge
+  g.updateEdge(2,1,gl::Color(0x123456)); // update color via updateEdge
+  g.updateEdge(1,0,5,gl::Color("red")); // update both via updateEdge
   
   auto neighbours_of_2 = g.getNeighbours(2);
   auto neighbourWeights_of_2 = g.getNeighbourWeights(2);
@@ -40,7 +41,23 @@ int main(int argc, char const *argv[])
   } catch (const std::runtime_error& e) {
     std::cout << "Caught exception: " << e.what() << "\n";
   }
+  try {
+    g.setEdge(2,1,8); // test setting a previously created edge
+  } catch (const std::runtime_error& e) {
+    std::cout << "Caught exception: " << e.what() << "\n";
+  }
   std::cout << std::endl << g << std::endl;
+
+  // ConstEdgeIterator test
+  for (auto it = g.edge_cbegin(); it != g.edge_cend(); ++it) {
+    std::cout << "Weight of edge (" << it->source() << "->" << it->dest() << ") is " << it->weight() << "\n";
+  }
+  std::cout << std::endl;
+  // EdgeIterator test
+  for (auto it = g.edge_begin(); it != g.edge_end(); ++it) {
+    it->weight(6);
+    std::cout << "Weight of edge (" << it->source() << "->" << it->dest() << ") is " << it->weight() << "\n";
+  }
 
   return 0;
 }
