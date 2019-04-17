@@ -17,7 +17,8 @@
 
 #include "Color.hpp"
 
-namespace gl {
+namespace gl
+{
 
 class Matrix;
 class List;
@@ -43,14 +44,14 @@ class Graph
 {
 
 public:
-  using val_t = SCALAR;
-  using idx_t = std::size_t;
-  using dest_vec_t = std::vector<std::pair<idx_t,val_t>>;
-  using idx_list_t = std::vector<idx_t>;
-  using ordered_list_t = std::list<idx_t>;
-  using visit_list_t = std::vector<bool>;
-  using BFS_queue_t = std::deque<idx_t>;
-  using DFS_queue_t = std::stack<idx_t>;
+  using val_t = SCALAR;                                    ///< Value type
+  using idx_t = std::size_t;                               ///< Index type
+  using dest_vec_t = std::vector<std::pair<idx_t, val_t>>; ///< Destination-Vector type
+  using idx_list_t = std::vector<idx_t>;                   ///< Index List type
+  using ordered_list_t = std::list<idx_t>;                 ///< Ordered List type
+  using visit_list_t = std::vector<bool>;                  ///< Visited-List type
+  using BFS_queue_t = std::deque<idx_t>;                   ///< BFS type
+  using DFS_queue_t = std::stack<idx_t>;                   ///< DFS type
 
   /** 
    * @class Edge
@@ -59,10 +60,18 @@ public:
    * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
    * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
    */
-  class Edge {
+  class Edge
+  {
   public:
-    Edge (const idx_t& src = 0, const idx_t& dest = 0, const val_t& weight = 0, const Color& color = {}, const bool& exists = false) :
-      src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
+    /**
+     * @brief Construct Edge from data
+     * @param src Source index
+     * @param dest Destination index
+     * @param weight The weight of the %Edge
+     * @param color Color of the %Edge
+     * @param exists Whether the %Edge exists
+     */
+    Edge(const idx_t &src = 0, const idx_t &dest = 0, const val_t &weight = 0, const Color &color = Color(), const bool &exists = false) : src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
 
     /**
      * @name exists
@@ -142,15 +151,15 @@ public:
      * @brief Allows changing the edge's RGBA color value.
      * @param[in] color New color object. 
      */
-    inline void color (const Color& color);
+    inline void color(const Color &color);
     //@}
-    
+
   private:
-    idx_t src_; /**< @brief Source index */
-    idx_t dest_; /**< @brief Destination index */ 
+    idx_t src_;    /**< @brief Source index */
+    idx_t dest_;   /**< @brief Destination index */
     val_t weight_; /**< @brief Edge weight */
-    bool exists_; /**< @brief Edge existance */
-    Color color_; /**< @brief Edge color */
+    bool exists_;  /**< @brief Edge existance */
+    Color color_;  /**< @brief Edge color */
   };
 
   /** 
@@ -160,12 +169,12 @@ public:
    * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
    * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
    */
-  class Node {
+  class Node
+  {
 
   public:
-    Node (idx_t id = 0, val_t capacity = 1, std::string name = "Node") :
-      id_(id), name_(name), capacity_(capacity), 
-      inDegree_(0), outDegree_(0) {}
+    Node(idx_t id = 0, val_t capacity = 1, std::string name = "Node") : id_(id), name_(name), capacity_(capacity),
+                                                                        inDegree_(0), outDegree_(0) {}
 
     /**
      * @name id
@@ -197,7 +206,7 @@ public:
      * @brief Allows changing the name of a node.
      * @param name New value of node name.
      */
-    inline void name(const std::string& name);
+    inline void name(const std::string &name);
     //@}
     /**
      * @name capacity
@@ -229,7 +238,7 @@ public:
      * @brief Allows changing the edge's RGBA color value.
      * @param[in] color New color object. 
      */
-    inline void color (const Color& color);
+    inline void color(const Color &color);
     //@}
     /**
      * @name inDegree
@@ -269,29 +278,28 @@ public:
      */
     inline void outDegreeDecrement();
     //@}
-    
+
   private:
-    idx_t id_; /**< @brief Node ID */
+    idx_t id_;         /**< @brief Node ID */
     std::string name_; /**< @brief Node name */
-    val_t capacity_; /**< @brief Node capacity */
-    Color color_; /**< @brief Node color */
-    idx_t inDegree_; /**< @brief In-degree */
-    idx_t outDegree_; /**< @brief Out-degree */
+    val_t capacity_;   /**< @brief Node capacity */
+    Color color_;      /**< @brief Node color */
+    idx_t inDegree_;   /**< @brief In-degree */
+    idx_t outDegree_;  /**< @brief Out-degree */
   };
 
-/** 
+  /** 
    * @class Property
    * @brief Stores the properties of a Graph.
    * @tparam SCALAR Number type used to store edge weights.
    * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
    * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
    */
-  class Property {
+  class Property
+  {
   public:
-    Property (const idx_t& numNodes, const std::string& name = "Graph", const idx_t& numEdges = 0) :
-      numNodes_(numNodes), name_(name), numEdges_(0) {}
-    Property (const Property& property) :
-      numNodes_(property.numNodes_), name_(property.name_), numEdges_(property.numEdges_) {}
+    Property(const idx_t &numNodes, const std::string &name = "Graph", const idx_t &numEdges = 0) : numNodes_(numNodes), name_(name), numEdges_(0) {}
+    Property(const Property &property) : numNodes_(property.numNodes_), name_(property.name_), numEdges_(property.numEdges_) {}
 
     /**
      * @name numNodes
@@ -307,17 +315,17 @@ public:
      * @brief Allows changing the number of nodes in the graph.
      * @param numNodes New value of node count.
      */
-    inline void numNodes(const idx_t& numNodes);
+    inline void numNodes(const idx_t &numNodes);
     /**
      * @brief Increments the number of nodes in the graph.
      * @param increment Number of nodes that will be added to the graph.
      */
-    inline void numNodesIncrement(const idx_t& increment = 1);
+    inline void numNodesIncrement(const idx_t &increment = 1);
     /**
      * @brief Decrements the number of nodes in the graph.
      * @param decrement Number of nodes that will be removed from the graph.
      */
-    inline void numNodesDecrement(const idx_t& decrement = 1);
+    inline void numNodesDecrement(const idx_t &decrement = 1);
     //@}
     /**
      * @name numEdges
@@ -333,17 +341,17 @@ public:
      * @brief Allows changing the number of edges in the graph.
      * @param numEdges New value of edge count.
      */
-    inline void numEdges(const idx_t& numEdges);
+    inline void numEdges(const idx_t &numEdges);
     /**
      * @brief Increments the number of edges in the graph.
      * @param increment Number of nodes that will be added to the graph.
      */
-    inline void numEdgesIncrement(const idx_t& increment = 1);
+    inline void numEdgesIncrement(const idx_t &increment = 1);
     /**
      * @brief Decrements the number of edges in the graph.
      * @param decrement Number of edges that will be removed from the graph.
      */
-    inline void numEdgesDecrement(const idx_t& decrement = 1);
+    inline void numEdgesDecrement(const idx_t &decrement = 1);
     //@}
     /**
      * @name name
@@ -359,156 +367,188 @@ public:
      * @brief Allows changing the name of the graph.
      * @param name New graph name.
      */
-    inline void name(const std::string& name);
+    inline void name(const std::string &name);
     //@}
-    
+
   private:
-    idx_t numNodes_; /**< @brief number of nodes in the graph */
-    idx_t numEdges_; /**< @brief number of edges in the graph */ 
+    idx_t numNodes_;   /**< @brief number of nodes in the graph */
+    idx_t numEdges_;   /**< @brief number of edges in the graph */
     std::string name_; /**< @brief name of the graph */
   };
 
-  using matrix_t = std::vector<Edge>;
-  using nodeList_t = std::list<Edge>;
-  using rootList_t = std::vector<nodeList_t>;
+  using matrix_t = std::vector<Edge>;         ///< Matrix Representation type
+  using nodeList_t = std::list<Edge>;         ///< ListNode Representation type
+  using rootList_t = std::vector<nodeList_t>; ///< ListRoot Representation type
+
 protected:
   Property property_; /**< @brief stores various properties of the Graph. */
 
-  std::vector<Node> nodes_; /**< @brief stores information about all nodes in the Graph. */
-  std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,matrix_t,rootList_t> edges_; /**< @brief Stores information about all edges in the Graph. */
+  std::vector<Node> nodes_;                                                                   /**< @brief stores information about all nodes in the Graph. */
+  std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, matrix_t, rootList_t> edges_; /**< @brief Stores information about all edges in the Graph. */
 
-public: 
+public:
   /**
+   * @brief Construct Graph from amount and name
    * @param numNodes Number of nodes/vertices in the graph.
    * @param name Name of the graph.
    */
-  Graph(const idx_t& numNodes, const std::string& name = "Graph") : 
-        property_(numNodes,name,0) { 
-          construct(); 
-    std::vector<Node> nodes ();
-    for (idx_t i = 0; i < numNodes; ++i) {
+  Graph(const idx_t &numNodes, const std::string &name = "Graph") : property_(numNodes, name, 0)
+  {
+    construct();
+    std::vector<Node> nodes();
+    for (idx_t i = 0; i < numNodes; ++i)
+    {
       nodes_.push_back(Node(i));
     }
   }
   /**
+   * @brief Construct Graph from property
    * @param property Properties for a graph.
    */
-  Graph(const Property& property) : 
-        property_(property) { 
-    construct(); 
-    std::vector<Node> nodes ();
-    for (idx_t i = 0; i < numNodes; ++i) {
+  Graph(const Property &property) : property_(property)
+  {
+    construct();
+    std::vector<Node> nodes();
+    for (idx_t i = 0; i < numNodes; ++i)
+    {
       nodes_.push_back(Node(i));
     }
   }
-  ~Graph() {}
+  ~Graph()
+  {
+  }
 
 private:
-
   /**
-   * @brief Auxiliary function. Creates an empty Graph using an adjacency matrix storage format.
+   * @brief Auxiliary function. Creates an empty Graph using the deducted storage format.
    */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  // here using matrix
   GL_ENABLE_IF_MATRIX
-  void construct () {
-    matrix_t matrix (numNodes()*numNodes(), Edge()); 
-    for (idx_t i = 0; i < numNodes(); ++i) {
-      for (idx_t j = 0; j < numNodes(); ++j) {
-        matrix[i*numNodes()+j].source(i);
-        matrix[i*numNodes()+j].dest(j);
+#endif
+  void construct()
+  {
+    matrix_t matrix(numNodes() * numNodes(), Edge());
+    for (idx_t i = 0; i < numNodes(); ++i)
+    {
+      for (idx_t j = 0; j < numNodes(); ++j)
+      {
+        matrix[i * numNodes() + j].source(i);
+        matrix[i * numNodes() + j].dest(j);
       }
     }
     edges_ = matrix;
   }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Auxiliary function. Creates an empty Graph using an adjacency list storage format.
    */
   GL_ENABLE_IF_LIST
-  void construct () {
-    rootList_t list (numNodes());
+  void construct()
+  {
+    rootList_t list(numNodes());
     edges_ = list;
   }
+#endif
 
 public:
-
 ///////////////////////////////////////////////////////////
 //    Specialized function implementations
 ///////////////////////////////////////////////////////////
 
-
-  /**
+/**
    * @brief Outputs a graph in Adjacency Matrix storage format with the same edges as this.
+   * This function does only exist for ListGraphs.
    */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  gl::Graph<SCALAR,gl::Matrix,DIRECTION> toMatrix() const {
-    gl::Graph<SCALAR,gl::Matrix,DIRECTION> out(numNodes(), name());
-    for (idx_t start = 0; start < edges_.size(); ++start) {
-      for (auto & end: edges_[start]) {
-        out.setEdge(start,end.dest(),end.weight(),end.color());
+#endif
+  gl::Graph<SCALAR, gl::Matrix, DIRECTION> toMatrix() const
+  {
+    gl::Graph<SCALAR, gl::Matrix, DIRECTION> out(numNodes(), name());
+    for (idx_t start = 0; start < edges_.size(); ++start)
+    {
+      for (auto &end : edges_[start])
+      {
+        out.setEdge(start, end.dest(), end.weight(), end.color());
       }
     }
     return out;
   }
 
-  /**
+/**
    * @brief Outputs a graph in Adjacency List storage format with the same edges as this.
+   * This function does only exist for MatrixGraphs
    */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX_DIRECTED
-  gl::Graph<SCALAR,List,Directed> toList() const {
-    gl::Graph<SCALAR,List,Directed> out(numNodes(), name());
-    for (idx_t i = 0; i < numNodes(); ++i) {
-      for (idx_t j = 0; j < numNodes(); ++j) {
-        if (hasEdge(i,j)) {
-          out.setEdge(i,j,edges_[i*numNodes()+j].weight(),edges_[i*numNodes()+j].color()); 
+#endif
+  gl::Graph<SCALAR, gl::List, gl::Directed> toList() const
+  {
+    gl::Graph<SCALAR, List, Directed> out(numNodes(), name());
+    for (idx_t i = 0; i < numNodes(); ++i)
+    {
+      for (idx_t j = 0; j < numNodes(); ++j)
+      {
+        if (hasEdge(i, j))
+        {
+          out.setEdge(i, j, edges_[i * numNodes() + j].weight(), edges_[i * numNodes() + j].color());
         }
       }
     }
     return out;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Outputs a graph in Adjacency List storage format with the same edges as this.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  gl::Graph<SCALAR,List,Undirected> toList() const {
-    gl::Graph<SCALAR,List,Undirected> out(numNodes(), name());
-    for (idx_t i = 0; i < numNodes(); ++i) {
-      for (idx_t j = i; j < numNodes(); ++j) {
-        if (hasEdge(i,j)) {
-          out.setEdge(i,j,edges_[i*numNodes()+j].weight(),edges_[i*numNodes()+j].color()); 
+  gl::Graph<SCALAR, gl::List, gl::Undirected> toList() const
+  {
+    gl::Graph<SCALAR, List, Undirected> out(numNodes(), name());
+    for (idx_t i = 0; i < numNodes(); ++i)
+    {
+      for (idx_t j = i; j < numNodes(); ++j)
+      {
+        if (hasEdge(i, j))
+        {
+          out.setEdge(i, j, edges_[i * numNodes() + j].weight(), edges_[i * numNodes() + j].color());
         }
       }
     }
     return out;
   }
+#endif
 
-  /**
-   * @name setEdge
+/**
    * @brief Sets an edge including start/end points and weight.
    * @param start edge origin point
    * @param end edge end point
    * @param weight new edge weight
    * @param color (Optional) new edge color
    */
-  //@{
-  /**
-   * @brief Adds edge in a Directed List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST_DIRECTED
-  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color& color = Color()) {
-    GL_ASSERT((!hasEdge(start,end)),std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+#endif
+  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color &color = Color())
+  {
+    GL_ASSERT((!hasEdge(start, end)), std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
 
     edges_[start].push_back(Edge(start, end, weight, color, true));
     property_.numEdgesIncrement();
     nodes_[start].outDegreeIncrement();
     nodes_[end].inDegreeIncrement();
   }
-  
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Adds edge in an Undirected List Graph.
    */
   GL_ENABLE_IF_LIST_UNDIRECTED
-  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color& color = Color()) {
-    GL_ASSERT((!hasEdge(start,end)),std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color &color = Color())
+  {
+    GL_ASSERT((!hasEdge(start, end)), std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     edges_[start].push_back(Edge(start, end, weight, color, true));
     edges_[end].push_back(Edge(end, start, weight, color, true));
     property_.numEdgesIncrement();
@@ -522,27 +562,31 @@ public:
    * @brief Adds edge in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color& color = Color()) {
-    GL_ASSERT((!hasEdge(start,end)),std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start*numNodes()+end].weight(weight);
-    edges_[start*numNodes()+end].exists(true);
-    edges_[start*numNodes()+end].color(color);
+  void setEdge(const idx_t start, const idx_t end, const val_t weight = 1, const Color &color = Color())
+  {
+    GL_ASSERT((!hasEdge(start, end)), std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    edges_[start * numNodes() + end].weight(weight);
+    edges_[start * numNodes() + end].exists(true);
+    edges_[start * numNodes() + end].color(color);
     property_.numEdgesIncrement();
     nodes_[start].outDegreeIncrement();
     nodes_[end].inDegreeIncrement();
   }
-  
+
   /**
    * @brief Adds edge in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  void setEdge(idx_t start, idx_t end, const val_t weight = 1, const Color& color = {}) {
-    GL_ASSERT((!hasEdge(start,end)),std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    if (start > end) std::swap(end, start);
-    edges_[start*numNodes()+end].color(color);
-    edges_[start*numNodes()+end].weight(weight);
-    if (!hasEdge(start,end)) {
-      edges_[start*numNodes()+end].exists(true);
+  void setEdge(idx_t start, idx_t end, const val_t weight = 1, const Color &color = {})
+  {
+    GL_ASSERT((!hasEdge(start, end)), std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    if (start > end)
+      std::swap(end, start);
+    edges_[start * numNodes() + end].color(color);
+    edges_[start * numNodes() + end].weight(weight);
+    if (!hasEdge(start, end))
+    {
+      edges_[start * numNodes() + end].exists(true);
       property_.numEdgesIncrement();
       nodes_[start].inDegreeIncrement();
       nodes_[start].outDegreeIncrement();
@@ -550,90 +594,100 @@ public:
       nodes_[end].outDegreeIncrement();
     }
   }
-  //@}
+#endif
 
+/**
+   * @brief Updates the weight edge from start to end.
+   * @param start edge origin point
+   * @param end edge end point
+   * @param weight new edge weight
+   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  GL_ENABLE_IF_LIST_DIRECTED
+#endif
+  void updateEdge(const idx_t start, const idx_t end, const val_t weight)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
+                           [&end](const Edge &node) { return node.dest() == end; });
+    (*it).weight(weight);
+  }
   /**
-   * @name updateEdge
+   * @brief Updates the color of an edge from start to end.
+   * @param start edge origin point
+   * @param end edge end point
+   * @param color new edge color
+   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  GL_ENABLE_IF_LIST_DIRECTED
+#endif
+  void updateEdge(const idx_t start, const idx_t end, const Color &color)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
+                           [&end](const Edge &node) { return node.dest() == end; });
+    (*it).color(color);
+  }
+  /**
    * @brief Updates the weight & color of an edge from start to end.
    * @param start edge origin point
    * @param end edge end point
    * @param weight new edge weight
    * @param color new edge color
    */
-  //@{
-  /**
-   * @brief Updates edge weight in a Directed List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST_DIRECTED
-  void updateEdge(const idx_t start, const idx_t end, const val_t weight) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+#endif
+  void updateEdge(const idx_t start, const idx_t end, const val_t weight, const Color &color)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
-    (*it).weight(weight);
-  }
-  /**
-   * @brief Updates edge color in a Directed List Graph.
-   */
-  GL_ENABLE_IF_LIST_DIRECTED
-  void updateEdge(const idx_t start, const idx_t end, const Color& color) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
-    (*it).color(color);
-  }
-  /**
-   * @brief Updates edge weight & color in a Directed List Graph.
-   */
-  GL_ENABLE_IF_LIST_DIRECTED
-  void updateEdge(const idx_t start, const idx_t end, const val_t weight, const Color& color) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     (*it).color(color);
     (*it).weight(weight);
   }
-
-  /**
-   * @brief Updates edge weight in an Undirected List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST_UNDIRECTED
-  void updateEdge(const idx_t start, const idx_t end, const val_t weight) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+  void updateEdge(const idx_t start, const idx_t end, const val_t weight)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     (*it).weight(weight);
 
     it = std::find_if(edges_[end].begin(), edges_[end].end(),
-    [&start](const Edge& node){ return node.dest() == start;});
+                      [&start](const Edge &node) { return node.dest() == start; });
     (*it).weight(weight);
   }
   /**
    * @brief Updates edge color in an Undirected List Graph.
    */
   GL_ENABLE_IF_LIST_UNDIRECTED
-  void updateEdge(const idx_t start, const idx_t end, const Color& color) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+  void updateEdge(const idx_t start, const idx_t end, const Color &color)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     (*it).color(color);
 
     it = std::find_if(edges_[end].begin(), edges_[end].end(),
-    [&start](const Edge& node){ return node.dest() == start;});
+                      [&start](const Edge &node) { return node.dest() == start; });
     (*it).color(color);
   }
   /**
    * @brief Updates edge weight & color in an Undirected List Graph.
    */
   GL_ENABLE_IF_LIST_UNDIRECTED
-  void updateEdge(const idx_t start, const idx_t end, const val_t weight, const Color& color) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+  void updateEdge(const idx_t start, const idx_t end, const val_t weight, const Color &color)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     (*it).weight(weight);
     (*it).color(color);
 
     it = std::find_if(edges_[end].begin(), edges_[end].end(),
-    [&start](const Edge& node){ return node.dest() == start;});
+                      [&start](const Edge &node) { return node.dest() == start; });
     (*it).weight(weight);
     (*it).color(color);
   }
@@ -642,90 +696,98 @@ public:
    * @brief Updates edge weight in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  inline void updateEdge(const idx_t start, const idx_t end, const val_t weight) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start*numNodes()+end].weight(weight);
+  inline void updateEdge(const idx_t start, const idx_t end, const val_t weight)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    edges_[start * numNodes() + end].weight(weight);
   }
   /**
    * @brief Updates edge color in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  inline void updateEdge(const idx_t start, const idx_t end, const Color& color) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start*numNodes()+end].color(color);
+  inline void updateEdge(const idx_t start, const idx_t end, const Color &color)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    edges_[start * numNodes() + end].color(color);
   }
   /**
    * @brief Updates edge weight & color in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  inline void updateEdge(const idx_t start, const idx_t end, const val_t weight, const Color& color) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start*numNodes()+end].weight(weight);
-    edges_[start*numNodes()+end].color(color);
+  inline void updateEdge(const idx_t start, const idx_t end, const val_t weight, const Color &color)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    edges_[start * numNodes() + end].weight(weight);
+    edges_[start * numNodes() + end].color(color);
   }
 
   /**
    * @brief Updates edge weight in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline void updateEdge(idx_t start, idx_t end, const val_t weight) {
-    if (start > end) std::swap(end, start);
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start*numNodes()+end].weight(weight);
+  inline void updateEdge(idx_t start, idx_t end, const val_t weight)
+  {
+    if (start > end)
+      std::swap(end, start);
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    edges_[start * numNodes() + end].weight(weight);
   }
   /**
    * @brief Updates edge color in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline void updateEdge(idx_t start, idx_t end, const Color& color) {
-    if (start > end) std::swap(end, start);
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start*numNodes()+end].color(color);
+  inline void updateEdge(idx_t start, idx_t end, const Color &color)
+  {
+    if (start > end)
+      std::swap(end, start);
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    edges_[start * numNodes() + end].color(color);
   }
   /**
    * @brief Updates edge weight & color in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline void updateEdge(idx_t start, idx_t end, const val_t weight, const Color& color) {
-    if (start > end) std::swap(end, start);
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start*numNodes()+end].weight(weight);
-    edges_[start*numNodes()+end].color(color);
+  inline void updateEdge(idx_t start, idx_t end, const val_t weight, const Color &color)
+  {
+    if (start > end)
+      std::swap(end, start);
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    edges_[start * numNodes() + end].weight(weight);
+    edges_[start * numNodes() + end].color(color);
   }
-  //@}
+#endif
 
-  /**
-   * @name delEdge
+/**
    * @brief Deletes the edge going from start to end.
    * @param start edge origin point
    * @param end edge end point
    */
-  //@{
-  /**
-   * @brief Deletes edge in a Directed List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST_DIRECTED
-  void delEdge(const idx_t start, const idx_t end) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+#endif
+  void delEdge(const idx_t start, const idx_t end)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     edges_[start].erase(it);
     property_.numEdgesDecrement();
     nodes_[start].outDegreeDecrement();
     nodes_[end].inDegreeDecrement();
   }
-  
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Deletes edge in an Undrected List Graph.
    */
   GL_ENABLE_IF_LIST_UNDIRECTED
-  void delEdge(const idx_t start, const idx_t end) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+  void delEdge(const idx_t start, const idx_t end)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     edges_[start].erase(it);
     it = std::find_if(edges_[end].begin(), edges_[end].end(),
-    [&start](const Edge& node){ return node.dest() == start;});
+                      [&start](const Edge &node) { return node.dest() == start; });
     edges_[end].erase(it);
     property_.numEdgesDecrement();
     nodes_[start].inDegreeDecrement();
@@ -738,11 +800,12 @@ public:
    * @brief Deletes edge in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  inline void delEdge (const idx_t start, const idx_t end) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    checkRange(start,end);
-    edges_[start*numNodes()+end].weight(SCALAR(0));
-    edges_[start*numNodes()+end].exists(false);
+  inline void delEdge(const idx_t start, const idx_t end)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    checkRange(start, end);
+    edges_[start * numNodes() + end].weight(SCALAR(0));
+    edges_[start * numNodes() + end].exists(false);
     property_.numEdgesDecrement();
     nodes_[start].outDegreeDecrement();
     nodes_[end].inDegreeDecrement();
@@ -752,338 +815,355 @@ public:
    * @brief Deletes edge in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline void delEdge (idx_t start, idx_t end) {
-    GL_ASSERT((hasEdge(start,end)),std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    if (start > end) std::swap(end, start);
-    edges_[start*numNodes()+end].weight(SCALAR(0));
-    edges_[start*numNodes()+end].exists(false);
+  inline void delEdge(idx_t start, idx_t end)
+  {
+    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
+    if (start > end)
+      std::swap(end, start);
+    edges_[start * numNodes() + end].weight(SCALAR(0));
+    edges_[start * numNodes() + end].exists(false);
     property_.numEdgesDecrement();
     nodes_[start].inDegreeDecrement();
     nodes_[start].outDegreeDecrement();
     nodes_[end].inDegreeDecrement();
     nodes_[end].outDegreeDecrement();
   }
-  //@}
+#endif
 
-  /**
-   * @name hasEdge
+/**
    * @brief Checks whether an edge exists from start to end.
    * @param start edge origin point
    * @param end edge end point
    * @return true if there exists an edge, false otherwise
    */
-  //@{
-  /**
-   * @brief Checks whether an edge exists in a List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  bool hasEdge(const idx_t start, const idx_t end) const {
-    checkRange(start,end);
+#endif
+  bool hasEdge(const idx_t start, const idx_t end) const
+  {
+    checkRange(start, end);
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     return it != edges_[start].end();
   }
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Checks whether an edge exists in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  inline bool hasEdge(const idx_t start, const idx_t end) const {
-    checkRange(start,end);
-    return edges_[start*numNodes()+end].exists();
+  inline bool hasEdge(const idx_t start, const idx_t end) const
+  {
+    checkRange(start, end);
+    return edges_[start * numNodes() + end].exists();
   }
 
   /**
    * @brief Checks whether an edge exists in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline bool hasEdge(idx_t start, idx_t end) const {
-    checkRange(start,end);
-    if (start > end) std::swap(end, start);
-    return edges_[start*numNodes()+end].exists();
+  inline bool hasEdge(idx_t start, idx_t end) const
+  {
+    checkRange(start, end);
+    if (start > end)
+      std::swap(end, start);
+    return edges_[start * numNodes() + end].exists();
   }
-  //@}
+#endif
 
-  /**
-   * @name getWeight
+/**
    * @brief Finds the weight of the edge going from start to end.
    * @param start edge origin point
    * @param end edge end point
    * @return weight of the selected edge
    */
-  //@{
-  /**
-   * @brief Finds the weight of an edge in a List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  val_t getWeight(const idx_t start, const idx_t end) const {
-    GL_ASSERT(hasEdge(start,end),(std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
+#endif
+  val_t getWeight(const idx_t start, const idx_t end) const
+  {
+    GL_ASSERT(hasEdge(start, end), (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-    [&end](const Edge& node){ return node.dest() == end;});
+                           [&end](const Edge &node) { return node.dest() == end; });
     return (*it).weight();
   }
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Finds the weight of an edge in a Directed Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
-  inline val_t getWeight(const idx_t start, const idx_t end) const {
-    GL_ASSERT(hasEdge(start,end),(std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
-    return edges_[start*numNodes()+end].weight();
+  inline val_t getWeight(const idx_t start, const idx_t end) const
+  {
+    GL_ASSERT(hasEdge(start, end), (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
+    return edges_[start * numNodes() + end].weight();
   }
 
   /**
    * @brief Finds the weight of an edge in an Undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline val_t getWeight(idx_t start, idx_t end) const {
-    if (start > end) std::swap(end, start);
-    GL_ASSERT(hasEdge(start,end),(std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
-    return edges_[start*numNodes()+end].weight();
+  inline val_t getWeight(idx_t start, idx_t end) const
+  {
+    if (start > end)
+      std::swap(end, start);
+    GL_ASSERT(hasEdge(start, end), (std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end)))
+    return edges_[start * numNodes() + end].weight();
   }
-  //@}
+#endif
 
-  /**
-   * @name getNeighbours
+/**
    * @brief Returns a list of all endpoints of outgoing edges from start.
    * @param node edge origin point
    * @return List of all direct neighbours
    */
-  //@{
-  /**
-   * @brief Gets a list of all node neighbours in a List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  idx_list_t getNeighbours (const idx_t node) const {
+#endif
+  idx_list_t getNeighbours(const idx_t node) const
+  {
     idx_list_t out;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end)) {
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end))
+      {
         out.push_back(end);
       }
     }
-    return out; 
+    return out;
   }
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Gets a list of all node neighbours in a Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX
-  idx_list_t getNeighbours (const idx_t node) const {
+  idx_list_t getNeighbours(const idx_t node) const
+  {
     idx_list_t out;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end)) 
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end))
         out.push_back(end);
     }
-    return out; 
+    return out;
   }
-  //@}
+#endif
 
-  /**
-   * @name getUnvisitedNeighbours
+/**
    * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
    * @param node edge origin point
    * @param visited boolean list of previously visited nodes
    * @return List of all direct neighbours + weights
    */
-  //@{
-  /**
-   * @brief Gets a list of unvisited node neighbours in a List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  idx_list_t getUnvisitedNeighbours (const idx_t node, const std::vector<bool> visited) const {
+#endif
+  idx_list_t getUnvisitedNeighbours(const idx_t node, const std::vector<bool> visited) const
+  {
     idx_list_t out;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end) && !visited[end]) 
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end) && !visited[end])
         out.push_back(end);
     }
-    return out; 
+    return out;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Gets a list of unvisited node neighbours in a Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX
-  idx_list_t getUnvisitedNeighbours (const idx_t node, const std::vector<bool> visited) const {
+  idx_list_t getUnvisitedNeighbours(const idx_t node, const std::vector<bool> visited) const
+  {
     idx_list_t out;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end) && !visited[end]) 
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end) && !visited[end])
         out.push_back(end);
     }
-    return out; 
+    return out;
   }
-  //@}
+#endif
 
-  /**
-   * @name getNeighbourWeights
+/**
    * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
    * @param node edge origin point
    * @return List of all direct neighbours + weights
    */
-  //@{
-  /**
-   * @brief Gets list & weights of outgoing edges in a List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  dest_vec_t getNeighbourWeights (const idx_t node) const {
+#endif
+  dest_vec_t getNeighbourWeights(const idx_t node) const
+  {
     dest_vec_t out;
-    for (const auto& edge : edges_[node]) {
-        out.push_back(std::make_pair(edge.dest(),edge.weight()));
+    for (const auto &edge : edges_[node])
+    {
+      out.push_back(std::make_pair(edge.dest(), edge.weight()));
     }
     return out;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Gets list & weights of outgoing edges in a Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX
-  dest_vec_t getNeighbourWeights (const idx_t node) const {
+  dest_vec_t getNeighbourWeights(const idx_t node) const
+  {
     dest_vec_t out;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end)) 
-        out.push_back(std::make_pair(end,getWeight(node,end)));
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end))
+        out.push_back(std::make_pair(end, getWeight(node, end)));
     }
-    return out; 
+    return out;
   }
-  //@}  
-  /**
-   * @name getUnvisitedEdges
+#endif
+/**
    * @brief Returns a list of endpoints + edge weights of unvisited outgoing edges from start.
    * @param node edge origin point
    * @param visited boolean list of previously visited nodes
    * @return List of all direct neighbours + weights
    */
-  //@{
-  /**
-   * @brief Gets a list of unvisited edges (weight + neighbour) in a List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  dest_vec_t getUnvisitedEdges (const idx_t node, const std::vector<bool> visited) const {
+#endif
+  dest_vec_t getUnvisitedEdges(const idx_t node, const std::vector<bool> visited) const
+  {
     dest_vec_t out;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end) && !visited[end]) 
-        out.push_back(std::make_pair(end,getWeight(node,end)));
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end) && !visited[end])
+        out.push_back(std::make_pair(end, getWeight(node, end)));
     }
-    return out; 
+    return out;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Gets a list of unvisited edges (weight + neighbour) in a Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX
-  dest_vec_t getUnvisitedEdges (const idx_t node, const std::vector<bool> visited) const {
+  dest_vec_t getUnvisitedEdges(const idx_t node, const std::vector<bool> visited) const
+  {
     dest_vec_t out;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if(hasEdge(node, end) && !visited[end]) 
-        out.push_back(std::make_pair(end,getWeight(node,end)));
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end) && !visited[end])
+        out.push_back(std::make_pair(end, getWeight(node, end)));
     }
-    return out; 
+    return out;
   }
-  //@}
-  /**
-   * @name getEdgeColor
+#endif
+/**
    * @brief Returns the color of the edgee^from src to dest.
    * @param src edge origin point
    * @param dest edge destination point
    * @return Color of edge src->dest
    */
-  //@{
-  /**
-   * @brief Gets the color of a directed Matrix Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX_DIRECTED
-  Color getEdgeColor (const idx_t src, const idx_t dest) const {
-    return edges_[src*numNodes()+dest].color();
+#endif
+  Color getEdgeColor(const idx_t src, const idx_t dest) const
+  {
+    return edges_[src * numNodes() + dest].color();
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Gets the color of an undirected Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX_UNDIRECTED
-  Color getEdgeColor (idx_t src, idx_t dest) const {
-    if (src > dest) std::swap(src,dest);
-    return edges_[src*numNodes()+dest].color();
+  Color getEdgeColor(idx_t src, idx_t dest) const
+  {
+    if (src > dest)
+      std::swap(src, dest);
+    return edges_[src * numNodes() + dest].color();
   }
   /**
    * @brief Gets the color of a List Graph.
    */
   GL_ENABLE_IF_LIST
-  Color getEdgeColor (const idx_t src, const idx_t dest) const {
+  Color getEdgeColor(const idx_t src, const idx_t dest) const
+  {
     auto it = std::find_if(edges_[src].begin(), edges_[src].end(),
-    [&dest](const Edge& node){ return node.dest() == dest;});
+                           [&dest](const Edge &node) { return node.dest() == dest; });
     return (*it).color();
   }
-  //@}
+#endif
 
-  /**
-   * @name getDegree
+/**
    * @brief Finds the degree numNodesof the given node (i.e. count of all outgoing edges).
    * @param node node whose degree is to be found
    * @return Degree of node
    */
-  //@{
-  /**
-   * @brief Gets the degree of a node in a List Graph.
-   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  inline idx_t getDegree (const idx_t node) const {
+#endif
+  inline idx_t getDegree(const idx_t node) const
+  {
     return edges_[node].size();
   }
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Gets the degree of a node in a Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX
-  idx_t getDegree (const idx_t node) const {
+  idx_t getDegree(const idx_t node) const
+  {
     idx_t count = 0;
-    for (idx_t end = 0; end < numNodes(); ++end) {
-      if (hasEdge(node,end)) ++count;
+    for (idx_t end = 0; end < numNodes(); ++end)
+    {
+      if (hasEdge(node, end))
+        ++count;
     }
     return count;
   }
-  //@}
+#endif
 
-///////////////////////////////////////////////////////////
-//    Base class function implementations
-///////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////
+  //    Base class function implementations
+  ///////////////////////////////////////////////////////////
 
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  GL_ENABLE_IF_UNDIRECTED
+#endif
   /**
-   * @name isDirected
    * @brief Returns true if the graph is undirected, false if not.
    * @return true if the graph is undirected, false if not.
    */
-  //@{
-  /**
-   * @brief Version for undirected graphs.
-   */
-  GL_ENABLE_IF_UNDIRECTED
-  inline bool isDirected () const {
+  inline bool isDirected() const
+  {
     return false;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Version for directed graphs.
    */
   GL_ENABLE_IF_DIRECTED
-  inline bool isDirected () const {
+  inline bool isDirected() const
+  {
     return true;
   }
-  //@}
+#endif
 
   /**
    * @brief Returns the name of the graph.
    * @return name of the graph
    */
-  inline std::string name () const {
+  inline std::string name() const
+  {
     return property_.name();
   }
   /**
    * @brief Changes the name of the graph.
    * @return New name of the graph
    */
-  inline void name (const std::string& name) {
+  inline void name(const std::string &name)
+  {
     property_.name(name);
   }
   /**
    * @brief Returns the number of nodes currently in the graph.
    * @return number of nodes in the graph
    */
-  inline idx_t numNodes () const {
+  inline idx_t numNodes() const
+  {
     return property_.numNodes();
   }
 
@@ -1091,7 +1171,8 @@ public:
    * @brief Returns the number of edges currently in the graph.
    * @return number of edges in the graph
    */
-  inline idx_t numEdges () const {
+  inline idx_t numEdges() const
+  {
     return property_.numEdges();
   }
 
@@ -1102,16 +1183,22 @@ public:
    * @brief Checks whether the given graph containes cycles.
    * @return true if cyclic, false if acyclic
    */
-  bool hasCycle () const {
+  bool hasCycle() const
+  {
     visit_list_t visited(numNodes(), false);
     idx_list_t neighbourList;
 
-    for(idx_t i = 0; i < numNodes(); i++) {
+    for (idx_t i = 0; i < numNodes(); i++)
+    {
       neighbourList = getNeighbours(i);
-      for(auto neighbour : neighbourList) {
-        if (visited[neighbour]) {
+      for (auto neighbour : neighbourList)
+      {
+        if (visited[neighbour])
+        {
           return true;
-        } else {
+        }
+        else
+        {
           visited[neighbour] = true;
         }
       }
@@ -1123,18 +1210,22 @@ public:
    * @brief Adds edges in the format "<start> <end> <weight>" found in inFile to the graph.
    * @param inFile file name of input file
    */
-  void readFile(const std::string& inFile)
+  void readFile(const std::string &inFile)
   {
     std::ifstream is;
     is.open(inFile, std::ios::in);
-    if (!is.is_open()) {
+    if (!is.is_open())
+    {
       std::cout << "Error: failed to open " << inFile << '\n';
-    } else {
+    }
+    else
+    {
       idx_t start;
       idx_t end;
       val_t weight;
-      while (is >> start >> end >> weight) {
-        setEdge(start,end,weight);
+      while (is >> start >> end >> weight)
+      {
+        setEdge(start, end, weight);
       }
     }
   }
@@ -1149,9 +1240,10 @@ public:
    * @brief Only one index that gets range checked.
    * @param idx1 Index that will be range checked
    */
-  inline void checkRange (const idx_t idx1) const {
-    GL_ASSERT((0 <= idx1),(std::string("Negative index: ") + std::to_string(idx1) + std::string(" < 0")))
-    GL_ASSERT((idx1 < numNodes()),("Index " + std::to_string(idx1) + " is larger than the max: " + std::to_string(numNodes()-1)))
+  inline void checkRange(const idx_t idx1) const
+  {
+    GL_ASSERT((0 <= idx1), (std::string("Negative index: ") + std::to_string(idx1) + std::string(" < 0")))
+    GL_ASSERT((idx1 < numNodes()), ("Index " + std::to_string(idx1) + " is larger than the max: " + std::to_string(numNodes() - 1)))
   }
 
   /**
@@ -1159,200 +1251,377 @@ public:
    * @param idx1 First index that will be range checked
    * @param idx2 Second index that will be range checked.
    */
-  inline void checkRange (const idx_t idx1, const idx_t idx2) const {
+  inline void checkRange(const idx_t idx1, const idx_t idx2) const
+  {
     checkRange(idx1);
     checkRange(idx2);
   }
 
+  /**
+   * @brief %EdgeIterator class.
+   * Used to iterate over all Edges in the Graph
+   */
   class EdgeIterator
   {
   public:
-    using self_t = EdgeIterator;
-    using val_t = Edge;
-    using ref_t = Edge&;
-    using pointer_t = Edge*;
-    using iterator_category = std::forward_iterator_tag;
-    using diff_t = std::ptrdiff_t;
+    using self_t = EdgeIterator;                         ///< EdgeIterator type
+    using val_t = Edge;                                  ///< Edge type
+    using ref_t = Edge &;                                ///< Edge reference type
+    using pointer_t = Edge *;                            ///< Edge pointer type
+    using iterator_category = std::forward_iterator_tag; ///< Iterator category
+    using diff_t = std::ptrdiff_t;                       ///< Pointer Difference type
+    /**
+     * @brief Default constructor
+     */
     EdgeIterator() {}
+/**
+     * @brief Construct EdgeIterator, only used with Matrix Representation
+     * @param ptr Pointer to which edge this iterator should point
+     * @param data1 ?
+     * @param data2 ?
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_MATRIX
-    EdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2) { }
+#endif
+    EdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {
+    }
+/**
+     * @brief Construct EdgeIterator, only used with List Representation
+     * @param ptr Pointer to which edge this iterator should point
+     * @param data1 ?
+     * @param data2 ?
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_LIST
-    EdgeIterator(typename nodeList_t::iterator ptr, typename rootList_t::iterator data1, Graph<SCALAR,STORAGE_KIND,DIRECTION>* data2) : ptr_(ptr), data1_(data1), data2_(data2) { }
-    GL_ENABLE_IF_MATRIX
-    self_t operator++() { 
-      ++ptr_;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists()) { 
-        ptr_++; 
-      }
-      return *this;
+#endif
+    EdgeIterator(typename nodeList_t::iterator ptr, typename rootList_t::iterator data1, Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {
     }
-    GL_ENABLE_IF_MATRIX
-    self_t operator++(int dummy) { 
-      self_t i = *this; 
-      ptr_++; 
-      while (ptr_ - data1_ < data2_ && !ptr_->exists()) { 
-        ptr_++; 
-      } 
-      return i; 
-    }
-    GL_ENABLE_IF_LIST
-    self_t operator++() { 
-      ++ptr_;
-      if(ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end())){
-        ++data1_;
-        while(data1_->size() == 0) ++data1_;
-        ptr_ = data1_->begin();
-      }
-      return *this;
-    }
-    GL_ENABLE_IF_LIST
-    self_t operator++(int dummy) { 
-      self_t i = *this; 
-      ++ptr_;
-      if(ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end())){
-        ++data1_;
-        while(data1_->size() == 0) ++data1_;
-        ptr_ = data1_->begin();
-      }
-      return i; 
-    }
-    val_t& operator*() { return *ptr_; }
-    val_t* operator->() { return &operator*(); }
 
-    self_t operator=(const self_t& rhs) { 
+    /**
+     * @brief Move Iterator to next edge (pre-increment)
+     * @return new Iterator
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    self_t operator++()
+    {
+      ++ptr_;
+      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      {
+        ptr_++;
+      }
+      return *this;
+    }
+    /**
+     * @brief Move Iterator to next edge (post-increment)
+     * @return new Iterator
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    self_t operator++(int dummy)
+    {
+      self_t i = *this;
+      ptr_++;
+      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      {
+        ptr_++;
+      }
+      return i;
+    }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_LIST
+    self_t operator++()
+    {
+      ++ptr_;
+      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
+      {
+        ++data1_;
+        while (data1_->size() == 0)
+          ++data1_;
+        ptr_ = data1_->begin();
+      }
+      return *this;
+    }
+    GL_ENABLE_IF_LIST
+    self_t operator++(int dummy)
+    {
+      self_t i = *this;
+      ++ptr_;
+      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
+      {
+        ++data1_;
+        while (data1_->size() == 0)
+          ++data1_;
+        ptr_ = data1_->begin();
+      }
+      return i;
+    }
+#endif
+    /**
+     * @brief Dereference iterator
+     * @return A Reference to the underlying edge
+     */
+    val_t &operator*() { return *ptr_; }
+    /**
+     * @brief Get underlying edge
+     * @return Pointer to underlying edge
+     */
+    pointer_t operator->() { return &operator*(); }
+    /**
+     * @brief Check if equal
+     * @return If both iterators are equal
+     */
+    bool operator==(const self_t &rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
+    /**
+     * @brief Check if not equal
+     * @return If both iterators are not equal
+     */
+    bool operator!=(const self_t &rhs) { return !operator==(rhs); }
+
+    /**
+     * @brief Construct from Assignment
+     * @return If both iterators are not equal
+     */
+    self_t operator=(const self_t &rhs)
+    {
       ptr_ = rhs.ptr_;
       data1_ = rhs.data1_;
       data2_ = rhs.data2_;
     }
-    bool operator==(const self_t& rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
-    bool operator!=(const self_t& rhs) { return !operator==(rhs); }
+
   private:
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::iterator> ptr_;  //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,pointer_t, typename rootList_t::iterator> data1_;  //< @brief pointer to first element for Matrix, iterator over the rootList for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,idx_t, Graph<SCALAR,STORAGE_KIND,DIRECTION>*> data2_;  //< @brief size of adjacency matrix for matrix, pointer to this Graph for List
+    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::iterator> ptr_;          //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
+    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename rootList_t::iterator> data1_;        //< @brief pointer to first element for Matrix, iterator over the rootList for List
+    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, idx_t, Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; //< @brief size of adjacency matrix for matrix, pointer to this Graph for List
   };
 
+  /**
+   * @brief %ConstEdgeIterator class.
+   * Used to iterate over all Edges in the Graph (and not write access)
+   */
   class ConstEdgeIterator
   {
   public:
-    using self_t = ConstEdgeIterator;
-    using val_t = Edge;
-    using ref_t = Edge&;
-    using pointer_t = Edge*;
-    using iterator_category = std::forward_iterator_tag;
-    using diff_t = std::ptrdiff_t;
-
+    using self_t = ConstEdgeIterator;                    ///< ConstEdgeIterator type
+    using val_t = Edge;                                  ///< Edge type
+    using ref_t = Edge &;                                ///< Edge reference type
+    using pointer_t = Edge *;                            ///< Edge pointer type
+    using iterator_category = std::forward_iterator_tag; ///< Iterator category
+    using diff_t = std::ptrdiff_t;                       ///< Pointer Difference type
+    /**
+   * @brief Default Constructor
+   */
     ConstEdgeIterator() {}
-    GL_ENABLE_IF_MATRIX
-    ConstEdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2) { }
-    GL_ENABLE_IF_LIST
-    ConstEdgeIterator(typename nodeList_t::const_iterator ptr, typename rootList_t::const_iterator data1, Graph<SCALAR,STORAGE_KIND,DIRECTION>* data2) : ptr_(ptr), data1_(data1), data2_(data2) { }
 
+    /**
+     * @brief Construct ConstEdgeIterator
+     * @param ptr Pointer to which edge this iterator should point
+     * @param data1 ?
+     * @param data2 ?
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_MATRIX
-    self_t operator++() { 
-      ++ptr_;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists()) { 
-        ptr_++; 
-      }
-      return *this; 
+#endif
+    ConstEdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {
     }
-    GL_ENABLE_IF_MATRIX
-    self_t operator++(int dummy) { 
-      self_t i = *this; 
-      ptr_++; 
-      while (ptr_ - data1_ < data2_ && !ptr_->exists()) { 
-        ptr_++; 
-      }
-      return i; 
-    }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_LIST
-    self_t operator++() { 
+#endif
+    ConstEdgeIterator(typename nodeList_t::const_iterator ptr, typename rootList_t::const_iterator data1, Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {
+    }
+
+    /**
+     * @brief Move Iterator to next edge (pre-increment)
+     * @return new Iterator
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    self_t operator++()
+    {
       ++ptr_;
-      if(ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end())){
+      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      {
+        ptr_++;
+      }
+      return *this;
+    }
+    /**
+     * @brief Move Iterator to next edge (post-increment)
+     * @return new Iterator
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    self_t operator++(int dummy)
+    {
+      self_t i = *this;
+      ptr_++;
+      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      {
+        ptr_++;
+      }
+      return i;
+    }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_LIST
+    self_t operator++()
+    {
+      ++ptr_;
+      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
+      {
         ++data1_;
-        while(data1_->size() == 0) ++data1_;
+        while (data1_->size() == 0)
+          ++data1_;
         ptr_ = data1_->begin();
       }
       return *this;
     }
     GL_ENABLE_IF_LIST
-    self_t operator++(int dummy) { 
-      self_t i = *this; 
+    self_t operator++(int dummy)
+    {
+      self_t i = *this;
       ++ptr_;
-      if(ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end())){
+      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
+      {
         ++data1_;
-        while(data1_->size() == 0) ++data1_;
+        while (data1_->size() == 0)
+          ++data1_;
         ptr_ = data1_->begin();
       }
-      return i; 
+      return i;
     }
+#endif
+    /**
+     * @brief Dereference iterator
+     * @return A const Reference to the underlying edge
+     */
+    const val_t &operator*() { return *ptr_; }
 
-    self_t operator=(const self_t& rhs) { 
+    /**
+     * @brief Assignment constructor
+     * @return A new EdgeIterator
+     */
+    self_t operator=(const self_t &rhs)
+    {
       ptr_ = rhs.ptr_;
       data1_ = rhs.data1_;
       data2_ = rhs.data2_;
     }
-    const val_t& operator*() { return *ptr_; }
-    const val_t* operator->() { return &operator*(); }
-    bool operator==(const self_t& rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
-    bool operator!=(const self_t& rhs) { return !operator==(rhs); }
+    /**
+     * @brief Get underlying edge
+     * @return const Pointer to underlying edge
+     */
+    const val_t *operator->() { return &operator*(); }
+    /**
+     * @brief Check if equal
+     * @return If both iterators are equal
+     */
+    bool operator==(const self_t &rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
+    /**
+     * @brief Check if not equal
+     * @return If both iterators are not equal
+     */
+    bool operator!=(const self_t &rhs) { return !operator==(rhs); }
 
   private:
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::const_iterator> ptr_;  //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,pointer_t, typename rootList_t::const_iterator> data1_;  //< @brief pointer to first element for Matrix, iterator over the rootList for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,idx_t, Graph<SCALAR,STORAGE_KIND,DIRECTION>*> data2_;  //< @brief size of adjacency matrix for matrix, pointer to this Graph for List
+    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::const_iterator> ptr_;    //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
+    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename rootList_t::const_iterator> data1_;  //< @brief pointer to first element for Matrix, iterator over the rootList for List
+    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, idx_t, Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; //< @brief size of adjacency matrix for matrix, pointer to this Graph for List
   };
+  /**
+   * @brief EdgeIterator to the first edge
+   * @return Iterator to first edge
+   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX
-  EdgeIterator edge_begin() {
-    Edge* ptr = &edges_.front();
-    Edge* start = &edges_.front();
-    idx_t end = numNodes()*numNodes();
-    while (!ptr->exists()) {
+#endif
+  EdgeIterator edge_begin()
+  {
+    Edge *ptr = &edges_.front();
+    Edge *start = &edges_.front();
+    idx_t end = numNodes() * numNodes();
+    while (!ptr->exists())
+    {
       ptr++;
     }
-    return EdgeIterator(ptr,start,end);
+    return EdgeIterator(ptr, start, end);
   }
+  /**
+   * @brief EdgeIterator to the last edge
+   * @return Iterator to last edge
+   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX
-  EdgeIterator edge_end() {
-    return EdgeIterator(&edges_.back()+1,&edges_.front(),numNodes()*numNodes());
+#endif
+  EdgeIterator edge_end()
+  {
+    return EdgeIterator(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
   }
-
+  /**
+   * @brief ConstEdgeIterator to the first edge
+   * @return Iterator to first edge
+   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX
-  ConstEdgeIterator edge_cbegin() {
-    Edge* ptr = &edges_.front();
-    Edge* start = &edges_.front();
-    idx_t end = numNodes()*numNodes();
-    while (!ptr->exists()) {
+#endif
+  ConstEdgeIterator edge_cbegin()
+  {
+    Edge *ptr = &edges_.front();
+    Edge *start = &edges_.front();
+    idx_t end = numNodes() * numNodes();
+    while (!ptr->exists())
+    {
       ptr++;
     }
-    return ConstEdgeIterator(ptr,start,end);
+    return ConstEdgeIterator(ptr, start, end);
   }
+  /**
+   * @brief ConstEdgeIterator to the last edge
+   * @return Iterator to last edge
+   */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX
-  ConstEdgeIterator edge_cend() {
-    return ConstEdgeIterator(&edges_.back()+1,&edges_.front(),numNodes()*numNodes());
+#endif
+  ConstEdgeIterator edge_cend()
+  {
+    return ConstEdgeIterator(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
   }
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
-  EdgeIterator edge_begin() {
+  EdgeIterator edge_begin()
+  {
     auto it = edges_.begin();
-    while (it->size()==0) ++it;
-    return EdgeIterator(edges_[it-edges_.begin()].begin(), it, this);
+    while (it->size() == 0)
+      ++it;
+    return EdgeIterator(edges_[it - edges_.begin()].begin(), it, this);
   }
   GL_ENABLE_IF_LIST
-  EdgeIterator edge_end() {
+  EdgeIterator edge_end()
+  {
     return EdgeIterator(edges_.back().end(), edges_.end() - 1, this);
   }
 
   GL_ENABLE_IF_LIST
-  ConstEdgeIterator edge_cbegin() {
+  ConstEdgeIterator edge_cbegin()
+  {
     auto it = edges_.cbegin();
-    while (it->size()==0) ++it;
-    return ConstEdgeIterator(edges_[it-edges_.begin()].cbegin(), it, this);
+    while (it->size() == 0)
+      ++it;
+    return ConstEdgeIterator(edges_[it - edges_.begin()].cbegin(), it, this);
   }
   GL_ENABLE_IF_LIST
-  ConstEdgeIterator edge_cend() {
+  ConstEdgeIterator edge_cend()
+  {
     return ConstEdgeIterator(edges_.back().cend(), edges_.cend() - 1, this);
   }
+#endif
 };
 
 } /* namespace gl */
