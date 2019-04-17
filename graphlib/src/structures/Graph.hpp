@@ -750,7 +750,7 @@ public:
    */
   GL_ENABLE_IF_MATRIX_DIRECTED
   Color getEdgeColor (const idx_t src, const idx_t dest) const {
-    return edges_[src*numNodes()+dest].color();
+    return _edges[src*numNodes()+dest].color();
   }
   /**
    * @brief Gets the color of an undirected Matrix Graph.
@@ -758,13 +758,13 @@ public:
   GL_ENABLE_IF_MATRIX_UNDIRECTED
   Color getEdgeColor (idx_t src, idx_t dest) const {
     if (src > dest) std::swap(src,dest);
-    return edges_[src*numNodes()+dest].color();
+    return _edges[src*numNodes()+dest].color();
   }
   /**
    * @brief Gets the color of a List Graph.
    */
   GL_ENABLE_IF_LIST
-  Color getEdgeColor (idx_t src, idx_t dest) const {
+  Color getEdgeColor (const idx_t src, const idx_t dest) const {
     auto it = std::find_if(edges_[src].begin(), edges_[src].end(),
     [&dest](const Edge& node){ return node.dest() == dest;});
     return (*it).color();
