@@ -18,6 +18,8 @@ set(TESTS
     IOTikz
     ListGraph
     MathGL
+    MathGLColors
+    MathGLPlacing
     MatrixGraph
     PrintContainer
     TransitiveClosure
@@ -29,7 +31,9 @@ set(EIGEN_TESTS
     MathGL)
 
 set(MATHGL_TESTS
-    MathGL)
+    MathGL
+    MathGLColors
+    MathGLPlacing)
 
 foreach(TEST_NAME ${TESTS})
   add_executable(${TEST_NAME} Test_${TEST_NAME}.cpp)

@@ -5,15 +5,17 @@
 #include <iostream>
 #include <Eigen/Dense>
 
-namespace gl {
-namespace external {
+namespace gl
+{
+namespace external
+{
 
 /**
    @brief Simple function, writes structure to the given stream,
    which then can be run through pdflatex to generate a pdf.
    */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void writeTikzToStream(std::ostream &s, Graph<SCALAR,STORAGE_KIND,DIRECTION> &g)
+void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g)
 {
   s << "\\documentclass[border=10pt]{standalone}\n"
     << "\\usepackage{tkz-graph}\n"
@@ -36,21 +38,15 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR,STORAGE_KIND,DIRECTION> &g)
       s << "\\WE(" << i - 1 << "){" << i << "}" << std::endl;
   }
 
-  for (int i = 0; i < g.numNodes(); i++)
+  for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
   {
-    for (int j = 0; j < g.numNodes(); j++)
+    if (it->source() == it->dest())
     {
-      if (g.hasEdge(i, j))
-      {
-        if (i == j)
-        {
-          s << "\\Loop[dist=4cm,dir=NO,label=" << g.getWeight(i, j) << "](" << i << ".west)\n";
-        }
-        else
-        {
-          s << "\\Edge[label=" << g.getWeight(i, j) << "](" << i << ")(" << j << ")\n";
-        }
-      }
+      s << "\\Loop[dist=4cm,dir=NO,label=" << it->weight() << "](" << it->source() << ".west)\n";
+    }
+    else
+    {
+      s << "\\Edge[label=" << it->weight() << "](" << it->source() << ")(" << it->dest() << ")\n";
     }
   }
 
@@ -64,7 +60,7 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR,STORAGE_KIND,DIRECTION> &g)
    @param writeNodes wheter it should write nodes (numbers)
    */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void writeTikzToStream2(std::ostream &s, Graph<SCALAR,STORAGE_KIND,DIRECTION> &g, bool writeNodes = true)
+void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true)
 {
   s << "\\documentclass{amsart}" << std::endl;
   s << "\\usepackage{tikz}" << std::endl;
@@ -84,21 +80,17 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR,STORAGE_KIND,DIRECTION> &g
   adjMat.setZero();
 
   // build degree matrix
-  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
     degs(i) = g.getDegree(i);
   }
   degMat = degs.asDiagonal();
 
   // build adjacency matrix
-  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
   {
-    typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
-    for (auto n : neighbours)
-    {
-      adjMat(i, n) = 1;
-      adjMat(n, i) = 1; // undirected
-    }
+    adjMat(it->source(), it->dest()) = 1;
+    adjMat(it->dest(), it->source()) = 1;
   }
 
   E_MAT laplacian = degMat - adjMat;
@@ -107,7 +99,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR,STORAGE_KIND,DIRECTION> &g
   Eigen::EigenSolver<E_MAT> solver;
   solver.compute(laplacian);
 
-  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
     Eigen::Vector2d pos;
     pos << solver.eigenvectors()(0, i).real(), solver.eigenvectors()(1, i).real();
@@ -120,19 +112,16 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR,STORAGE_KIND,DIRECTION> &g
       << pos(1) << ") {";
     if (writeNodes)
       s << i;
-      s << "};" << std::endl;
+    s << "};" << std::endl;
   }
 
   // draw all edges
   s << "  \\begin{scope}[every path/.style={->}]" << std::endl;
-  for (typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
   {
-    typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
-    for (auto n : neighbours)
+    if (it->source() != it->dest())
     {
-      if (i == n)
-        continue; // removing circle to itself
-      s << "    \\draw (" << i << ") -- (" << n << ");" << std::endl;
+      s << "    \\draw (" << it->source() << ") -- (" << it->dest() << ");" << std::endl;
     }
   }
 
