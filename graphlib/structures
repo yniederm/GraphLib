@@ -5,6 +5,7 @@
 #include "src/gl_assert.hpp"
 
 #include "src/structures/Edge.hpp"
+#include "src/structures/Node.hpp"
 #include "src/structures/Property.hpp"
 #include "src/structures/Graph.hpp"
 #include "src/structures/Color.hpp"

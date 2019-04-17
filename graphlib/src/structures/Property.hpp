@@ -19,58 +19,58 @@ using val_t = typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::val_t;
 /* \internal getter for numNodes */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodes() const {
-  return _numNodes;
+  return numNodes_;
 }
 
 /* \internal setter for numNodes */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodes(const idx_t& numNodes) {
-  _numNodes = numNodes;
+  numNodes_ = numNodes;
 }
 
 /* \internal increment for numNodes */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodesIncrement (const idx_t& increment) {
-  _numNodes += increment;
+  numNodes_ += increment;
 }
 /* \internal decrement for numNodes */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodesDecrement (const idx_t& decrement) {
-  _numNodes -= decrement;
+  numNodes_ -= decrement;
 }
 
 /* \internal getter for numEdges */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdges() const {
-  return _numEdges;
+  return numEdges_;
 }
 
 /* \internal setter for numEdges */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdges(const idx_t& numEdges) {
-  _numEdges = numEdges;
+  numEdges_ = numEdges;
 }
 
 /* \internal increment for numEdges */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdgesIncrement (const idx_t& increment) {
-  _numEdges += increment;
+  numEdges_ += increment;
 }
 /* \internal decrement for numEdges */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdgesDecrement (const idx_t& decrement) {
-  _numEdges -= decrement;
+  numEdges_ -= decrement;
 }
 /* \internal getter for name */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::name() const {
-  return _name;
+  return name_;
 }
 
 /* \internal setter for name */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::name(const std::string& name) {
-  _name = name;
+  name_ = name;
 }
 
 } // namespace gl

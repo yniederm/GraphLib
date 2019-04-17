@@ -163,6 +163,132 @@ public:
   };
 
   /** 
+   * @class Node
+   * @brief Represents a node in a Graph.
+   * @tparam SCALAR Number type used to store node capacities.
+   * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
+   * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
+   */
+  class Node
+  {
+
+  public:
+    Node(idx_t id = 0, val_t capacity = 1, std::string name = "Node") : id_(id), name_(name), capacity_(capacity),
+                                                                        inDegree_(0), outDegree_(0) {}
+
+    /**
+     * @name id
+     * @brief Access to node ID.
+     */
+    //@{
+    /**
+     * @brief Checks whether an edge exists.
+     * @return True if exists, false otherwise.
+     */
+    inline idx_t id() const;
+    /**
+     * @brief Allows changing of node ID.
+     * @param id New value of node ID.
+     */
+    inline void id(idx_t id);
+    //@}
+    /**
+     * @name name
+     * @brief Access to the name of a node.
+     */
+    //@{
+    /**
+     * @brief Gets the name of a node.
+     * @return name of the node.
+     */
+    inline std::string name() const;
+    /**
+     * @brief Allows changing the name of a node.
+     * @param name New value of node name.
+     */
+    inline void name(const std::string &name);
+    //@}
+    /**
+     * @name capacity
+     * @brief Access to capacity of the edge.
+     */
+    //@{
+    /**
+     * @brief Gets the capacity of the node.
+     * @return Capacity of the node.
+     */
+    inline val_t capacity() const;
+    /**
+     * @brief Allows changing the capacity of a node.
+     * @param capacity New value of node capacity.
+     */
+    inline void capacity(val_t capacity);
+    //@}
+    /**
+     * @name color
+     * @brief Access to the edge's RGBA color value.
+     */
+    //@{
+    /**
+     * @brief Gets the edge's color.
+     * @return Color of the edge.
+     */
+    inline Color color() const;
+    /**
+     * @brief Allows changing the edge's RGBA color value.
+     * @param[in] color New color object. 
+     */
+    inline void color(const Color &color);
+    //@}
+    /**
+     * @name inDegree
+     * @brief Access to node in-degree.
+     */
+    //@{
+    /**
+     * @brief Gets the in-degree of a node.
+     * @return In-degree of a node.
+     */
+    inline idx_t inDegree() const;
+    /**
+     * @brief Increments the node in-degree.
+     */
+    inline void inDegreeIncrement();
+    /**
+     * @brief Decrements the node in-degree.
+     */
+    inline void inDegreeDecrement();
+    //@}
+    /**
+     * @name outDegree
+     * @brief Access to node out-degree.
+     */
+    //@{
+    /**
+     * @brief Gets the out-degree of a node.
+     * @return Out-degree of a node.
+     */
+    inline idx_t outDegree() const;
+    /**
+     * @brief Increments the node out-degree.
+     */
+    inline void outDegreeIncrement();
+    /**
+     * @brief Decrements the node out-degree.
+     */
+    inline void outDegreeDecrement();
+    //@}
+
+  private:
+    idx_t id_;         /**< @brief Node ID */
+    std::string name_; /**< @brief Node name */
+    val_t capacity_;   /**< @brief Node capacity */
+    Color color_;      /**< @brief Node color */
+    idx_t inDegree_;   /**< @brief In-degree */
+    idx_t outDegree_;  /**< @brief Out-degree */
+  };
+
+  /** 
    * @class Property
    * @brief Stores the properties of a Graph.
    * @tparam SCALAR Number type used to store edge weights.
@@ -172,8 +298,8 @@ public:
   class Property
   {
   public:
-    Property(const idx_t &numNodes, const std::string &name = "Graph", const idx_t &numEdges = 0) : _numNodes(numNodes), _name(name), _numEdges(0) {}
-    Property(const Property &property) : _numNodes(property._numNodes), _name(property._name), _numEdges(property._numEdges) {}
+    Property(const idx_t &numNodes, const std::string &name = "Graph", const idx_t &numEdges = 0) : numNodes_(numNodes), name_(name), numEdges_(0) {}
+    Property(const Property &property) : numNodes_(property.numNodes_), name_(property.name_), numEdges_(property.numEdges_) {}
 
     /**
      * @name numNodes
@@ -184,22 +310,22 @@ public:
      * @brief Gets the number of nodes in the graph.
      * @return Number of nodes in the graph.
      */
-    idx_t numNodes() const;
+    inline idx_t numNodes() const;
     /**
      * @brief Allows changing the number of nodes in the graph.
      * @param numNodes New value of node count.
      */
-    void numNodes(const idx_t &numNodes);
+    inline void numNodes(const idx_t &numNodes);
     /**
      * @brief Increments the number of nodes in the graph.
      * @param increment Number of nodes that will be added to the graph.
      */
-    void numNodesIncrement(const idx_t &increment = 1);
+    inline void numNodesIncrement(const idx_t &increment = 1);
     /**
      * @brief Decrements the number of nodes in the graph.
      * @param decrement Number of nodes that will be removed from the graph.
      */
-    void numNodesDecrement(const idx_t &decrement = 1);
+    inline void numNodesDecrement(const idx_t &decrement = 1);
     //@}
     /**
      * @name numEdges
@@ -210,22 +336,22 @@ public:
      * @brief Gets the number of edges in the graph.
      * @return Number of edges in the graph.
      */
-    idx_t numEdges() const;
+    inline idx_t numEdges() const;
     /**
      * @brief Allows changing the number of edges in the graph.
      * @param numEdges New value of edge count.
      */
-    void numEdges(const idx_t &numEdges);
+    inline void numEdges(const idx_t &numEdges);
     /**
      * @brief Increments the number of edges in the graph.
      * @param increment Number of nodes that will be added to the graph.
      */
-    void numEdgesIncrement(const idx_t &increment = 1);
+    inline void numEdgesIncrement(const idx_t &increment = 1);
     /**
      * @brief Decrements the number of edges in the graph.
      * @param decrement Number of edges that will be removed from the graph.
      */
-    void numEdgesDecrement(const idx_t &decrement = 1);
+    inline void numEdgesDecrement(const idx_t &decrement = 1);
     //@}
     /**
      * @name name
@@ -236,18 +362,18 @@ public:
      * @brief Gets the name of the graph.
      * @return Graph name.
      */
-    std::string name() const;
+    inline std::string name() const;
     /**
      * @brief Allows changing the name of the graph.
      * @param name New graph name.
      */
-    void name(const std::string &name);
+    inline void name(const std::string &name);
     //@}
 
   private:
-    idx_t _numNodes;   /**< number of nodes in the graph */
-    idx_t _numEdges;   /**< number of edges in the graph */
-    std::string _name; /**< name of the graph */
+    idx_t numNodes_;   /**< @brief number of nodes in the graph */
+    idx_t numEdges_;   /**< @brief number of edges in the graph */
+    std::string name_; /**< @brief name of the graph */
   };
 
   using matrix_t = std::vector<Edge>;         ///< Matrix Representation type
@@ -255,9 +381,10 @@ public:
   using rootList_t = std::vector<nodeList_t>; ///< ListRoot Representation type
 
 protected:
-  Property property_;
+  Property property_; /**< @brief stores various properties of the Graph. */
 
-  std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, matrix_t, rootList_t> edges_;
+  std::vector<Node> nodes_;                                                                   /**< @brief stores information about all nodes in the Graph. */
+  std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, matrix_t, rootList_t> edges_; /**< @brief Stores information about all edges in the Graph. */
 
 public:
   /**
@@ -265,13 +392,31 @@ public:
    * @param numNodes Number of nodes/vertices in the graph.
    * @param name Name of the graph.
    */
-  Graph(const int &numNodes, const std::string &name = "Graph") : property_(numNodes, name, 0) { construct(); }
+  Graph(const idx_t &numNodes, const std::string &name = "Graph") : property_(numNodes, name, 0)
+  {
+    construct();
+    std::vector<Node> nodes();
+    for (idx_t i = 0; i < numNodes; ++i)
+    {
+      nodes_.push_back(Node(i));
+    }
+  }
   /**
    * @brief Construct Graph from property
    * @param property Properties for a graph.
    */
-  Graph(const Property &property) : property_(property) { construct(); }
-  ~Graph() {}
+  Graph(const Property &property) : property_(property)
+  {
+    construct();
+    std::vector<Node> nodes();
+    for (idx_t i = 0; i < numNodes; ++i)
+    {
+      nodes_.push_back(Node(i));
+    }
+  }
+  ~Graph()
+  {
+  }
 
 private:
   /**
@@ -392,6 +537,8 @@ public:
 
     edges_[start].push_back(Edge(start, end, weight, color, true));
     property_.numEdgesIncrement();
+    nodes_[start].outDegreeIncrement();
+    nodes_[end].inDegreeIncrement();
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -405,6 +552,10 @@ public:
     edges_[start].push_back(Edge(start, end, weight, color, true));
     edges_[end].push_back(Edge(end, start, weight, color, true));
     property_.numEdgesIncrement();
+    nodes_[start].inDegreeIncrement();
+    nodes_[start].outDegreeIncrement();
+    nodes_[end].inDegreeIncrement();
+    nodes_[end].outDegreeIncrement();
   }
 
   /**
@@ -418,6 +569,8 @@ public:
     edges_[start * numNodes() + end].exists(true);
     edges_[start * numNodes() + end].color(color);
     property_.numEdgesIncrement();
+    nodes_[start].outDegreeIncrement();
+    nodes_[end].inDegreeIncrement();
   }
 
   /**
@@ -435,6 +588,10 @@ public:
     {
       edges_[start * numNodes() + end].exists(true);
       property_.numEdgesIncrement();
+      nodes_[start].inDegreeIncrement();
+      nodes_[start].outDegreeIncrement();
+      nodes_[end].inDegreeIncrement();
+      nodes_[end].outDegreeIncrement();
     }
   }
 #endif
@@ -615,6 +772,8 @@ public:
                            [&end](const Edge &node) { return node.dest() == end; });
     edges_[start].erase(it);
     property_.numEdgesDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
   }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
@@ -631,6 +790,10 @@ public:
                       [&start](const Edge &node) { return node.dest() == start; });
     edges_[end].erase(it);
     property_.numEdgesDecrement();
+    nodes_[start].inDegreeDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
+    nodes_[end].outDegreeDecrement();
   }
 
   /**
@@ -644,6 +807,8 @@ public:
     edges_[start * numNodes() + end].weight(SCALAR(0));
     edges_[start * numNodes() + end].exists(false);
     property_.numEdgesDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
   }
 
   /**
@@ -658,6 +823,10 @@ public:
     edges_[start * numNodes() + end].weight(SCALAR(0));
     edges_[start * numNodes() + end].exists(false);
     property_.numEdgesDecrement();
+    nodes_[start].inDegreeDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
+    nodes_[end].outDegreeDecrement();
   }
 #endif
 
@@ -1102,19 +1271,33 @@ public:
     using iterator_category = std::forward_iterator_tag; ///< Iterator category
     using diff_t = std::ptrdiff_t;                       ///< Pointer Difference type
     /**
-     * @brief Construct EdgeIterator
+     * @brief Default constructor
+     */
+    EdgeIterator() {}
+/**
+     * @brief Construct EdgeIterator, only used with Matrix Representation
      * @param ptr Pointer to which edge this iterator should point
      * @param data1 ?
      * @param data2 ?
      */
-    EdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2) {}
-    /**
-     * @brief Construct EdgeIterator
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    EdgeIterator(pointer_t ptr, pointer_t data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {
+    }
+/**
+     * @brief Construct EdgeIterator, only used with List Representation
      * @param ptr Pointer to which edge this iterator should point
      * @param data1 ?
      * @param data2 ?
      */
-    EdgeIterator(typename nodeList_t::iterator ptr, typename rootList_t::iterator data1, Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2) {}
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_LIST
+#endif
+    EdgeIterator(typename nodeList_t::iterator ptr, typename rootList_t::iterator data1, Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {
+    }
 
     /**
      * @brief Move Iterator to next edge (pre-increment)
@@ -1182,10 +1365,7 @@ public:
      * @brief Dereference iterator
      * @return A Reference to the underlying edge
      */
-    ref_t operator*()
-    {
-      return *ptr_;
-    }
+    val_t &operator*() { return *ptr_; }
     /**
      * @brief Get underlying edge
      * @return Pointer to underlying edge
@@ -1200,7 +1380,18 @@ public:
      * @brief Check if not equal
      * @return If both iterators are not equal
      */
-    bool operator!=(const self_t &rhs) { return ptr_ != rhs.ptr_ || data1_ != rhs.data1_ || data2_ != rhs.data2_; }
+    bool operator!=(const self_t &rhs) { return !operator==(rhs); }
+
+    /**
+     * @brief Construct from Assignment
+     * @return If both iterators are not equal
+     */
+    self_t operator=(const self_t &rhs)
+    {
+      ptr_ = rhs.ptr_;
+      data1_ = rhs.data1_;
+      data2_ = rhs.data2_;
+    }
 
   private:
     std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::iterator> ptr_;          //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
@@ -1221,7 +1412,12 @@ public:
     using pointer_t = Edge *;                            ///< Edge pointer type
     using iterator_category = std::forward_iterator_tag; ///< Iterator category
     using diff_t = std::ptrdiff_t;                       ///< Pointer Difference type
-                                                         /**
+    /**
+   * @brief Default Constructor
+   */
+    ConstEdgeIterator() {}
+
+    /**
      * @brief Construct ConstEdgeIterator
      * @param ptr Pointer to which edge this iterator should point
      * @param data1 ?
@@ -1306,9 +1502,17 @@ public:
      * @brief Dereference iterator
      * @return A const Reference to the underlying edge
      */
-    const val_t &operator*()
+    const val_t &operator*() { return *ptr_; }
+
+    /**
+     * @brief Assignment constructor
+     * @return A new EdgeIterator
+     */
+    self_t operator=(const self_t &rhs)
     {
-      return *ptr_;
+      ptr_ = rhs.ptr_;
+      data1_ = rhs.data1_;
+      data2_ = rhs.data2_;
     }
     /**
      * @brief Get underlying edge
@@ -1324,7 +1528,7 @@ public:
      * @brief Check if not equal
      * @return If both iterators are not equal
      */
-    bool operator!=(const self_t &rhs) { return ptr_ != rhs.ptr_ || data1_ != rhs.data1_ || data2_ != rhs.data2_; }
+    bool operator!=(const self_t &rhs) { return !operator==(rhs); }
 
   private:
     std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer_t, typename nodeList_t::const_iterator> ptr_;    //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
