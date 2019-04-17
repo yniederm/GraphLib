@@ -23,13 +23,13 @@ inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::id(idx_t id) {
 
 /* \internal getter for name */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline const char* Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::name() const {
+inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::name() const {
   return name_;
 }
 
 /* \internal setter for name */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::name(const char* name) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::name(const std::string& name) {
   name_ = name;
 }
 

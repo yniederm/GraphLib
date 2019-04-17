@@ -192,12 +192,12 @@ public:
      * @brief Gets the name of a node.
      * @return name of the node.
      */
-    inline const char* name() const;
+    inline std::string name() const;
     /**
      * @brief Allows changing the name of a node.
      * @param name New value of node name.
      */
-    inline void name(const char* name);
+    inline void name(const std::string& name);
     //@}
     /**
      * @name capacity
@@ -289,9 +289,9 @@ public:
   class Property {
   public:
     Property (const idx_t& numNodes, const std::string& name = "Graph", const idx_t& numEdges = 0) :
-      _numNodes(numNodes), _name(name), _numEdges(0) {}
+      numNodes_(numNodes), name_(name), numEdges_(0) {}
     Property (const Property& property) :
-      _numNodes(property._numNodes), _name(property._name), _numEdges(property._numEdges) {}
+      numNodes_(property.numNodes_), name_(property.name_), numEdges_(property.numEdges_) {}
 
     /**
      * @name numNodes
@@ -302,22 +302,22 @@ public:
      * @brief Gets the number of nodes in the graph.
      * @return Number of nodes in the graph.
      */
-    idx_t numNodes() const;
+    inline idx_t numNodes() const;
     /**
      * @brief Allows changing the number of nodes in the graph.
      * @param numNodes New value of node count.
      */
-    void numNodes(const idx_t& numNodes);
+    inline void numNodes(const idx_t& numNodes);
     /**
      * @brief Increments the number of nodes in the graph.
      * @param increment Number of nodes that will be added to the graph.
      */
-    void numNodesIncrement(const idx_t& increment = 1);
+    inline void numNodesIncrement(const idx_t& increment = 1);
     /**
      * @brief Decrements the number of nodes in the graph.
      * @param decrement Number of nodes that will be removed from the graph.
      */
-    void numNodesDecrement(const idx_t& decrement = 1);
+    inline void numNodesDecrement(const idx_t& decrement = 1);
     //@}
     /**
      * @name numEdges
@@ -328,22 +328,22 @@ public:
      * @brief Gets the number of edges in the graph.
      * @return Number of edges in the graph.
      */
-    idx_t numEdges() const;
+    inline idx_t numEdges() const;
     /**
      * @brief Allows changing the number of edges in the graph.
      * @param numEdges New value of edge count.
      */
-    void numEdges(const idx_t& numEdges);
+    inline void numEdges(const idx_t& numEdges);
     /**
      * @brief Increments the number of edges in the graph.
      * @param increment Number of nodes that will be added to the graph.
      */
-    void numEdgesIncrement(const idx_t& increment = 1);
+    inline void numEdgesIncrement(const idx_t& increment = 1);
     /**
      * @brief Decrements the number of edges in the graph.
      * @param decrement Number of edges that will be removed from the graph.
      */
-    void numEdgesDecrement(const idx_t& decrement = 1);
+    inline void numEdgesDecrement(const idx_t& decrement = 1);
     //@}
     /**
      * @name name
@@ -354,40 +354,53 @@ public:
      * @brief Gets the name of the graph.
      * @return Graph name.
      */
-    std::string name() const;
+    inline std::string name() const;
     /**
      * @brief Allows changing the name of the graph.
      * @param name New graph name.
      */
-    void name(const std::string& name);
+    inline void name(const std::string& name);
     //@}
     
   private:
-    idx_t _numNodes; /**< number of nodes in the graph */
-    idx_t _numEdges; /**< number of edges in the graph */ 
-    std::string _name; /**< name of the graph */
+    idx_t numNodes_; /**< @brief number of nodes in the graph */
+    idx_t numEdges_; /**< @brief number of edges in the graph */ 
+    std::string name_; /**< @brief name of the graph */
   };
 
   using matrix_t = std::vector<Edge>;
   using nodeList_t = std::list<Edge>;
   using rootList_t = std::vector<nodeList_t>;
 protected:
-  Property property_;
+  Property property_; /**< @brief stores various properties of the Graph. */
 
-  std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,matrix_t,rootList_t> edges_;
+  std::vector<Node> nodes_; /**< @brief stores information about all nodes in the Graph. */
+  std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value,matrix_t,rootList_t> edges_; /**< @brief Stores information about all edges in the Graph. */
 
 public: 
   /**
    * @param numNodes Number of nodes/vertices in the graph.
    * @param name Name of the graph.
    */
-  Graph(const int& numNodes, const std::string& name = "Graph") : 
-        property_(numNodes,name,0) { construct(); }
+  Graph(const idx_t& numNodes, const std::string& name = "Graph") : 
+        property_(numNodes,name,0) { 
+          construct(); 
+    std::vector<Node> nodes ();
+    for (idx_t i = 0; i < numNodes; ++i) {
+      nodes_.push_back(Node(i));
+    }
+  }
   /**
    * @param property Properties for a graph.
    */
   Graph(const Property& property) : 
-        property_(property) { construct(); }
+        property_(property) { 
+    construct(); 
+    std::vector<Node> nodes ();
+    for (idx_t i = 0; i < numNodes; ++i) {
+      nodes_.push_back(Node(i));
+    }
+  }
   ~Graph() {}
 
 private:
@@ -486,6 +499,8 @@ public:
 
     edges_[start].push_back(Edge(start, end, weight, color, true));
     property_.numEdgesIncrement();
+    nodes_[start].outDegreeIncrement();
+    nodes_[end].inDegreeIncrement();
   }
   
   /**
@@ -497,6 +512,10 @@ public:
     edges_[start].push_back(Edge(start, end, weight, color, true));
     edges_[end].push_back(Edge(end, start, weight, color, true));
     property_.numEdgesIncrement();
+    nodes_[start].inDegreeIncrement();
+    nodes_[start].outDegreeIncrement();
+    nodes_[end].inDegreeIncrement();
+    nodes_[end].outDegreeIncrement();
   }
 
   /**
@@ -509,6 +528,8 @@ public:
     edges_[start*numNodes()+end].exists(true);
     edges_[start*numNodes()+end].color(color);
     property_.numEdgesIncrement();
+    nodes_[start].outDegreeIncrement();
+    nodes_[end].inDegreeIncrement();
   }
   
   /**
@@ -523,6 +544,10 @@ public:
     if (!hasEdge(start,end)) {
       edges_[start*numNodes()+end].exists(true);
       property_.numEdgesIncrement();
+      nodes_[start].inDegreeIncrement();
+      nodes_[start].outDegreeIncrement();
+      nodes_[end].inDegreeIncrement();
+      nodes_[end].outDegreeIncrement();
     }
   }
   //@}
@@ -686,6 +711,8 @@ public:
     [&end](const Edge& node){ return node.dest() == end;});
     edges_[start].erase(it);
     property_.numEdgesDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
   }
   
   /**
@@ -701,6 +728,10 @@ public:
     [&start](const Edge& node){ return node.dest() == start;});
     edges_[end].erase(it);
     property_.numEdgesDecrement();
+    nodes_[start].inDegreeDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
+    nodes_[end].outDegreeDecrement();
   }
 
   /**
@@ -713,6 +744,8 @@ public:
     edges_[start*numNodes()+end].weight(SCALAR(0));
     edges_[start*numNodes()+end].exists(false);
     property_.numEdgesDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
   }
 
   /**
@@ -725,6 +758,10 @@ public:
     edges_[start*numNodes()+end].weight(SCALAR(0));
     edges_[start*numNodes()+end].exists(false);
     property_.numEdgesDecrement();
+    nodes_[start].inDegreeDecrement();
+    nodes_[start].outDegreeDecrement();
+    nodes_[end].inDegreeDecrement();
+    nodes_[end].outDegreeDecrement();
   }
   //@}
 
