@@ -93,22 +93,14 @@ void saveImage(mglGraph *gr, gl::Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, cons
   gr->SetRange('y', positions.row(1).minCoeff(), positions.row(1).maxCoeff());
 
   // draw all edges
-  for (typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+  for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
   {
-    typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_list_t neighbours = g.getNeighbours(i);
-    for (auto n : neighbours)
-    {
-      mglPoint p1(positions(0, i), positions(1, i));
-      mglPoint p2(positions(0, n), positions(1, n));
+    mglPoint p1(positions(0, it->source()), positions(1, it->source()));
+    mglPoint p2(positions(0, it->dest()), positions(1, it->dest()));
+    std::string output_args = lineArgs;
+    output_args += "{x" + it->color().RGB() + "}";
 
-      /*
-       add color to line args
-      */
-      std::string output_args = lineArgs;
-      output_args += "{x" + g.getEdgeColor(i, n).RGB() + "}";
-
-      gr->Line(p1, p2, output_args.data());
-    }
+    gr->Line(p1, p2, output_args.data());
   }
 }
 

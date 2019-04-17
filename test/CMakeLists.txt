@@ -19,6 +19,7 @@ set(TESTS
     ListGraph
     MathGL
     MathGLColors
+    MathGLPlacing
     MatrixGraph
     PrintContainer
     TransitiveClosure
@@ -31,7 +32,8 @@ set(EIGEN_TESTS
 
 set(MATHGL_TESTS
     MathGL
-    MathGLColors)
+    MathGLColors
+    MathGLPlacing)
 
 foreach(TEST_NAME ${TESTS})
   add_executable(${TEST_NAME} Test_${TEST_NAME}.cpp)
