@@ -21,10 +21,10 @@ namespace gl
 class Color
 {
 public:
-  using color_val_t = unsigned char;
+  using color_val_t = unsigned char; /**< color value type, has a range of exactly\f$b \{0,\ldots,255\}\f$ */
 
   /**
-   * @name Constructs
+   * @name Constructors
    * @brief Constructs a new Color object.
    */
   //@{
@@ -109,11 +109,11 @@ public:
     }
   }
   //@}
-  Color(const Color &) = default;                // copy constructor
-  Color(Color &&) noexcept = default;            // move constructor
-  Color &operator=(const Color &) = default;     // copy assignment
-  Color &operator=(Color &&) noexcept = default; // move assignment
-  ~Color() = default;                            // destructor
+  Color(const Color &) = default;                /**< copy constructor */
+  Color(Color &&) noexcept = default;            /**< move constructor */
+  Color &operator=(const Color &) = default;     /**< copy assignment */
+  Color &operator=(Color &&) noexcept = default; /**< move assignment */
+  ~Color() = default;                            /**< destructor */
   /**
    * @name Read access to stored RGBA color values.
    * @brief Getters for stored color values.
@@ -213,7 +213,7 @@ private:
                    * @brief Blue value. \f$b \in \{0,\ldots,255\}\f$
                    */
       a_;         /**< 
-                   * @brief Alpha/opacity value. \f$a \in \{0,\hdots,100\}\f$
+                   * @brief Alpha/opacity value. \f$a \in \{0,\ldots,100\}\f$
                    */
 };
 

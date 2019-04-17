@@ -55,7 +55,7 @@ public:
 
   /** 
    * @class Edge
-   * @brief Represents an edge in a Graph.
+   * @brief Represents an Edge in a Graph.
    * @tparam SCALAR Number type used to store edge weights.
    * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
    * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
@@ -164,7 +164,7 @@ public:
 
   /** 
    * @class Node
-   * @brief Represents a node in a Graph.
+   * @brief Represents a Node in a Graph.
    * @tparam SCALAR Number type used to store node capacities.
    * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
    * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
@@ -252,12 +252,14 @@ public:
     inline idx_t inDegree() const;
     /**
      * @brief Increments the node in-degree.
+     * @param[in] increment number that will be added
      */
-    inline void inDegreeIncrement();
+    inline void inDegreeIncrement(const idx_t& increment = 1);
     /**
      * @brief Decrements the node in-degree.
+     * @param[in] decrement number that will be added
      */
-    inline void inDegreeDecrement();
+    inline void inDegreeDecrement(const idx_t& decrement = 1);
     //@}
     /**
      * @name outDegree

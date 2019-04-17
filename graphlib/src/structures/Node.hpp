@@ -39,9 +39,9 @@ inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::val_t Graph<SCALAR,STORAGE
   return capacity_;
 }
 
-/* \internal setter for weight */
+/* \internal setter for capacity */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::capacity(val_t weight) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::capacity(val_t capacity) {
   capacity_ = capacity;
 }
 
@@ -65,14 +65,14 @@ inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE
 
 /* \internal increment for inDegree */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::inDegreeIncrement() {
-  inDegree_++;
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::inDegreeIncrement(const idx_t& increment) {
+  inDegree_+= increment;
 }
 
 /* \internal decrement for inDegree */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::inDegreeDecrement() {
-  inDegree_--;
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::inDegreeDecrement(const idx_t& decrement) {
+  inDegree_-= decrement;
 }
 
 /* \internal getter for outDegree */
