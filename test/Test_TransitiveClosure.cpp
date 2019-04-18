@@ -3,7 +3,7 @@
 int main(int argc, char const *argv[])
 {
   gl::graphMid g(8);
-  g.readFile("test/Input_graph8"); // assumes running from project root folder
+  g.addEdgesFromFile("test/Input_graph8"); // assumes running from project root folder
   std::cout << g << std::endl;
   gl::graphMid::ordered_list_t tc;
   std::cout << "Transitive closure of every node:\n";

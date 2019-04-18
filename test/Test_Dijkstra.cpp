@@ -4,8 +4,8 @@ int main(int argc, char const *argv[])
 {
   gl::graphLiu dijkstraL(9);
   gl::graphMiu dijkstraM(9);
-  dijkstraL.readFile("test/Input_Dijkstra9"); // assumes running from project root folder
-  dijkstraM.readFile("test/Input_Dijkstra9"); // assumes running from project root folder
+  dijkstraL.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
+  dijkstraM.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
 
   std::cout << "\n" << dijkstraL << std::endl;
   gl::algorithm::dijkstraLiu pathL5 (dijkstraL,0);

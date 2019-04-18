@@ -78,7 +78,7 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : gr
     pq.pop();
     if(visited[u]) continue;
     visited[u] = true;
-    auto neighbours = graph.getUnvisitedEdges(u,visited);
+    auto neighbours = graph.getUnvisitedNeighbourWeights(u,visited);
     for (const auto& x : neighbours) {
       idx_t v = x.first;
       val_t weight = x.second;

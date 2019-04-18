@@ -16,7 +16,7 @@ typename GRAPH::idx_list_t degrees (const GRAPH& graph) {
   typename GRAPH::idx_list_t out(graph.numNodes());    // degree node list
 
   for (typename GRAPH::idx_t node = 0; node < graph.numNodes(); ++node) {
-    out[node] = graph.getDegree(node);
+    out[node] = graph.getNodeDegree(node);
   }
   return out;
 }

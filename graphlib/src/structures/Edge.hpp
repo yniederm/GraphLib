@@ -64,7 +64,6 @@ inline gl::Color Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::color() const {
   return color_;
 }
 
-
 /* \internal setter for color object */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Edge::color(const Color& color) {

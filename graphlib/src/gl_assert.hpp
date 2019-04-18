@@ -1,4 +1,4 @@
-#ifndef GL_ASSERT
+#ifndef GL_ASSERT_HPP
 
 #include <cassert>
 
@@ -17,6 +17,6 @@ if (!EXPR) { \
 } 
 #endif
 
-#endif // GL_ASSERT
+#endif // GL_ASSERT_HPP
 
 

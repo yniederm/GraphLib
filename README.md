@@ -5,7 +5,7 @@
 An up-to-date documentation of the source code is available here: [![Documentation](https://codedocs.xyz/guetzli32/GraphLib.svg)](https://codedocs.xyz/guetzli32/GraphLib/)
 ## Currently implemented is the following:
 #### Data structures
-- Graph Base Class
+- Graph class
   - Storage format
     - Adjacency Matrix
     - Adjacency List
@@ -62,8 +62,6 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 - Cliques
   - cliques of size k
 - node things
-  - proper functions for in/out/total degree
-  - interface for accessing capacities, color, name
   - centralities: 
     - degree
     - closeness

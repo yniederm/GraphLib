@@ -26,7 +26,7 @@ int main(int argc, char const *argv[])
     std::cout << "(" << x.first << "," << x.second << ") ";
   }
   std::cout << std::endl;
-  std::cout << "Degree of 2: " << g.getDegree(2) << std::endl;
+  std::cout << "Degree of 2: " << g.getNodeDegree(2) << std::endl;
   g.delEdge(2,0);   // remove edge
   std::cout << "deleted 2->0\n";
   try {
@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
   } catch (const std::runtime_error& e) {
     std::cout << "Caught exception: " << e.what() << "\n";
   }
-  g.readFile("test/Input_singleEdge"); // assumes running from build folder
+  g.addEdgesFromFile("test/Input_singleEdge"); // assumes running from build folder
 
   try {
     g.setEdge(1000,2,1);  // test out of range check
@@ -58,6 +58,17 @@ int main(int argc, char const *argv[])
     it->weight(6);
     std::cout << "Weight of edge (" << it->source() << "->" << it->dest() << ") is " << it->weight() << "\n";
   }
+  std::cout << std::endl;
+  // ConstNodeIterator test
+  for (auto it = g.node_cbegin(); it != g.node_cend(); ++it) {
+    std::cout << "InDegree of node " << it->id() << " is " << it->inDegree() << "\n";
+  }
+  std::cout << std::endl;
+  // NodeIterator test
+  for (auto it = g.node_cbegin(); it != g.node_cend(); ++it) {
+    std::cout << "outDegree of node " << it->id() << " is " << it->outDegree() << "\n";
+  }
+  std::cout << std::endl;
 
   return 0;
 }

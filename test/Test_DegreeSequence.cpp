@@ -5,8 +5,8 @@ int main(int argc, char const *argv[])
   gl::graphMiu tree(12);
   gl::graphLiu cycle(10);
 
-  tree.readFile("test/Input_tree12"); // assumes running from project root folder
-  cycle.readFile("test/Input_graph10"); // assumes running from project root folder
+  tree.addEdgesFromFile("test/Input_tree12"); // assumes running from project root folder
+  cycle.addEdgesFromFile("test/Input_graph10"); // assumes running from project root folder
 
 
   std::cout << "degrees(tree):         " << gl::algorithm::degrees(tree);

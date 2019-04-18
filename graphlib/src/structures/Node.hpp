@@ -17,7 +17,7 @@ inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE
 
 /* \internal setter for id */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::id(idx_t id) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::id(const idx_t& id) {
   id_ = id;
 }
 
@@ -41,20 +41,8 @@ inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::val_t Graph<SCALAR,STORAGE
 
 /* \internal setter for capacity */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::capacity(val_t capacity) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::capacity(const val_t& capacity) {
   capacity_ = capacity;
-}
-
-/* \internal getter for color object */
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline gl::Color Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::color() const {
-  return color_;
-}
-
-/* \internal setter for color object */
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::color(const Color& color) {
-  color_ = color;
 }
 
 /* \internal getter for inDegree */
@@ -83,14 +71,26 @@ inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE
 
 /* \internal increment for outDegree */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::outDegreeIncrement() {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::outDegreeIncrement(const idx_t& increment) {
   outDegree_++;
 }
 
 /* \internal decrement for outDegree */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::outDegreeDecrement() {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::outDegreeDecrement(const idx_t& decrement) {
   outDegree_--;
+}
+
+/* \internal getter for color object */
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+inline gl::Color Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::color() const {
+  return color_;
+}
+
+/* \internal setter for color object */
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::color(const Color& color) {
+  color_ = color;
 }
 
 } // namespace gl

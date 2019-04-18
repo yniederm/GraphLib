@@ -82,7 +82,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
   // build degree matrix
   for (typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
-    degs(i) = g.getDegree(i);
+    degs(i) = g.getNodeDegree(i);
   }
   degMat = degs.asDiagonal();
 
@@ -106,7 +106,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
 
     // Scale by degree
     pos.normalize();
-    pos *= (1 + g.getDegree(i));
+    pos *= (1 + g.getNodeDegree(i));
 
     s << "  \\node (" << i << ") at (" << pos(0) << ", "
       << pos(1) << ") {";
