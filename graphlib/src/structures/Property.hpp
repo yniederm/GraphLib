@@ -61,16 +61,16 @@ template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdgesDecrement (const idx_t& decrement) {
   numEdges_ -= decrement;
 }
-/* \internal getter for name */
+/* \internal getter for label */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::name() const {
-  return name_;
+inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::label() const {
+  return label_;
 }
 
-/* \internal setter for name */
+/* \internal setter for label */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::name(const std::string& name) {
-  name_ = name;
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::label(const std::string& label) {
+  label_ = label;
 }
 
 } // namespace gl

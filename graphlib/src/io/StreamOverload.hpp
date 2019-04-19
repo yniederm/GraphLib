@@ -21,7 +21,7 @@
 template <class SCALAR, class STORAGE>
 std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl::Directed>& rhs) {
   using idx_t = typename gl::Graph<SCALAR, STORAGE, gl::Directed>::idx_t;
-  os << "----- " << rhs.getName() << " -----" << std::endl
+  os << "----- " << rhs.getGraphLabel() << " -----" << std::endl
      << "Total Nodes: " << rhs.numNodes() << std::endl
      << "Total Edges: " << rhs.numEdges() << std::endl
      << "Directed " 
@@ -41,7 +41,7 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl:
 template <class SCALAR, class STORAGE>
 std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl::Undirected>& rhs) {
   using idx_t = typename gl::Graph<SCALAR, STORAGE, gl::Undirected>::idx_t;
-  os << "----- " << rhs.getName() << " -----" << std::endl
+  os << "----- " << rhs.getGraphLabel() << " -----" << std::endl
      << "Total Nodes: " << rhs.numNodes() << std::endl
      << "Total Edges: " << rhs.numEdges() << std::endl
      << "Undirected " 

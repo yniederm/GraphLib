@@ -154,11 +154,11 @@ public:
     //@}
 
   private:
-    idx_t src_;    /**< @brief Source index */
-    idx_t dest_;   /**< @brief Destination index */
-    val_t weight_; /**< @brief Edge weight */
-    bool exists_;  /**< @brief Edge existance */
-    Color color_;  /**< @brief Edge color */
+    idx_t src_;    ///< @brief Source index
+    idx_t dest_;   ///< @brief Destination index
+    val_t weight_; ///< @brief Edge weight
+    bool exists_;  ///< @brief Edge existance
+    Color color_;  ///< @brief Edge color
   };
 
   /** 
@@ -193,7 +193,7 @@ public:
     //@}
     /**
      * @name name
-     * @brief Access to the name of a node.
+     * @brief Access to the label of a node.
      */
     //@{
     /**
@@ -203,9 +203,9 @@ public:
     inline std::string label() const;
     /**
      * @brief Allows changing the lable of a node.
-     * @param name New value of node label.
+     * @param label New value of node label.
      */
-    inline void label(const std::string &name);
+    inline void label(const std::string &label);
     //@}
     /**
      * @name capacity
@@ -283,12 +283,12 @@ public:
     //@}
 
   private:
-    idx_t id_;         /**< @brief Node ID */
-    std::string label_; /**< @brief Node label */
-    val_t capacity_;   /**< @brief Node capacity */
-    Color color_;      /**< @brief Node color */
-    idx_t inDegree_;   /**< @brief In-degree */
-    idx_t outDegree_;  /**< @brief Out-degree */
+    idx_t id_;          ///< @brief Node ID */
+    std::string label_; ///< @brief Node label */
+    val_t capacity_;    ///< @brief Node capacity */
+    Color color_;       ///< @brief Node color */
+    idx_t inDegree_;    ///< @brief In-degree */
+    idx_t outDegree_;   ///< @brief Out-degree */
   };
 
   /** 
@@ -301,8 +301,8 @@ public:
   class Property
   {
   public:
-    Property(const idx_t &numNodes, const std::string &name = "Graph", const idx_t &numEdges = 0) : numNodes_(numNodes), name_(name), numEdges_(0) {}
-    Property(const Property &property) : numNodes_(property.numNodes_), name_(property.name_), numEdges_(property.numEdges_) {}
+    Property(const idx_t &numNodes, const std::string &label = "Graph", const idx_t &numEdges = 0) : numNodes_(numNodes), label_(label), numEdges_(0) {}
+    Property(const Property &property) : numNodes_(property.numNodes_), label_(property.label_), numEdges_(property.numEdges_) {}
 
     /**
      * @name numNodes
@@ -357,39 +357,202 @@ public:
     inline void numEdgesDecrement(const idx_t &decrement = 1);
     //@}
     /**
-     * @name name
-     * @brief Access to name of the graph.
+     * @name Label
+     * @brief Access to label of the graph.
      */
     //@{
     /**
-     * @brief Gets the name of the graph.
+     * @brief Gets the label of the graph.
      * @return Graph name.
      */
-    inline std::string name() const;
+    inline std::string label() const;
     /**
-     * @brief Allows changing the name of the graph.
-     * @param name New graph name.
+     * @brief Allows changing the label of the graph.
+     * @param label New graph name.
      */
-    inline void name(const std::string &name);
+    inline void label(const std::string& label);
     //@}
 
   private:
-    idx_t numNodes_;   /**< @brief Number of nodes in the graph */
-    idx_t numEdges_;   /**< @brief Number of edges in the graph */
-    std::string name_; /**< @brief Name of the graph */
+    idx_t numNodes_;    ///< @brief Number of nodes in the graph
+    idx_t numEdges_;    ///< @brief Number of edges in the graph
+    std::string label_; ///< @brief Label of the graph
   };
 
-  using matrix_t = std::vector<Edge>;         ///< Matrix Representation type
-  using nodeList_t = std::list<Edge>;         ///< ListNode Representation type
-  using rootList_t = std::vector<nodeList_t>; ///< ListRoot Representation type
-  using NodeIterator = typename std::vector<Node>::iterator; ///< Node iterator type
-  using ConstNodeIterator = typename std::vector<Node>::const_iterator; ///< Node const_iterator type
+  /* Data structure typedefs */
+  using matrix_t = std::vector<Edge>;         ///< @brief Matrix Representation type
+  using nodeList_t = std::list<Edge>;         ///< @brief ListNode Representation type
+  using rootList_t = std::vector<nodeList_t>; ///< @brief ListRoot Representation type
+
+  /**
+   * @brief %Edge_Iterator class.
+   * Used to iterate over all Edges in the Graph
+   */
+  template <bool IsConst = true>
+  class Edge_Iterator
+  {
+  public:
+    using value_type = Edge;                                  ///< Edge type
+    using reference = std::conditional_t<IsConst,const Edge&, Edge&>;                                ///< Edge reference type
+    using pointer = std::conditional_t<IsConst,const Edge*, Edge*>;                            ///< Edge pointer type
+    using iterator_category = std::forward_iterator_tag; ///< Iterator category
+    using difference_type = std::ptrdiff_t;                       ///< Pointer Difference type
+    using self_t = Edge_Iterator;                         ///< EdgeIterator type                        ///< ConstEdgeIterator type
+    /* typedefs for data members */
+    using vector_iterator_t = std::conditional_t<IsConst,typename rootList_t::const_iterator, typename rootList_t::iterator>;
+    using list_iterator_t = std::conditional_t<IsConst, typename nodeList_t::const_iterator, typename nodeList_t::iterator>;
+    using container_pointer_t = std::conditional_t<IsConst,const Graph<SCALAR,STORAGE_KIND,DIRECTION>*, Graph<SCALAR,STORAGE_KIND,DIRECTION>*>;
+    /**
+     * @brief Default constructor
+     */
+    Edge_Iterator() {}
+    /**
+     * @brief Construct EdgeIterator, only used with Matrix Representation
+     * @param ptr Pointer to which edge this iterator should point
+     * @param data1 pointer to first element in the matrix
+     * @param data2 number of entries in the matrix
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    Edge_Iterator(pointer ptr, pointer data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {
+    }
+    /**
+     * @brief Construct EdgeIterator, only used with List Representation
+     * @param ptr Pointer to which edge this iterator should point
+     * @param data1 iterator over the root vector
+     * @param data2 pointer to the owner data structure
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_LIST
+#endif
+    Edge_Iterator(list_iterator_t ptr, vector_iterator_t data1, container_pointer_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    {}
+
+    /**
+     * @brief Move Iterator to next edge (pre-increment)
+     * @return new Iterator
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    self_t operator++()
+    {
+      ++ptr_;
+      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      {
+        ptr_++;
+      }
+      return *this;
+    }
+    /**
+     * @brief Move Iterator to next edge (post-increment)
+     * @return new Iterator
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_MATRIX
+#endif
+    self_t operator++(int dummy)
+    {
+      self_t i = *this;
+      ptr_++;
+      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      {
+        ptr_++;
+      }
+      return i;
+    }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    GL_ENABLE_IF_LIST
+    self_t operator++()
+    {
+      ++ptr_;
+      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
+      {
+        ++data1_;
+        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
+          ++data1_;
+        }
+        ptr_ = data1_->begin();
+      }
+      return *this;
+    }
+    GL_ENABLE_IF_LIST
+    self_t operator++(int dummy)
+    {
+      self_t i = *this;
+      ++ptr_;
+      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
+      {
+        ++data1_;
+        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
+          ++data1_;
+        }
+        ptr_ = data1_->begin();
+      }
+      return i;
+    }
+#endif
+    /**
+     * @brief Dereference iterator
+     * @return A Reference to the underlying edge
+     */
+    template <bool _IsConst = IsConst>
+    std::enable_if_t<_IsConst,reference>
+    operator*() const { return *ptr_; }
+    template <bool _IsConst = IsConst>
+    std::enable_if_t<!_IsConst,reference>
+    operator*() { return *ptr_; }
+    /**
+     * @brief Get underlying edge
+     * @return Pointer to underlying edge
+     */
+    template <bool _IsConst = IsConst>
+    std::enable_if_t<_IsConst,pointer>
+    operator->() const { return &operator*(); }
+    template <bool _IsConst = IsConst>
+    std::enable_if_t<!_IsConst,pointer>
+    operator->() { return &operator*(); }
+    /**
+     * @brief Check if equal
+     * @return If both iterators are equal
+     */
+    bool operator==(const self_t &rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
+    /**
+     * @brief Check if not equal
+     * @return If both iterators are not equal
+     */
+    bool operator!=(const self_t &rhs) { return !operator==(rhs); }
+
+    /**
+     * @brief Construct from Assignment
+     * @return If both iterators are not equal
+     */
+    self_t operator=(const self_t &rhs)
+    {
+      ptr_ = rhs.ptr_;
+      data1_ = rhs.data1_;
+      data2_ = rhs.data2_;
+    }
+
+  private:
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, list_iterator_t> ptr_;     ///< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, vector_iterator_t> data1_; ///< @brief pointer to first element for Matrix, iterator over the rootList for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, idx_t, container_pointer_t> data2_; ///< @brief size of adjacency matrix for matrix, pointer to this Graph for List
+  };
+
+  /* Iterator typedefs */ 
+  using EdgeIterator = Edge_Iterator<false>;                            ///< Edge iterator type
+  using ConstEdgeIterator = Edge_Iterator<true>;                        ///< Edge const_iterator type
+  using NodeIterator = typename std::vector<Node>::iterator;            ///< Node iterator type
+  using ConstNodeIterator = typename std::vector<Node>::const_iterator; ///< Node const_iterator type  
 
 protected:
-  Property property_; /**< @brief Stores various properties of the Graph. */
+  Property property_; ///< @brief Stores various properties of the Graph.
 
-  std::vector<Node> nodes_;                                                                   /**< @brief Stores information about all nodes in the Graph. */
-  std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_t, rootList_t> edges_; /**< @brief Stores information about all edges in the Graph. */
+  std::vector<Node> nodes_;                                                              ///< @brief Stores information about all nodes in the Graph.
+  std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_t, rootList_t> edges_; ///< @brief Stores information about all edges in the Graph.
 
 public:
   /**
@@ -398,11 +561,11 @@ public:
    */
   //@{
   /**
-   * @brief Construct Graph from node count and name
+   * @brief Construct Graph from node count and label
    * @param numNodes Number of nodes/vertices in the graph.
-   * @param name Name of the graph.
+   * @param label label of the graph.
    */
-  Graph(const idx_t &numNodes, const std::string &name = "Graph") : property_(numNodes, name, 0)
+  Graph(const idx_t &numNodes, const std::string &label = "Graph") : property_(numNodes, label, 0)
   {
     construct();
     std::vector<Node> nodes();
@@ -415,7 +578,7 @@ public:
    * @brief Construct Graph from property
    * @param property Properties for a graph.
    */
-  Graph(const Property &property) : property_(property)
+  Graph(const Property& property) : property_(property)
   {
     construct();
     std::vector<Node> nodes();
@@ -441,7 +604,7 @@ public:
 #endif
   gl::Graph<SCALAR, gl::Matrix, DIRECTION> toMatrix() const
   {
-    gl::Graph<SCALAR, gl::Matrix, DIRECTION> out(numNodes(), getName());
+    gl::Graph<SCALAR, gl::Matrix, DIRECTION> out(numNodes(), getGraphLabel());
     for (idx_t start = 0; start < edges_.size(); ++start)
     {
       for (auto &end : edges_[start])
@@ -458,7 +621,7 @@ public:
   GL_ENABLE_IF_LIST_UNDIRECTED
   gl::Graph<SCALAR, gl::Matrix, DIRECTION> toMatrix() const
   {
-    gl::Graph<SCALAR, gl::Matrix, DIRECTION> out(numNodes(), getName());
+    gl::Graph<SCALAR, gl::Matrix, DIRECTION> out(numNodes(), getGraphLabel());
     for (idx_t start = 0; start < edges_.size(); ++start)
     {
       for (auto &end : edges_[start])
@@ -480,7 +643,7 @@ public:
 #endif
   gl::Graph<SCALAR, gl::List, gl::Directed> toList() const
   {
-    gl::Graph<SCALAR, List, Directed> out(numNodes(), getName());
+    gl::Graph<SCALAR, List, Directed> out(numNodes(), getGraphLabel());
     for (idx_t i = 0; i < numNodes(); ++i)
     {
       for (idx_t j = 0; j < numNodes(); ++j)
@@ -500,7 +663,7 @@ public:
   GL_ENABLE_IF_MATRIX_UNDIRECTED
   gl::Graph<SCALAR, gl::List, gl::Undirected> toList() const
   {
-    gl::Graph<SCALAR, List, Undirected> out(numNodes(), getName());
+    gl::Graph<SCALAR, List, Undirected> out(numNodes(), getGraphLabel());
     for (idx_t i = 0; i < numNodes(); ++i)
     {
       for (idx_t j = i; j < numNodes(); ++j)
@@ -521,20 +684,20 @@ public:
    */
   //@{
   /**
-   * @brief Returns the name of the graph.
-   * @return name of the graph
+   * @brief Returns the label of the graph.
+   * @return label of the graph
    */
-  inline std::string getName() const
+  inline std::string getGraphLabel() const
   {
-    return property_.name();
+    return property_.label();
   }
   /**
-   * @brief Changes the name of the graph.
-   * @return New name of the graph
+   * @brief Changes the label of the graph.
+   * @param[in] label New label of the graph
    */
-  inline void setName(const std::string& name)
+  inline void setGraphLabel(const std::string& label)
   {
-    property_.name(name);
+    property_.label(label);
   }
   /**
    * @brief Returns the number of nodes currently in the graph.
@@ -1141,288 +1304,7 @@ public:
     return (*it).color();
   }
 #endif  
-  /**
-   * @brief %EdgeIterator class.
-   * Used to iterate over all Edges in the Graph
-   */
-  class EdgeIterator
-  {
-  public:
-    using self_t = EdgeIterator;                         ///< EdgeIterator type
-    using value_type = Edge;                                  ///< Edge type
-    using reference = Edge&;                                ///< Edge reference type
-    using pointer = Edge*;                            ///< Edge pointer type
-    using iterator_category = std::forward_iterator_tag; ///< Iterator category
-    using difference_type = std::ptrdiff_t;                       ///< Pointer Difference type
-    /**
-     * @brief Default constructor
-     */
-    EdgeIterator() {}
-    /**
-     * @brief Construct EdgeIterator, only used with Matrix Representation
-     * @param ptr Pointer to which edge this iterator should point
-     * @param data1 ?
-     * @param data2 ?
-     */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_MATRIX
-#endif
-    EdgeIterator(pointer ptr, pointer data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
-    {
-    }
-    /**
-     * @brief Construct EdgeIterator, only used with List Representation
-     * @param ptr Pointer to which edge this iterator should point
-     * @param data1 ?
-     * @param data2 ?
-     */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_LIST
-#endif
-    EdgeIterator(typename nodeList_t::iterator ptr, typename rootList_t::iterator data1, Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2)
-    {
-    }
 
-    /**
-     * @brief Move Iterator to next edge (pre-increment)
-     * @return new Iterator
-     */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_MATRIX
-#endif
-    self_t operator++()
-    {
-      ++ptr_;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists())
-      {
-        ptr_++;
-      }
-      return *this;
-    }
-    /**
-     * @brief Move Iterator to next edge (post-increment)
-     * @return new Iterator
-     */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_MATRIX
-#endif
-    self_t operator++(int dummy)
-    {
-      self_t i = *this;
-      ptr_++;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists())
-      {
-        ptr_++;
-      }
-      return i;
-    }
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_LIST
-    self_t operator++()
-    {
-      ++ptr_;
-      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
-      {
-        ++data1_;
-        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
-          ++data1_;
-        }
-        ptr_ = data1_->begin();
-      }
-      return *this;
-    }
-    GL_ENABLE_IF_LIST
-    self_t operator++(int dummy)
-    {
-      self_t i = *this;
-      ++ptr_;
-      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
-      {
-        ++data1_;
-        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
-          ++data1_;
-        }
-        ptr_ = data1_->begin();
-      }
-      return i;
-    }
-#endif
-    /**
-     * @brief Dereference iterator
-     * @return A Reference to the underlying edge
-     */
-    value_type& operator*() { return *ptr_; }
-    /**
-     * @brief Get underlying edge
-     * @return Pointer to underlying edge
-     */
-    value_type* operator->() { return &operator*(); }
-    /**
-     * @brief Check if equal
-     * @return If both iterators are equal
-     */
-    bool operator==(const self_t &rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
-    /**
-     * @brief Check if not equal
-     * @return If both iterators are not equal
-     */
-    bool operator!=(const self_t &rhs) { return !operator==(rhs); }
-
-    /**
-     * @brief Construct from Assignment
-     * @return If both iterators are not equal
-     */
-    self_t operator=(const self_t &rhs)
-    {
-      ptr_ = rhs.ptr_;
-      data1_ = rhs.data1_;
-      data2_ = rhs.data2_;
-    }
-
-  private:
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename nodeList_t::iterator> ptr_;          ///< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename rootList_t::iterator> data1_;        ///< @brief pointer to first element for Matrix, iterator over the rootList for List
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, idx_t, Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; ///< @brief size of adjacency matrix for matrix, pointer to this Graph for List
-  };
-
-  /**
-   * @brief %ConstEdgeIterator class.
-   * Used to iterate over all Edges in the Graph (and not write access)
-   */
-  class ConstEdgeIterator
-  {
-  public:
-    using self_t = ConstEdgeIterator;                    ///< ConstEdgeIterator type
-    using value_type = Edge;                                  ///< Edge type
-    using reference = const Edge&;                                ///< Edge reference type
-    using pointer = const Edge*;                            ///< Edge pointer type
-    using iterator_category = std::forward_iterator_tag; ///< Iterator category
-    using difference_type = std::ptrdiff_t;                       ///< Pointer Difference type
-    /**
-     * @brief Default Constructor
-     */
-    ConstEdgeIterator() {}
-
-    /**
-     * @brief Construct ConstEdgeIterator
-     * @param ptr Pointer to which edge this iterator should point
-     * @param data1 ?
-     * @param data2 ?
-     */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_MATRIX
-#endif
-    ConstEdgeIterator(pointer ptr, pointer data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
-    {
-    }
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_LIST
-#endif
-    ConstEdgeIterator(typename nodeList_t::const_iterator ptr, typename rootList_t::const_iterator data1, const Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2)
-    {
-    }
-
-    /**
-     * @brief Move Iterator to next edge (pre-increment)
-     * @return new Iterator
-     */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_MATRIX
-#endif
-    self_t operator++()
-    {
-      ++ptr_;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists())
-      {
-        ptr_++;
-      }
-      return *this;
-    }
-    /**
-     * @brief Move Iterator to next edge (post-increment)
-     * @return new Iterator
-     */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_MATRIX
-#endif
-    self_t operator++(int dummy)
-    {
-      self_t i = *this;
-      ptr_++;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists())
-      {
-        ptr_++;
-      }
-      return i;
-    }
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    GL_ENABLE_IF_LIST
-    self_t operator++()
-    {
-      ++ptr_;
-      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
-      {
-        ++data1_;
-        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
-          ++data1_;
-        }
-        ptr_ = data1_->begin();
-      }
-      return *this;
-    }
-    GL_ENABLE_IF_LIST
-    self_t operator++(int dummy)
-    {
-      self_t i = *this;
-      ++ptr_;
-      if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
-      {
-        ++data1_;
-        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
-          ++data1_;
-        }
-        ptr_ = data1_->begin();
-      }
-      return i;
-    }
-#endif
-    /**
-     * @brief Dereference iterator
-     * @return A const Reference to the underlying edge
-     */
-    const value_type& operator*() { return *ptr_; }
-    /**
-     * @brief Get underlying edge
-     * @return const Pointer to underlying edge
-     */
-    const value_type *operator->() { return &operator*(); }
-
-    /**
-     * @brief Assignment constructor
-     * @return A new EdgeIterator
-     */
-    self_t operator=(const self_t &rhs)
-    {
-      ptr_ = rhs.ptr_;
-      data1_ = rhs.data1_;
-      data2_ = rhs.data2_;
-    }
-    /**
-     * @brief Check if equal
-     * @return If both iterators are equal
-     */
-    bool operator==(const self_t &rhs) { return ptr_ == rhs.ptr_ && data1_ == rhs.data1_ && data2_ == rhs.data2_; }
-    /**
-     * @brief Check if not equal
-     * @return If both iterators are not equal
-     */
-    bool operator!=(const self_t &rhs) { return !operator==(rhs); }
-
-  private:
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename nodeList_t::const_iterator> ptr_;    //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename rootList_t::const_iterator> data1_;  //< @brief pointer to first element for Matrix, iterator over the rootList for List
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, idx_t, const Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; //< @brief size of adjacency matrix for matrix, pointer to this Graph for List
-  };
   /**
    * @brief EdgeIterator to the first edge
    * @return Iterator to the first edge
@@ -1439,7 +1321,7 @@ public:
     {
       ptr++;
     }
-    return EdgeIterator(ptr, start, end);
+    return Edge_Iterator<false>(ptr, start, end);
   }
   /**
    * @brief EdgeIterator to behind the last edge
@@ -1450,7 +1332,7 @@ public:
 #endif
   EdgeIterator edge_end()
   {
-    return EdgeIterator(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
+    return Edge_Iterator<false>(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
   }
   /**
    * @brief ConstEdgeIterator to the first edge
@@ -1468,7 +1350,7 @@ public:
     {
       ptr++;
     }
-    return ConstEdgeIterator(ptr, start, end);
+    return Edge_Iterator<true>(ptr, start, end);
   }
   /**
    * @brief ConstEdgeIterator to the last edge
@@ -1479,7 +1361,7 @@ public:
 #endif
   ConstEdgeIterator edge_cend() const
   {
-    return ConstEdgeIterator(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
+    return Edge_Iterator<true>(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
   }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
@@ -1488,12 +1370,12 @@ public:
     auto it = edges_.begin();
     while (it->size() == 0)
       ++it;
-    return EdgeIterator(edges_[it - edges_.begin()].begin(), it, this);
+    return Edge_Iterator<false>(edges_[it - edges_.begin()].begin(), it, this);
   }
   GL_ENABLE_IF_LIST
   EdgeIterator edge_end()
   {
-    return EdgeIterator(edges_.back().end(), edges_.end() - 1, this);
+    return Edge_Iterator<false>(edges_.back().end(), edges_.end() - 1, this);
   }
 
   GL_ENABLE_IF_LIST
@@ -1502,12 +1384,12 @@ public:
     auto it = edges_.cbegin();
     while (it->size() == 0)
       ++it;
-    return ConstEdgeIterator(edges_[it - edges_.begin()].cbegin(), it, this);
+    return Edge_Iterator<true>(edges_[it - edges_.begin()].cbegin(), it, this);
   }
   GL_ENABLE_IF_LIST
   ConstEdgeIterator edge_cend() const 
   {
-    return ConstEdgeIterator(edges_.back().cend(), edges_.cend() - 1, this);
+    return Edge_Iterator<true>(edges_.back().cend(), edges_.cend() - 1, this);
   }
 #endif
   //@}
@@ -1691,8 +1573,8 @@ public:
     updateNode(id,color);
   }
   /**
-   * @brief Updates node custom name & color.
-   * @param[in] od ID of the node that should be updated.
+   * @brief Updates node label & color.
+   * @param[in] id ID of the node that should be updated.
    * @param[in] label New label for the node.
    * @param[in] color New color for the node.
    */
@@ -1728,7 +1610,7 @@ public:
 
   /**
    * @brief Finds the label of the given node.
-   * @param[in] id ID of the node whose lavel is to be found.
+   * @param[in] id ID of the node whose label is to be found.
    * @return Label of node
    */
   inline std::string getNodeLabel(const idx_t& id) const
@@ -1736,7 +1618,7 @@ public:
     return nodes_[id].label();
   }
   /**
-   * @brief Finds the flow capactiy of the given node.
+   * @brief Finds the flow capacity of the given node.
    * @param[in] id node whose flow capacity is to be found
    * @return Capacity of node
    */

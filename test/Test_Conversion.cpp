@@ -8,7 +8,7 @@ int main(int argc, char const *argv[])
   ldd_in.setEdge(3,0,.3);
   ldd_in.setEdge(0,3,1.2);
   gl::graphMdd mdd_out = ldd_in.toMatrix();
-  mdd_out.setName("mdd_out");
+  mdd_out.setGraphLabel("mdd_out");
 
   gl::graphMdd mdd_in(4,"mdd_in");
   mdd_in.setEdge(1,2,9.81);
@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
   mdd_in.setEdge(1,1,111);
   mdd_in.setEdge(0,3,1.2);
   gl::graphLdd ldd_out = mdd_in.toList();
-  ldd_out.setName("ldd_out");
+  ldd_out.setGraphLabel("ldd_out");
 
   gl::graphLdu ldu_in(5,"ldu_in");
   ldu_in.setEdge(0,2,5.56);
@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
   ldu_in.setEdge(1,1,111);
   ldu_in.setEdge(2,1,73);
   gl::graphMdu mdu_out = ldu_in.toMatrix();
-  mdu_out.setName("mdu_out");
+  mdu_out.setGraphLabel("mdu_out");
 
   gl::graphMdu mdu_in(5,"mdu_in");
   mdu_in.setEdge(0,2,5.56);
@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
   mdu_in.setEdge(1,1,111);
   mdu_in.setEdge(2,1,73);
   gl::graphLdu ldu_out = mdu_in.toList();
-  ldu_out.setName("ldu_out");
+  ldu_out.setGraphLabel("ldu_out");
 
   std::cout << ldd_in << mdd_out << mdd_in << ldd_out
             << ldu_in << mdu_out << mdu_in << ldu_out; 
