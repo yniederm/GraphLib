@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(GraphLibrary)
 set(CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 
 # Check that this is not an in-source build:
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")

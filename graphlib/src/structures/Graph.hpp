@@ -49,7 +49,7 @@ public:
   using idx_list_t = std::vector<idx_t>;                   ///< Index List type
   using ordered_list_t = std::list<idx_t>;                 ///< Ordered List type
   using visit_list_t = std::vector<bool>;                  ///< Visited-List type
-  using BFS_queue_t = std::deque<idx_t>;                   ///< BFS type
+  using BFS_queue_t = std::queue<idx_t>;                   ///< BFS type
   using DFS_queue_t = std::stack<idx_t>;                   ///< DFS type
 
   /** 
@@ -172,7 +172,7 @@ public:
   {
 
   public:
-    Node(const idx_t& id = 0, const val_t& capacity = 1, const std::string& name = "Node") : id_(id), name_(name), capacity_(capacity),
+    Node(const idx_t& id = 0, const val_t& capacity = 1, const std::string& label = "") : id_(id), label_(label), capacity_(capacity),
                                                                         inDegree_(0), outDegree_(0) {}
 
     /**
@@ -197,15 +197,15 @@ public:
      */
     //@{
     /**
-     * @brief Gets the name of a node.
-     * @return name of the node.
+     * @brief Gets the label of a node.
+     * @return label of the node.
      */
-    inline std::string name() const;
+    inline std::string label() const;
     /**
-     * @brief Allows changing the name of a node.
-     * @param name New value of node name.
+     * @brief Allows changing the lable of a node.
+     * @param name New value of node label.
      */
-    inline void name(const std::string &name);
+    inline void label(const std::string &name);
     //@}
     /**
      * @name capacity
@@ -284,7 +284,7 @@ public:
 
   private:
     idx_t id_;         /**< @brief Node ID */
-    std::string name_; /**< @brief Node name */
+    std::string label_; /**< @brief Node label */
     val_t capacity_;   /**< @brief Node capacity */
     Color color_;      /**< @brief Node color */
     idx_t inDegree_;   /**< @brief In-degree */
@@ -389,7 +389,7 @@ protected:
   Property property_; /**< @brief Stores various properties of the Graph. */
 
   std::vector<Node> nodes_;                                                                   /**< @brief Stores information about all nodes in the Graph. */
-  std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, matrix_t, rootList_t> edges_; /**< @brief Stores information about all edges in the Graph. */
+  std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_t, rootList_t> edges_; /**< @brief Stores information about all edges in the Graph. */
 
 public:
   /**
@@ -437,7 +437,7 @@ public:
    * This function only exists for ListGraphs.
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  GL_ENABLE_IF_LIST
+  GL_ENABLE_IF_LIST_DIRECTED
 #endif
   gl::Graph<SCALAR, gl::Matrix, DIRECTION> toMatrix() const
   {
@@ -451,6 +451,25 @@ public:
     }
     return out;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  /**
+   * @brief Converts an undirected ListGraph to an undirected MatrixGraph.
+   */
+  GL_ENABLE_IF_LIST_UNDIRECTED
+  gl::Graph<SCALAR, gl::Matrix, DIRECTION> toMatrix() const
+  {
+    gl::Graph<SCALAR, gl::Matrix, DIRECTION> out(numNodes(), getName());
+    for (idx_t start = 0; start < edges_.size(); ++start)
+    {
+      for (auto &end : edges_[start])
+      {
+        if(!out.hasEdge(start,end.dest()))
+          out.setEdge(start, end.dest(), end.weight(), end.color());
+      }
+    }
+    return out;
+  }
+#endif
 
   /**
    * @brief Outputs a graph in Adjacency List storage format with the same edges as this.
@@ -562,6 +581,13 @@ public:
    * @brief Checks whether the given graph containes cycles.
    * @return true if cyclic, false if acyclic
    */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  /**
+   * @brief Checks whether the given directed graph containes cycles using an iterative DFS approach.
+   * @return true if cyclic, false if acyclic
+   */
+  GL_ENABLE_IF_DIRECTED
+#endif
   bool hasCycle() const
   {
     visit_list_t visited(numNodes(), false);
@@ -584,6 +610,43 @@ public:
     }
     return false;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  /**
+   * @brief Checks whether the given undirected graph containes cycles using an iterative BFS approach.
+   * @return true if cyclic, false if acyclic
+   */
+  GL_ENABLE_IF_UNDIRECTED
+  bool hasCycle() const
+  {
+    idx_t v = 0;
+    idx_t parent = 0;
+    std::deque<std::pair<idx_t, idx_t> > queue;
+    idx_list_t tempList;
+    visit_list_t visited (numNodes(),false);
+    queue.push_front(std::make_pair(v, parent));
+    visited[v] = true;
+
+    while (!queue.empty())
+    {
+      v = queue.front().first;
+      parent = queue.front().second;
+      queue.pop_front();
+
+      tempList = getNeighbours(v);
+      for (auto elem : tempList) 
+      {
+        if (!visited[elem])
+        {
+          queue.push_front(std::make_pair(elem, v));
+          visited[elem] = true;
+        }
+        else if (elem != parent)
+          return true;
+      }
+    }
+    return false;
+  }
+#endif
   //@}
   /**
    * @name Edge interface
@@ -619,12 +682,14 @@ public:
   {
     GL_ASSERT((!hasEdge(start, end)), std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     edges_[start].push_back(Edge(start, end, weight, color, true));
-    edges_[end].push_back(Edge(end, start, weight, color, true));
     property_.numEdgesIncrement();
-    nodes_[start].inDegreeIncrement();
     nodes_[start].outDegreeIncrement();
     nodes_[end].inDegreeIncrement();
-    nodes_[end].outDegreeIncrement();
+    if(start != end) { // for avoiding double-adding self loops
+      edges_[end].push_back(Edge(end, start, weight, color, true));
+      nodes_[start].inDegreeIncrement();
+      nodes_[end].outDegreeIncrement();
+    }
   }
 
   /**
@@ -648,9 +713,9 @@ public:
   GL_ENABLE_IF_MATRIX_UNDIRECTED
   void setEdge(idx_t start, idx_t end, const val_t& weight = 1, const Color& color = {})
   {
-    GL_ASSERT((!hasEdge(start, end)), std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     if (start > end)
       std::swap(end, start);
+    GL_ASSERT((!hasEdge(start, end)), std::string("There is already an edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     edges_[start * numNodes() + end].color(color);
     edges_[start * numNodes() + end].weight(weight);
     if (!hasEdge(start, end))
@@ -1159,8 +1224,9 @@ public:
       if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
       {
         ++data1_;
-        while (data1_->size() == 0)
+        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
           ++data1_;
+        }
         ptr_ = data1_->begin();
       }
       return *this;
@@ -1173,8 +1239,9 @@ public:
       if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
       {
         ++data1_;
-        while (data1_->size() == 0)
+        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
           ++data1_;
+        }
         ptr_ = data1_->begin();
       }
       return i;
@@ -1213,9 +1280,9 @@ public:
     }
 
   private:
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer, typename nodeList_t::iterator> ptr_;          ///< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer, typename rootList_t::iterator> data1_;        ///< @brief pointer to first element for Matrix, iterator over the rootList for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, idx_t, Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; ///< @brief size of adjacency matrix for matrix, pointer to this Graph for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename nodeList_t::iterator> ptr_;          ///< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename rootList_t::iterator> data1_;        ///< @brief pointer to first element for Matrix, iterator over the rootList for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, idx_t, Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; ///< @brief size of adjacency matrix for matrix, pointer to this Graph for List
   };
 
   /**
@@ -1227,8 +1294,8 @@ public:
   public:
     using self_t = ConstEdgeIterator;                    ///< ConstEdgeIterator type
     using value_type = Edge;                                  ///< Edge type
-    using reference = Edge&;                                ///< Edge reference type
-    using pointer = Edge*;                            ///< Edge pointer type
+    using reference = const Edge&;                                ///< Edge reference type
+    using pointer = const Edge*;                            ///< Edge pointer type
     using iterator_category = std::forward_iterator_tag; ///< Iterator category
     using difference_type = std::ptrdiff_t;                       ///< Pointer Difference type
     /**
@@ -1251,7 +1318,7 @@ public:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_LIST
 #endif
-    ConstEdgeIterator(typename nodeList_t::const_iterator ptr, typename rootList_t::const_iterator data1, Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    ConstEdgeIterator(typename nodeList_t::const_iterator ptr, typename rootList_t::const_iterator data1, const Graph<SCALAR, STORAGE_KIND, DIRECTION> *data2) : ptr_(ptr), data1_(data1), data2_(data2)
     {
     }
 
@@ -1296,8 +1363,9 @@ public:
       if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
       {
         ++data1_;
-        while (data1_->size() == 0)
+        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
           ++data1_;
+        }
         ptr_ = data1_->begin();
       }
       return *this;
@@ -1310,8 +1378,9 @@ public:
       if (ptr_ == data1_->end() && ((data1_ + 1) != data2_->edges_.end()))
       {
         ++data1_;
-        while (data1_->size() == 0)
+        while (data1_->size() == 0 && ((data1_ + 1) != data2_->edges_.end())) {
           ++data1_;
+        }
         ptr_ = data1_->begin();
       }
       return i;
@@ -1350,9 +1419,9 @@ public:
     bool operator!=(const self_t &rhs) { return !operator==(rhs); }
 
   private:
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer, typename nodeList_t::const_iterator> ptr_;    //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, pointer, typename rootList_t::const_iterator> data1_;  //< @brief pointer to first element for Matrix, iterator over the rootList for List
-    std::conditional_t<std::is_same<STORAGE_KIND, Matrix>::value, idx_t, Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; //< @brief size of adjacency matrix for matrix, pointer to this Graph for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename nodeList_t::const_iterator> ptr_;    //< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, typename rootList_t::const_iterator> data1_;  //< @brief pointer to first element for Matrix, iterator over the rootList for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, idx_t, const Graph<SCALAR, STORAGE_KIND, DIRECTION> *> data2_; //< @brief size of adjacency matrix for matrix, pointer to this Graph for List
   };
   /**
    * @brief EdgeIterator to the first edge
@@ -1390,10 +1459,10 @@ public:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX
 #endif
-  ConstEdgeIterator edge_cbegin()
+  ConstEdgeIterator edge_cbegin() const
   {
-    Edge *ptr = &edges_.front();
-    Edge *start = &edges_.front();
+    auto ptr = &edges_.front();
+    const auto start = &edges_.front();
     idx_t end = numNodes() * numNodes();
     while (!ptr->exists())
     {
@@ -1408,7 +1477,7 @@ public:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_MATRIX
 #endif
-  ConstEdgeIterator edge_cend()
+  ConstEdgeIterator edge_cend() const
   {
     return ConstEdgeIterator(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
   }
@@ -1428,7 +1497,7 @@ public:
   }
 
   GL_ENABLE_IF_LIST
-  ConstEdgeIterator edge_cbegin()
+  ConstEdgeIterator edge_cbegin() const
   {
     auto it = edges_.cbegin();
     while (it->size() == 0)
@@ -1436,7 +1505,7 @@ public:
     return ConstEdgeIterator(edges_[it - edges_.begin()].cbegin(), it, this);
   }
   GL_ENABLE_IF_LIST
-  ConstEdgeIterator edge_cend()
+  ConstEdgeIterator edge_cend() const 
   {
     return ConstEdgeIterator(edges_.back().cend(), edges_.cend() - 1, this);
   }
@@ -1590,94 +1659,114 @@ public:
 #endif
   /**
    * @brief Updates node properties. Parameter "node" mandatory, the rest optional.
-   * @param[in] node ID of the node that should be updated.
-   * @param[in] name (Optional) New custom name for the node.
+   * @param[in] id ID of the node that should be updated.
+   * @param[in] label (Optional) New label for the node.
    * @param[in] capacity (Optional) New flow capacity for the node.
    * @param[in] color (Optional) New color for the node.
    */
-  inline void updateNode(const idx_t& node, const std::string& name, const val_t& capacity, const Color& color);
+  inline void updateNode(const idx_t& id, const std::string& label, const val_t& capacity, const Color& color) {
+    updateNode(id,label);
+    updateNode(id,capacity);
+    updateNode(id,color);
+  }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
-   * @brief Updates node custom name & flow capacity.
-   * @param[in] node ID of the node that should be updated.
-   * @param[in] name New custom name for the node.
+   * @brief Updates node label & flow capacity.
+   * @param[in] id ID of the node that should be updated.
+   * @param[in] label New label for the node.
    * @param[in] capacity New flow capacity for the node.
    */
-  inline void updateNode(const idx_t& node, const std::string& name, const val_t& capacity);
+  inline void updateNode(const idx_t& id, const std::string& label, const val_t& capacity) {
+    updateNode(id,label);
+    updateNode(id,capacity);
+  }
   /**
    * @brief Updates node flow capacity & color.
-   * @param[in] node ID of the node that should be updated.
+   * @param[in] id ID of the node that should be updated.
    * @param[in] capacity New flow capacity for the node.
    * @param[in] color New color for the node.
    */
-  inline void updateNode(const idx_t& node, const val_t& capacity, const Color& color);
+  inline void updateNode(const idx_t& id, const val_t& capacity, const Color& color) {
+    updateNode(id,capacity);
+    updateNode(id,color);
+  }
   /**
    * @brief Updates node custom name & color.
-   * @param[in] node ID of the node that should be updated.
-   * @param[in] name New custom name for the node.
+   * @param[in] od ID of the node that should be updated.
+   * @param[in] label New label for the node.
    * @param[in] color New color for the node.
    */
-  inline void updateNode(const idx_t& node, const std::string& name, const Color& color);
+  inline void updateNode(const idx_t& id, const std::string& label, const Color& color) {
+    updateNode(id,label);
+    updateNode(id,color);    
+  }
   /**
-   * @brief Updates node custom name.
-   * @param[in] name New custom name for the node.
+   * @brief Updates node label.
+   * @param[in] id ID of the node that should be updated.
+   * @param[in] label New label for the node.
    */
-  inline void updateNode(const idx_t& node, const std::string& name);
+  inline void updateNode(const idx_t& id, const std::string& label) {
+    nodes_[id].label(label);
+  }
   /**
    * @brief Updates node flow capacity.
-   * @param[in] node ID of the node that should be updated.
+   * @param[in] id ID of the node that should be updated.
    * @param[in] capacity New flow capacity for the node.
    */
-  inline void updateNode(const idx_t& node, const val_t& capacity);
+  inline void updateNode(const idx_t& id, const val_t& capacity) {
+    nodes_[id].capacity(capacity);
+  }
   /**
    * @brief Updates node color.
-   * @param[in] node ID of the node that should be updated.
+   * @param[in] id ID of the node that should be updated.
    * @param[in] color New color for the node.
    */
-  inline void updateNode(const idx_t& node, const Color& color);
+  inline void updateNode(const idx_t& id, const Color& color) {
+    nodes_[id].color(color);
+  }
 #endif
 
   /**
-   * @brief Finds the custom name of the given node.
-   * @param node node whose custom is to be found
-   * @return Custom name of node
+   * @brief Finds the label of the given node.
+   * @param[in] id ID of the node whose lavel is to be found.
+   * @return Label of node
    */
-  inline std::string getNodeName(const idx_t& node) const
+  inline std::string getNodeLabel(const idx_t& id) const
   {
-    return nodes_[node].name();
+    return nodes_[id].label();
   }
   /**
    * @brief Finds the flow capactiy of the given node.
-   * @param node node whose flow capacity is to be found
+   * @param[in] id node whose flow capacity is to be found
    * @return Capacity of node
    */
-  inline val_t getNodeCapacity(const idx_t& node) const
+  inline val_t getNodeCapacity(const idx_t& id) const
   {
-    return nodes_[node].capacity();
+    return nodes_[id].capacity();
   }
   /**
    * @brief Finds the degree of the given node (i.e. count of all in- & outgoing edges).
-   * @param node node whose degree is to be found
+   * @param id node whose degree is to be found
    * @return Degree of node
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
 #endif
-  inline idx_t getNodeDegree(const idx_t& node) const
+  inline idx_t getNodeDegree(const idx_t& id) const
   {
-    return edges_[node].size();
+    return edges_[id].size();
   }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
    * @brief Gets the degree of a node in a Matrix Graph.
    */
   GL_ENABLE_IF_MATRIX
-  idx_t getNodeDegree(const idx_t& node) const
+  idx_t getNodeDegree(const idx_t& id) const
   {
     idx_t count = 0;
     for (idx_t end = 0; end < numNodes(); ++end)
     {
-      if (hasEdge(node, end))
+      if (hasEdge(id, end))
         ++count;
     }
     return count;
@@ -1687,14 +1776,14 @@ public:
   /**
    * @brief Gets the in-degree of a node (i.e. count of all incoming edges).
    */
-  idx_t getNodeInDegree(const idx_t& node) const {
-    return nodes_[node].inDegree();
+  idx_t getNodeInDegree(const idx_t& id) const {
+    return nodes_[id].inDegree();
   }
   /**
    * @brief Gets the in-degree of a node (i.e. count of all outgoing edges).
    */
-  idx_t getNodeOutDegree(const idx_t& node) const {
-    return nodes_[node].outDegree();
+  idx_t getNodeOutDegree(const idx_t& id) const {
+    return nodes_[id].outDegree();
   }
   /**
    * @brief Returns the color of a node.
@@ -1725,7 +1814,7 @@ public:
    * @brief ConstNodeIterator to the first node
    * @return Iterator to the first node
    */
-  ConstNodeIterator node_cbegin()
+  ConstNodeIterator node_cbegin() const
   {
     return ConstNodeIterator(nodes_.cbegin());
   }
@@ -1733,7 +1822,7 @@ public:
    * @brief ConstNodeIterator to behind the last node
    * @return Iterator to behind the last node
    */
- ConstNodeIterator node_cend()
+ ConstNodeIterator node_cend() const
   {
     return ConstNodeIterator(nodes_.cend());
   }

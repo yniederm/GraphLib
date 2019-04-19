@@ -27,13 +27,9 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl:
      << "Directed " 
      << (GL_IS_MATRIX ? "Matrix" : (GL_IS_LIST ? "List" : "Unknown storage type"))
      << std::endl;
-  for(idx_t start = 0; start < rhs.numNodes(); start++)
-  {
-    auto neighbours = rhs.getNeighbourWeights(start);
-    for(const auto& edge : neighbours)
-    {
-      os << start << "--(" << edge.second << ")->" << edge.first << std::endl;
-    }
+  for (auto it = rhs.edge_cbegin(); it != rhs.edge_cend(); ++it) {
+    os << it->source() << "--(" << it->weight() 
+        << ")->" << it->dest() << std::endl;
   }
   std::cout << std::endl;
   return os;
@@ -51,14 +47,10 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl:
      << "Undirected " 
      << (GL_IS_MATRIX ? "Matrix" : (GL_IS_LIST ? "List" : "Unknown storage type"))
      << std::endl;
-  for(idx_t start = 0; start < rhs.numNodes(); start++)
-  {
-    auto neighbours = rhs.getNeighbourWeights(start);
-    for(const auto& edge : neighbours)
-    {
-      if (start < edge.first) {
-        os << start << "<-(" << edge.second << ")->" << edge.first << std::endl;
-      }
+  for (auto it = rhs.edge_cbegin(); it != rhs.edge_cend(); ++it) {
+    if (it->source() <= it->dest()) {
+        os << it->source() << "<-(" << it->weight() 
+           << ")->" << it->dest() << std::endl;
     }
   }
   std::cout << std::endl;

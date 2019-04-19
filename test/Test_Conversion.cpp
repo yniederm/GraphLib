@@ -14,6 +14,7 @@ int main(int argc, char const *argv[])
   mdd_in.setEdge(1,2,9.81);
   mdd_in.setEdge(2,3,-3.2);
   mdd_in.setEdge(3,0,.3);
+  mdd_in.setEdge(1,1,111);
   mdd_in.setEdge(0,3,1.2);
   gl::graphLdd ldd_out = mdd_in.toList();
   ldd_out.setName("ldd_out");
@@ -21,6 +22,7 @@ int main(int argc, char const *argv[])
   gl::graphLdu ldu_in(5,"ldu_in");
   ldu_in.setEdge(0,2,5.56);
   ldu_in.setEdge(3,2,3.4);
+  ldu_in.setEdge(1,1,111);
   ldu_in.setEdge(2,1,73);
   gl::graphMdu mdu_out = ldu_in.toMatrix();
   mdu_out.setName("mdu_out");
@@ -28,6 +30,7 @@ int main(int argc, char const *argv[])
   gl::graphMdu mdu_in(5,"mdu_in");
   mdu_in.setEdge(0,2,5.56);
   mdu_in.setEdge(3,2,3.4);
+  mdu_in.setEdge(1,1,111);
   mdu_in.setEdge(2,1,73);
   gl::graphLdu ldu_out = mdu_in.toList();
   ldu_out.setName("ldu_out");

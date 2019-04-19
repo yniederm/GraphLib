@@ -21,16 +21,16 @@ inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::id(const idx_t& id) {
   id_ = id;
 }
 
-/* \internal getter for name */
+/* \internal getter for label */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::name() const {
-  return name_;
+inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::label() const {
+  return label_;
 }
 
-/* \internal setter for name */
+/* \internal setter for label */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::name(const std::string& name) {
-  name_ = name;
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::label(const std::string& name) {
+  label_ = label;
 }
 
 /* \internal getter for capacity */

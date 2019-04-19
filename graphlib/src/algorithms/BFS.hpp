@@ -21,16 +21,16 @@ typename GRAPH::ordered_list_t BFS (const GRAPH& graph, const typename GRAPH::id
   auto v = node;
 
   // traversal
-  queue.push_front(v);
+  queue.push(v);
   visited[v] = true;
   while(!queue.empty()) {
     v = queue.front();
-    queue.pop_front();
+    queue.pop();
     out.push_back(v);
     tempList = graph.getUnvisitedNeighbours(v,visited);
     for (auto elem : tempList) {
       visited[elem] = true;
-      queue.push_front(elem);
+      queue.push(elem);
     }
   }
   return out;

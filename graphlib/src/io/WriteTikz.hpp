@@ -63,7 +63,7 @@ template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true)
 {
   s << "\\documentclass{amsart}" << std::endl;
-  s << "\\usepackage{tikz}" << std::endl;
+  s << "\\usepackage{tikz-network}" << std::endl;
   s << "\\begin{document}" << std::endl;
   s << "\\begin{center}" << std::endl;
   s << "\\begin{tikzpicture}" << std::endl;
@@ -107,25 +107,35 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
     // Scale by degree
     pos.normalize();
     pos *= (1 + g.getNodeDegree(i));
+    auto color = g.getNodeColor(i);
 
-    s << "  \\node (" << i << ") at (" << pos(0) << ", "
-      << pos(1) << ") {";
-    if (writeNodes)
-      s << i;
-    s << "};" << std::endl;
+    s << "  \\Vertex[x=" << pos(0) << ",y=" << pos(1) 
+      << ",RGB,color={" << +color.r() << "," << +color.g() 
+      << "," << +color.b() << "},opacity=" << +color.a() 
+      << ",size=0.4";
+    if (g.getNodeLabel(i)=="") {
+      s << ",IdAsLabel";
+    }
+    else {
+      s << "label=" << g.getNodeLabel(i);
+    }
+    s << (writeNodes ? "" : ",Pseudo")
+      << "]{" << i << "}" << std::endl;
   }
 
   // draw all edges
-  s << "  \\begin{scope}[every path/.style={->}]" << std::endl;
+  // s << "  \\begin{scope}[every path/.style={->}]" << std::endl;
   for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
   {
-    if (it->source() != it->dest())
-    {
-      s << "    \\draw (" << it->source() << ") -- (" << it->dest() << ");" << std::endl;
-    }
+    auto color = it->color();
+    s << "    \\Edge[" << (g.isDirected() ? "Direct," : "")
+      << (it->source() == it->dest() ? "loopshape=45," : "")
+      << "RGB,color={" << +color.r() << "," << +color.g() 
+      << "," << +color.b() << "},opacity=" << +color.a() 
+      << "](" << it->source() << ")(" << it->dest() << ")" << std::endl;
   }
 
-  s << "  \\end{scope}" << std::endl;
+  // s << "  \\end{scope}" << std::endl;
   s << "\\end{tikzpicture}" << std::endl;
   s << "\\end{center}" << std::endl;
   s << "\\end{document}" << std::endl;

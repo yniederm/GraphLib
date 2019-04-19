@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
     mglGraph gr;
     gr.SetSize(1000, 1000);
     gl::external::saveImage(&gr, g, "k-"); // black lines
-    gr.WritePNG("build/output.png");
-    std::cout << "saved to build/output.png" << std::endl;
+    gr.WritePNG("build/mathgl.png");
+    std::cout << "saved to build/mathgl.png" << std::endl;
     return 0;
 }
