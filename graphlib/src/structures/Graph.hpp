@@ -49,7 +49,8 @@ public:
   using idx_list_t = std::vector<idx_t>;                   ///< Index List type
   using ordered_list_t = std::list<idx_t>;                 ///< Ordered List type
   using visit_list_t = std::vector<bool>;                  ///< Visited-List type
-  using BFS_queue_t = std::queue<idx_t>;                   ///< BFS type
+  template <class info_t>
+  using BFS_queue_t = std::deque<info_t>;                   ///< BFS type
   using DFS_queue_t = std::stack<idx_t>;                   ///< DFS type
 
   /** 
@@ -1540,7 +1541,7 @@ public:
   }
 #endif
   /**
-   * @brief Updates node properties. Parameter "node" mandatory, the rest optional.
+   * @brief Updates node properties. Parameter "id" mandatory, the rest optional.
    * @param[in] id ID of the node that should be updated.
    * @param[in] label (Optional) New label for the node.
    * @param[in] capacity (Optional) New flow capacity for the node.

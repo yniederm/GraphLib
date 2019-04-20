@@ -15,9 +15,9 @@ int main(int argc, char const *argv[])
   std::cout << "DFS: ";
   gl::io::printContainer(tree_search);
   
-  tree_search = gl::algorithm::BFS(tree, 0);
+  gl::algorithm::BFSMiu tree_bfs (tree, 0);
   std::cout << "BFS: ";
-  gl::io::printContainer(tree_search);
+  gl::io::printContainer(tree_bfs.getTraversalOrder());
 
   std::cout << "\n" << connected << std::endl;
 
@@ -25,9 +25,23 @@ int main(int argc, char const *argv[])
   std::cout << "DFS: ";
   gl::io::printContainer(conn_search);
   
-  conn_search = gl::algorithm::BFS(connected, 0);
-  std::cout << "BFS: ";
-  gl::io::printContainer(conn_search);
+  gl::algorithm::BFSLiu conn_bfs (connected, 0);
+  std::cout << "BFS Traversal order: ";
+  gl::io::printContainer(conn_bfs.getTraversalOrder());
+
+  std::cout << "\nTraversal order up to distance from 0:\n";
+  for (int i = 0; i < 4; ++i) {
+    std::cout << i << ": " << conn_bfs.getTraversalOrderMaxDistance(i);
+  }
+  std::cout << "\nNodes at fixed distances from 0:\n";
+  for (int i = 0; i < 4; ++i) {
+    std::cout << i << ": " << conn_bfs.getNodesExactDistance(i);
+  }
+  std::cout << "\nNodes up to maximum distance from 0:\n";
+  for (int i = 0; i < 4; ++i) {
+    std::cout << i << ": " << conn_bfs.getNodesMaxDistance(i);
+  }
+
 
   return 0;
 }

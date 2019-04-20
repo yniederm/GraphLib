@@ -18,7 +18,8 @@ namespace gl {
 namespace algorithm {
 
 #define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar,ScalarSuffix,Storage,StorageSuffix,Direction,DirectionSuffix) \
-using dijkstra##StorageSuffix##ScalarSuffix##DirectionSuffix = Dijkstra<Scalar,Storage,Direction>;
+using dijkstra##StorageSuffix##ScalarSuffix##DirectionSuffix = Dijkstra<Scalar,Storage,Direction>; \
+using BFS##StorageSuffix##ScalarSuffix##DirectionSuffix = BFS<Scalar,Storage,Direction>;
 
 #define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix) \
 GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar, ScalarSuffix, gl::Matrix, M, Direction, DirectionSuffix) \

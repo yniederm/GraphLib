@@ -26,8 +26,12 @@ class Dijkstra {
   using visit_list_t = typename Graph::visit_list_t;
 
 public: 
-  Dijkstra();
+  Dijkstra() = delete;
   Dijkstra(const Graph&, const idx_t);
+  Dijkstra(Dijkstra &&) = default;
+  Dijkstra(const Dijkstra &) = default;
+  Dijkstra &operator=(Dijkstra &&) = default;
+  Dijkstra &operator=(const Dijkstra &) = default;
   ~Dijkstra();
 
   val_t pathLength(const idx_t) const;
@@ -42,9 +46,6 @@ private:
 ///////////////////////////////////////////////////////////
 //    Member function implementations
 ///////////////////////////////////////////////////////////
-
-template <class SCALAR, class STORAGE, class DIR>
-Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra() {}
 
 template <class SCALAR, class STORAGE, class DIR>
 Dijkstra<SCALAR,STORAGE,DIR>::~Dijkstra() {}
