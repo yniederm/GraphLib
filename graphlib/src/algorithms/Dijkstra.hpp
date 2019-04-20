@@ -26,20 +26,36 @@ class Dijkstra {
   using visit_list_t = typename Graph::visit_list_t;
 
 public: 
-  Dijkstra() = delete;
+  /**
+   * @brief Constructor. This is where the shortest distances and the predecessors of each node on the shortest path tree get computed.
+   * @param graph Input graph on which the shortest paths will be computed.
+   * @param src Source node. All shortest paths will be computed from here.
+   */
   Dijkstra(const Graph&, const idx_t);
+
+  Dijkstra() = delete;
   Dijkstra(Dijkstra &&) = default;
   Dijkstra(const Dijkstra &) = default;
   Dijkstra &operator=(Dijkstra &&) = default;
   Dijkstra &operator=(const Dijkstra &) = default;
   ~Dijkstra();
 
+  /**
+   * @brief Computes the shortest path length from src to dest.
+   * @param dest Node whose distance to src we want to know.
+   * @return shortest path length / weight.
+   */
   val_t pathLength(const idx_t) const;
+  /**
+   * @brief Computes the node sequence that represents the shortest path from src to dest.
+   * @param dest Node whose shortest path to src we want to know.
+   * @return shortest path in form of an ordered list of node indices.
+   */
   ordered_list_t getPath(const idx_t) const;
 
 private:
-  Graph const& graph_; /**< @brief reference to graph */
-  idx_t src_; /**< @brief source node */
+  Graph const& graph_; /**< @brief Reference to graph */
+  idx_t src_; /**< @brief Source node */
   result_t final_; /**< @brief Shortest Path lengths & predecessors */
 };
 
@@ -50,11 +66,6 @@ private:
 template <class SCALAR, class STORAGE, class DIR>
 Dijkstra<SCALAR,STORAGE,DIR>::~Dijkstra() {}
 
-  /**
-   * Constructor. This is where the shortest distances and the predecessors of each node on the shortest path tree get computed.
-   * @param graph Input graph on which the shortest paths will be computed.
-   * @param src Source node. All shortest paths will be computed from here.
-   */
 template <class SCALAR, class STORAGE, class DIR>
 Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {
 
@@ -92,21 +103,11 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : gr
   final_ = out;
 }
 
-  /**
-   * @brief Computes the shortest path length from src to dest.
-   * @param dest Node whose distance to src we want to know.
-   * @return shortest path length / weight.
-   */
 template <class SCALAR, class STORAGE, class DIR>
 typename gl::Graph<SCALAR,STORAGE,DIR>::val_t Dijkstra<SCALAR,STORAGE,DIR>::pathLength (const idx_t dest) const {
   return final_[dest].first!=std::numeric_limits<val_t>::max() ? final_[dest].first : val_t(-1);
 }
 
-  /**
-   * @brief Computes the node sequence that represents the shortest path from src to dest.
-   * @param dest Node whose shortest path to src we want to know.
-   * @return shortest path in form of an ordered list of node indices.
-   */
 template <class SCALAR, class STORAGE, class DIR>
 typename gl::Graph<SCALAR,STORAGE,DIR>::ordered_list_t Dijkstra<SCALAR,STORAGE,DIR>::getPath (const idx_t dest) const {
   typename gl::Graph<SCALAR,STORAGE,DIR>::ordered_list_t out;

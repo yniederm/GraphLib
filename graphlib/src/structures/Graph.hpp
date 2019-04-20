@@ -393,12 +393,12 @@ public:
   class Edge_Iterator
   {
   public:
-    using value_type = Edge;                                  ///< Edge type
-    using reference = std::conditional_t<IsConst,const Edge&, Edge&>;                                ///< Edge reference type
-    using pointer = std::conditional_t<IsConst,const Edge*, Edge*>;                            ///< Edge pointer type
-    using iterator_category = std::forward_iterator_tag; ///< Iterator category
-    using difference_type = std::ptrdiff_t;                       ///< Pointer Difference type
-    using self_t = Edge_Iterator;                         ///< EdgeIterator type                        ///< ConstEdgeIterator type
+    using value_type = Edge;                                          ///< Edge type
+    using reference = std::conditional_t<IsConst,const Edge&, Edge&>; ///< Edge reference type
+    using pointer = std::conditional_t<IsConst,const Edge*, Edge*>;   ///< Edge pointer type
+    using iterator_category = std::forward_iterator_tag;              ///< Iterator category
+    using difference_type = std::ptrdiff_t;                           ///< Pointer Difference type
+    using self_t = Edge_Iterator;                                     ///< EdgeIterator type
     /* typedefs for data members */
     using vector_iterator_t = std::conditional_t<IsConst,typename rootList_t::const_iterator, typename rootList_t::iterator>;
     using list_iterator_t = std::conditional_t<IsConst, typename nodeList_t::const_iterator, typename nodeList_t::iterator>;
@@ -496,24 +496,40 @@ public:
     }
 #endif
     /**
-     * @brief Dereference iterator
+     * @brief Const dreference iterator
      * @return A Reference to the underlying edge
      */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     template <bool _IsConst = IsConst>
     std::enable_if_t<_IsConst,reference>
+#endif
     operator*() const { return *ptr_; }
+    /**
+     * @brief Non-const dereference iterator
+     * @return A Reference to the underlying edge
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     template <bool _IsConst = IsConst>
     std::enable_if_t<!_IsConst,reference>
+#endif
     operator*() { return *ptr_; }
     /**
      * @brief Get underlying edge
-     * @return Pointer to underlying edge
+     * @return Const pointer to underlying edge
      */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     template <bool _IsConst = IsConst>
     std::enable_if_t<_IsConst,pointer>
+#endif
     operator->() const { return &operator*(); }
+    /**
+     * @brief Get underlying edge
+     * @return Non-const pointer to underlying edge
+     */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
     template <bool _IsConst = IsConst>
     std::enable_if_t<!_IsConst,pointer>
+#endif
     operator->() { return &operator*(); }
     /**
      * @brief Check if equal
