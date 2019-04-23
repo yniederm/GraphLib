@@ -1,11 +1,11 @@
 #include <graphlib/gl>
-#include <graphlib/external>
+#include <graphlib/external> // for writeTIKZ
 
 int main(int argc, char const *argv[])
 {
-    gl::external::YAMLReader reader("test/graph.yml");
+    gl::io::YAMLReader reader("test/graph.yml");
 
-    gl::external::YAMLReader::graph_variant_type g = reader.get();
+    gl::io::YAMLReader::graph_variant_type g = reader.get();
 
     // std::visit([](auto g_ptr) { std::cout << *g_ptr; }, g);
     IO_CALL_ON_GRAPH(g, std::cout << IO_GRAPH << std::endl);

@@ -8,12 +8,12 @@
 
 namespace gl
 {
-namespace external
+namespace io
 {
 
 /**
- * @brief Template object to use with IO_CALL_ON_GRAPH
- */
+  * @brief Template object to use with IO_CALL_ON_GRAPH
+*/
 #define IO_GRAPH (*arg)
 
 /**
@@ -203,11 +203,11 @@ void YAMLReader::read()
     // add all edges to the graph
     for (edge_t &e : edges)
     {
-        IO_CALL_ON_GRAPH(graph_, (IO_GRAPH).setEdge(e.first.first, e.first.second, e.second.first, e.second.second));
+        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.setEdge(e.first.first, e.first.second, e.second.first, e.second.second));
     }
 }
 
-} // namespace external
-} // namespace gl
+} /* namespace io */
+} /* namespace gl */
 
 #endif

@@ -5,6 +5,5 @@
 
 #include "src/io/WriteImage.hpp"
 #include "src/io/WriteTikz.hpp"
-#include "src/io/ReadYAML.hpp"
 
 #endif /* GL_EXTERNAL */
