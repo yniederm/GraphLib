@@ -92,7 +92,7 @@ void YAMLReader::read()
     idx_t number_of_nodes;
 
     std::vector<edge_t> edges;
-    std::vector<std::pair<idx_t, const std::string>> nodes;
+    std::vector<std::pair<idx_t, std::pair<double, const std::string>>> nodes;
 
     std::string line;
     while (getline(stream_, line))
@@ -146,11 +146,12 @@ void YAMLReader::read()
         else if (name == "node")
         {
             idx_t node;
+            double cap;
             std::stringstream ss(value);
-            ss >> node;
+            ss >> node >> cap;
             std::string rest;
             getline(ss, rest);
-            nodes.push_back({node, rest});
+            nodes.push_back({node, {cap, rest}});
         }
         else
         {
@@ -219,7 +220,7 @@ void YAMLReader::read()
     }
     for (auto &n : nodes)
     {
-        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.updateNode(n.first, n.second));
+        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.updateNode(n.first, n.second.second, n.second.first));
     }
 }
 
