@@ -2,7 +2,7 @@
 
 int main(int argc, char const *argv[])
 {
-    gl::io::YAMLReader reader("../test/graph.yml");
+    gl::io::YAMLReader reader("test/graph.yml");
 
     reader.read();
 
