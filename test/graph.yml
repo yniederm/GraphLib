@@ -4,10 +4,10 @@
 value_type: double
 
 # storage_type: Matrix | List
-storage_type: Matrix
+storage_type: List
 
 # direction: Undirected | Directed
-direction_type: Directed
+direction_type: Undirected
 
 # number of nodes
 number_nodes: 5

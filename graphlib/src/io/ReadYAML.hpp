@@ -14,7 +14,9 @@ namespace io
 class YAMLReader
 {
 public:
-    using graph_variant_type = std::variant<graphMdu *, graphMdd *, graphLdu *, graphLdd *>;
+    using graph_variant_type = std::variant<graphMdu *, graphMdd *, graphLdu *, graphLdd *,
+                                            graphMfu *, graphMfd *, graphLfu *, graphLfd *,
+                                            graphMiu *, graphMid *, graphLiu *, graphLid *>;
 
     graph_variant_type graph;
 
@@ -86,6 +88,38 @@ public:
         if (value_type == "double" && storage_type == "List" && direction_type == "Directed")
         {
             graph = new graphLdd(number_of_nodes, graph_name);
+        }
+        if (value_type == "float" && storage_type == "Matrix" && direction_type == "Undirected")
+        {
+            graph = new graphMfu(number_of_nodes, graph_name);
+        }
+        if (value_type == "float" && storage_type == "Matrix" && direction_type == "Directed")
+        {
+            graph = new graphMfd(number_of_nodes, graph_name);
+        }
+        if (value_type == "float" && storage_type == "List" && direction_type == "Undirected")
+        {
+            graph = new graphLfu(number_of_nodes, graph_name);
+        }
+        if (value_type == "float" && storage_type == "List" && direction_type == "Directed")
+        {
+            graph = new graphLfd(number_of_nodes, graph_name);
+        }
+        if (value_type == "int" && storage_type == "Matrix" && direction_type == "Undirected")
+        {
+            graph = new graphMiu(number_of_nodes, graph_name);
+        }
+        if (value_type == "int" && storage_type == "Matrix" && direction_type == "Directed")
+        {
+            graph = new graphMid(number_of_nodes, graph_name);
+        }
+        if (value_type == "int" && storage_type == "List" && direction_type == "Undirected")
+        {
+            graph = new graphLiu(number_of_nodes, graph_name);
+        }
+        if (value_type == "int" && storage_type == "List" && direction_type == "Directed")
+        {
+            graph = new graphLid(number_of_nodes, graph_name);
         }
     }
 
