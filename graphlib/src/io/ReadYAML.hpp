@@ -36,7 +36,7 @@ public:
 
     void read()
     {
-        std::string value_type, storage_type, direction_type, graph_name;
+        std::string value_type, storage_type, direction_type, graph_label;
         int number_of_nodes;
 
         // {{from,to},{weight, color}}
@@ -71,7 +71,7 @@ public:
             }
             else if (name == "name")
             {
-                graph_name = name;
+                graph_label = value;
             }
             else if (name == "edge")
             {
@@ -101,51 +101,51 @@ public:
 
         if (value_type == "double" && storage_type == "Matrix" && direction_type == "Undirected")
         {
-            graph = new graphMdu(number_of_nodes, graph_name);
+            graph = new graphMdu(number_of_nodes, graph_label);
         }
         else if (value_type == "double" && storage_type == "Matrix" && direction_type == "Directed")
         {
-            graph = new graphMdd(number_of_nodes, graph_name);
+            graph = new graphMdd(number_of_nodes, graph_label);
         }
         else if (value_type == "double" && storage_type == "List" && direction_type == "Undirected")
         {
-            graph = new graphLdu(number_of_nodes, graph_name);
+            graph = new graphLdu(number_of_nodes, graph_label);
         }
         else if (value_type == "double" && storage_type == "List" && direction_type == "Directed")
         {
-            graph = new graphLdd(number_of_nodes, graph_name);
+            graph = new graphLdd(number_of_nodes, graph_label);
         }
         else if (value_type == "float" && storage_type == "Matrix" && direction_type == "Undirected")
         {
-            graph = new graphMfu(number_of_nodes, graph_name);
+            graph = new graphMfu(number_of_nodes, graph_label);
         }
         else if (value_type == "float" && storage_type == "Matrix" && direction_type == "Directed")
         {
-            graph = new graphMfd(number_of_nodes, graph_name);
+            graph = new graphMfd(number_of_nodes, graph_label);
         }
         else if (value_type == "float" && storage_type == "List" && direction_type == "Undirected")
         {
-            graph = new graphLfu(number_of_nodes, graph_name);
+            graph = new graphLfu(number_of_nodes, graph_label);
         }
         else if (value_type == "float" && storage_type == "List" && direction_type == "Directed")
         {
-            graph = new graphLfd(number_of_nodes, graph_name);
+            graph = new graphLfd(number_of_nodes, graph_label);
         }
         else if (value_type == "int" && storage_type == "Matrix" && direction_type == "Undirected")
         {
-            graph = new graphMiu(number_of_nodes, graph_name);
+            graph = new graphMiu(number_of_nodes, graph_label);
         }
         else if (value_type == "int" && storage_type == "Matrix" && direction_type == "Directed")
         {
-            graph = new graphMid(number_of_nodes, graph_name);
+            graph = new graphMid(number_of_nodes, graph_label);
         }
         else if (value_type == "int" && storage_type == "List" && direction_type == "Undirected")
         {
-            graph = new graphLiu(number_of_nodes, graph_name);
+            graph = new graphLiu(number_of_nodes, graph_label);
         }
         else if (value_type == "int" && storage_type == "List" && direction_type == "Directed")
         {
-            graph = new graphLid(number_of_nodes, graph_name);
+            graph = new graphLid(number_of_nodes, graph_label);
         }
         else
         {

@@ -12,8 +12,8 @@ direction_type: Undirected
 # number of nodes
 number_nodes: 5
 
-# name of graph
-name: This is a graph
+# label of graph
+label: This is a graph
 
 #edges
 #normal
