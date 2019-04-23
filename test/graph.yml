@@ -1,4 +1,9 @@
-# comments
+# Example YAML File to use with the YAMLReader
+# 
+# Add comments with the # in the beginning
+# each key-value pair must have following structure
+# key: value
+# the space after the : is intended!
 
 # value_type: double | int | float
 value_type: double
@@ -15,13 +20,15 @@ number_nodes: 5
 # label of graph
 label: This is a graph
 
-#edges
-#normal
+# add some edges to our graph
+# normal
 edge: 0 1
-#normal with weight
+# normal with weight
 edge: 0 2 1.3
-#normal with color and weight
+# normal with color and weight
 edge: 0 3 2.5 0xaabbcc
+
+# some more edges for testing
 edge: 1 2 1.0 0xff0000
 edge: 2 4
 edge: 2 3
