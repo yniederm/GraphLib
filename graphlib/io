@@ -7,6 +7,7 @@
 
 #include "src/io/StreamOverload.hpp"
 #include "src/io/PrintContainer.hpp"
+#include "src/io/ReadYAML.hpp"
 
 #include "src/partial_specialization_off"
 

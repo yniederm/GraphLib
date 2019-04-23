@@ -1,0 +1,16 @@
+# comments
+
+# value_type: double | int | float
+value_type: double
+
+# storage_type: Matrix | List
+storage_type: Matrix
+
+# direction: Undirected | Directed
+direction_type: Directed
+
+# number of nodes
+number_nodes: 5
+
+# name of graph
+name: This is a graph

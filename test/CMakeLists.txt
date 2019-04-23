@@ -22,6 +22,7 @@ set(TESTS
     MathGLPlacing
     MatrixGraph
     PrintContainer
+    ReadYAML
     TransitiveClosure
     Traversal
     )
