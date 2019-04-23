@@ -11,6 +11,16 @@ namespace gl
 {
 namespace io
 {
+// define those macros for usage with printing
+/* usage: get the IO_Graph_variant using YAMLReader::get
+ * then, write your normal code lines using IO_CALL_ON_GRAPH and the arugment IO_GRAPH
+ * e.g. for pringing (and graph_variant_type g = reader.get();)
+ * IO_CALL_ON_GRAPH(g, std::cout << IO_GRAPH << std::endl;);
+ * 
+ * If it must call directly, use (IO_GRAPH).FUNCTION
+ */
+#define IO_GRAPH *arg
+#define IO_CALL_ON_GRAPH(g, func) std::visit([&](auto arg) { func; }, g)
 
 class YAMLReader
 {
@@ -153,13 +163,10 @@ public:
         }
 
         // add all edges to the graph
-        std::visit([&edges](auto g) {
-            for (edge_t &e : edges)
-            {
-                g->setEdge(e.first.first, e.first.second, e.second.first, e.second.second);
-            }
-        },
-                   graph);
+        for (edge_t &e : edges)
+        {
+            IO_CALL_ON_GRAPH(graph, (IO_GRAPH).setEdge(e.first.first, e.first.second, e.second.first, e.second.second));
+        }
     }
 
 private:
