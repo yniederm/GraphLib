@@ -1,4 +1,5 @@
 #include <graphlib/gl>
+#include <graphlib/external>
 
 int main(int argc, char const *argv[])
 {
@@ -13,8 +14,12 @@ int main(int argc, char const *argv[])
         g_ptr->setEdge(1, 2, 3.3); };
     auto print_graph = [](auto g_ptr) { std::cout << *g_ptr; };
 
-    std::visit(add_edge, g);
+    //std::visit(add_edge, g);
     std::visit(print_graph, g);
+
+    std::ofstream out("build/test/OUTPUT.tex");
+    std::visit([&out](auto arg) { gl::external::writeTikzToStream2(out, *arg); }, g);
+    out.close();
 
     return 0;
 }

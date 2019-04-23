@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream> // for debugging
 #include <variant>
+#include <sstream>
 
 namespace gl
 {
@@ -38,6 +39,11 @@ public:
         std::string value_type, storage_type, direction_type, graph_name;
         int number_of_nodes;
 
+        // {{from,to},{weight, color}}
+        using edge_t = std::pair<std::pair<unsigned int, unsigned int>, std::pair<double, gl::Color>>;
+        using idx_t = graphMdd::idx_t;
+
+        std::vector<edge_t> edges;
         std::string line;
         while (getline(stream_, line))
         {
@@ -67,6 +73,26 @@ public:
             {
                 graph_name = name;
             }
+            else if (name == "edge")
+            {
+                std::stringstream ss(value);
+                idx_t a, b;
+                double weight = 1;
+                ss >> a >> b;
+                // if ss not empty, read weight
+                if (!ss.eof())
+                {
+                    ss >> weight;
+                }
+                gl::Color c(0, 0, 0);
+                unsigned int hex;
+                if (!ss.eof())
+                {
+                    ss >> std::hex >> hex;
+                    c.hex(hex);
+                }
+                edges.push_back({{a, b}, {weight, c}});
+            }
             else
             {
                 std::cout << "Unrecognized option" << std::endl;
@@ -77,50 +103,63 @@ public:
         {
             graph = new graphMdu(number_of_nodes, graph_name);
         }
-        if (value_type == "double" && storage_type == "Matrix" && direction_type == "Directed")
+        else if (value_type == "double" && storage_type == "Matrix" && direction_type == "Directed")
         {
             graph = new graphMdd(number_of_nodes, graph_name);
         }
-        if (value_type == "double" && storage_type == "List" && direction_type == "Undirected")
+        else if (value_type == "double" && storage_type == "List" && direction_type == "Undirected")
         {
             graph = new graphLdu(number_of_nodes, graph_name);
         }
-        if (value_type == "double" && storage_type == "List" && direction_type == "Directed")
+        else if (value_type == "double" && storage_type == "List" && direction_type == "Directed")
         {
             graph = new graphLdd(number_of_nodes, graph_name);
         }
-        if (value_type == "float" && storage_type == "Matrix" && direction_type == "Undirected")
+        else if (value_type == "float" && storage_type == "Matrix" && direction_type == "Undirected")
         {
             graph = new graphMfu(number_of_nodes, graph_name);
         }
-        if (value_type == "float" && storage_type == "Matrix" && direction_type == "Directed")
+        else if (value_type == "float" && storage_type == "Matrix" && direction_type == "Directed")
         {
             graph = new graphMfd(number_of_nodes, graph_name);
         }
-        if (value_type == "float" && storage_type == "List" && direction_type == "Undirected")
+        else if (value_type == "float" && storage_type == "List" && direction_type == "Undirected")
         {
             graph = new graphLfu(number_of_nodes, graph_name);
         }
-        if (value_type == "float" && storage_type == "List" && direction_type == "Directed")
+        else if (value_type == "float" && storage_type == "List" && direction_type == "Directed")
         {
             graph = new graphLfd(number_of_nodes, graph_name);
         }
-        if (value_type == "int" && storage_type == "Matrix" && direction_type == "Undirected")
+        else if (value_type == "int" && storage_type == "Matrix" && direction_type == "Undirected")
         {
             graph = new graphMiu(number_of_nodes, graph_name);
         }
-        if (value_type == "int" && storage_type == "Matrix" && direction_type == "Directed")
+        else if (value_type == "int" && storage_type == "Matrix" && direction_type == "Directed")
         {
             graph = new graphMid(number_of_nodes, graph_name);
         }
-        if (value_type == "int" && storage_type == "List" && direction_type == "Undirected")
+        else if (value_type == "int" && storage_type == "List" && direction_type == "Undirected")
         {
             graph = new graphLiu(number_of_nodes, graph_name);
         }
-        if (value_type == "int" && storage_type == "List" && direction_type == "Directed")
+        else if (value_type == "int" && storage_type == "List" && direction_type == "Directed")
         {
             graph = new graphLid(number_of_nodes, graph_name);
         }
+        else
+        {
+            GL_ASSERT(false, "Please enter valid data into config.");
+        }
+
+        // add all edges to the graph
+        std::visit([&edges](auto g) {
+            for (edge_t &e : edges)
+            {
+                g->setEdge(e.first.first, e.first.second, e.second.first, e.second.second);
+            }
+        },
+                   graph);
     }
 
 private:

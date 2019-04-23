@@ -4,7 +4,7 @@
 value_type: double
 
 # storage_type: Matrix | List
-storage_type: List
+storage_type: Matrix
 
 # direction: Undirected | Directed
 direction_type: Undirected
@@ -14,3 +14,15 @@ number_nodes: 5
 
 # name of graph
 name: This is a graph
+
+#edges
+#normal
+edge: 0 1
+#normal with weight
+edge: 0 2 1.3
+#normal with color and weight
+edge: 0 3 2.5 0xaabbcc
+edge: 1 2 1.0 0xff0000
+edge: 2 4
+edge: 2 3
+edge: 3 4
