@@ -17,7 +17,8 @@ namespace io
  * e.g. for pringing (and graph_variant_type g = reader.get();)
  * IO_CALL_ON_GRAPH(g, std::cout << IO_GRAPH << std::endl;);
  * 
- * If it must call directly, use (IO_GRAPH).FUNCTION
+ * If it must be called directly, use (IO_GRAPH).FUNCTION, e.g
+ * (IO_GRAPH).setEdge(0, 1);
  */
 #define IO_GRAPH *arg
 #define IO_CALL_ON_GRAPH(g, func) std::visit([&](auto arg) { func; }, g)
