@@ -56,26 +56,27 @@ public:
      */
     graph_variant_type get() { return graph_; }
 
-private:
     /**
      * @brief Reads the file, generates graph
+     * This is automatically done in YAMLReader(const char *filename)
      */
     void read();
+
+private:
     std::fstream stream_;      ///< the filestream to use
     graph_variant_type graph_; ///< the graph variant
 };
 
 YAMLReader::YAMLReader(const char *filename)
 {
-    std::cout << "Reading " << filename << std::endl;
     stream_ = std::fstream(filename);
     graph_ = graph_variant_type(); // set to default
     GL_ASSERT(stream_.is_open(), "File could not be opened");
+    read();
 }
 
 void YAMLReader::setFilename(const char *filename)
 {
-    std::cout << "Reading " << filename << std::endl;
     stream_ = std::fstream(filename);
     GL_ASSERT(stream_.is_open(), "File could not be opened");
 }
@@ -116,7 +117,7 @@ void YAMLReader::read()
         {
             number_of_nodes = std::stoi(value);
         }
-        else if (name == "name")
+        else if (name == "label")
         {
             graph_label = value;
         }
@@ -142,7 +143,7 @@ void YAMLReader::read()
         }
         else
         {
-            std::cout << "Unrecognized option" << std::endl;
+            GL_ASSERT(false, "Unrecognized option: " + line);
         }
     }
 
