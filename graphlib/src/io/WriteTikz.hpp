@@ -117,7 +117,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
       s << ",IdAsLabel";
     }
     else {
-      s << "label=" << g.getNodeLabel(i);
+      s << ",label=" << g.getNodeLabel(i);
     }
     s << (writeNodes ? "" : ",Pseudo")
       << "]{" << i << "}" << std::endl;

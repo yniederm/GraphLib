@@ -29,7 +29,7 @@ inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::label() const {
 
 /* \internal setter for label */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::label(const std::string& name) {
+inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Node::label(const std::string& label) {
   label_ = label;
 }
 

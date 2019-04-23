@@ -33,3 +33,7 @@ edge: 1 2 1.0 0xff0000
 edge: 2 4
 edge: 2 3
 edge: 3 4
+
+# node: add labels to nodes
+node: 0 this is the 0 node
+node: 1 and the 1er

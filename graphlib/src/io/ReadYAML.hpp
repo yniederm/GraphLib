@@ -83,15 +83,17 @@ void YAMLReader::setFilename(const char *filename)
 
 void YAMLReader::read()
 {
+    using idx_t = graphMdd::idx_t; // use idx_t from a graph
+    // {{from,to},{weight, color}}
+    using edge_t = std::pair<std::pair<idx_t, idx_t>, std::pair<double, gl::Color>>;
+
     // temp variables to store data while reading
     std::string value_type, storage_type, direction_type, graph_label;
-    int number_of_nodes;
-
-    // {{from,to},{weight, color}}
-    using edge_t = std::pair<std::pair<unsigned int, unsigned int>, std::pair<double, gl::Color>>;
-    using idx_t = graphMdd::idx_t; // use idx_t from a graph
+    idx_t number_of_nodes;
 
     std::vector<edge_t> edges;
+    std::vector<std::pair<idx_t, const std::string>> nodes;
+
     std::string line;
     while (getline(stream_, line))
     {
@@ -140,6 +142,15 @@ void YAMLReader::read()
                 c.hex(hex);
             }
             edges.push_back({{a, b}, {weight, c}});
+        }
+        else if (name == "node")
+        {
+            idx_t node;
+            std::stringstream ss(value);
+            ss >> node;
+            std::string rest;
+            getline(ss, rest);
+            nodes.push_back({node, rest});
         }
         else
         {
@@ -205,6 +216,10 @@ void YAMLReader::read()
     for (edge_t &e : edges)
     {
         IO_CALL_ON_GRAPH(graph_, IO_GRAPH.setEdge(e.first.first, e.first.second, e.second.first, e.second.second));
+    }
+    for (auto &n : nodes)
+    {
+        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.updateNode(n.first, n.second));
     }
 }
 
