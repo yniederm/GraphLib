@@ -2,8 +2,8 @@
 
 int main(int argc, char const *argv[])
 {
-  gl::graphLiu dijkstraL(9);
-  gl::graphMiu dijkstraM(9);
+  gl::graphLiu dijkstraL(9, "Dijkstra List");
+  gl::graphMiu dijkstraM(9, "Dijkstra Matrix");
   dijkstraL.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
   dijkstraM.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
 
@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
   }
 
   std::cout << "\n" << dijkstraM << std::endl;
-  gl::algorithm::dijkstraMiu  pathM5 (dijkstraM,0);
+  gl::algorithm::dijkstraMiu pathM5 (dijkstraM,0);
 
   std::cout << "dest\tlength\tpath" << std::endl;
   for (int i = 0; i < dijkstraM.numNodes(); ++i) {

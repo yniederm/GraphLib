@@ -203,20 +203,14 @@ public:
   //@}
 
 private:
-  color_val_t r_, /**< 
-                   * @brief Red value. \f$r \in \{0,\ldots,255\}\f$
-                   */
-      g_,         /**< 
-                   * @brief Green value.  \f$g \in \{0,\ldots,255\}\f$
-                   */
-      b_,         /**< 
-                   * @brief Blue value. \f$b \in \{0,\ldots,255\}\f$
-                   */
-      a_;         /**< 
-                   * @brief Alpha/opacity value. \f$a \in \{0,\ldots,100\}\f$
-                   */
+  color_val_t r_, ///< @brief Red value. \f$r \in \{0,\ldots,255\}\f$
+              g_, ///< @brief Green value.  \f$g \in \{0,\ldots,255\}\f$
+              b_, ///< @brief Blue value. \f$b \in \{0,\ldots,255\}\f$
+              a_; ///< @brief Alpha/opacity value. \f$a \in \{0,\ldots,100\}\f$
 };
 
 } // namespace gl
+
+#undef GL_FORCE_INTO_RANGE
 
 #endif // GL_COLOR_HPP

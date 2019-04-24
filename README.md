@@ -15,7 +15,8 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - edges & nodes support individual colours
   - edges & nodes support C++ STL conform iterators
 - Initialization
-  -   YAML input file constructor
+  - YAML input file constructor
+  - degree sequence (for undirected graphs)
 
 #### Algorithms
 - Closure
@@ -24,6 +25,7 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - Basic graph traversal
 - BFS
   - Basic graph traversal
+  - finding vertices at the same distance from source
 - Graph properties
   - general cycle detection
 - Shortest Paths
@@ -35,7 +37,6 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 #### Data structures
 - advanced initialization 
   - stream operators
-  - degree sequence (for undirected graphs)
 - simple graph support
 - multigraph support
 - bipartite graphs
@@ -43,13 +44,11 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 - threshold graphs, split graphs
 #### Algorithms
 - BFS
-  - finding vertices at the same distance from source
   - power graphs (for undirected graphs)
 - Shortest Paths
   - Floyd-Warshall
   - Bellman-Ford
   - Johnson
-  - Betweenness centrality
 - Graph properties
   - cycles of specific length (e.g. triad census)
   - eccentricity, radius, diameter
@@ -75,3 +74,7 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 - Split graph
   - find constructing degree sequence
   - computing splittance
+- Bipartite graphs
+  - Testing for bipartiteness
+  - 2-coloring
+  - vertex cover

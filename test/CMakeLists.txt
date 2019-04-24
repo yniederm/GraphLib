@@ -11,6 +11,7 @@ link_directories(
 
 set(TESTS
     Color
+    ConstructFromDegSeq
     Conversion
     CycleDetection
     DegreeSequence
@@ -31,12 +32,14 @@ set(EIGEN_TESTS
     IOTikz
     MathGL
     MathGLColors
+    ReadYAML
     )
 
 set(MATHGL_TESTS
     MathGL
     MathGLColors
-    MathGLPlacing)
+    MathGLPlacing
+    )
 
 foreach(TEST_NAME ${TESTS})
   add_executable(${TEST_NAME} Test_${TEST_NAME}.cpp)

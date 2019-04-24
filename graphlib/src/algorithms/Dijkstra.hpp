@@ -11,9 +11,10 @@ namespace gl::algorithm {
 //    Class declaration
 ///////////////////////////////////////////////////////////
 
-/** Dijkstra
- @brief Class that computes Dijkstra's Shortest Paths algorithm.
-  */
+/** 
+ * @class Dijkstra
+ * @brief Class that computes Dijkstra's Shortest Paths algorithm.
+ */
 
 template <class SCALAR, class STORAGE, class DIR>
 class Dijkstra {
@@ -54,9 +55,9 @@ public:
   ordered_list_t getPath(const idx_t) const;
 
 private:
-  Graph const& graph_; /**< @brief Reference to graph */
-  idx_t src_; /**< @brief Source node */
-  result_t final_; /**< @brief Shortest Path lengths & predecessors */
+  Graph const& graph_; ///< @brief Reference to graph
+  idx_t src_;          ///< @brief Source node
+  result_t final_;     ///< @brief Shortest Path lengths & predecessors
 };
 
 ///////////////////////////////////////////////////////////
