@@ -100,9 +100,12 @@ void YAMLReader::read()
         // comments on lines
         if (line[0] == '#' || line.empty())
             continue;
-        std::size_t delimiterPos = line.find(": "); // including space
+        std::size_t delimiterPos = line.find(":");
         std::string name = line.substr(0, delimiterPos);
-        std::string value = line.substr(delimiterPos + 2);
+        std::string value = line.substr(delimiterPos + 1);
+        // trim spaces
+        value.erase(value.begin(), std::find_if(value.begin(), value.end(),
+                                                std::not1(std::ptr_fun<int, int>(std::isspace))));
         if (name == "value_type")
         {
             value_type = value;
