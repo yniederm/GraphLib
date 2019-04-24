@@ -1,10 +1,14 @@
 # GraphLib
 
-### A simple header-only C++ library that aims to showcase and implement various data structures and algorithms that are based on graph theory.
+A simple header-only C++ library that aims to showcase and implement various data structures and algorithms that are based on graph theory.
 
-An up-to-date documentation of the source code is available here: [![Documentation](https://codedocs.xyz/guetzli32/GraphLib.svg)](https://codedocs.xyz/guetzli32/GraphLib/)
+An up-to-date documentation of the source code is available here:
+
+[![Documentation](https://codedocs.xyz/guetzli32/GraphLib.svg)](https://codedocs.xyz/guetzli32/GraphLib/)
+
+# Details
 ## Currently implemented is the following:
-#### Data structures
+### Data structures
 - Graph class
   - Storage format
     - Adjacency Matrix
@@ -18,7 +22,7 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - YAML input file constructor
   - degree sequence (for undirected graphs)
 
-#### Algorithms
+### Algorithms
 - Closure
   - Finding the connected component / transitive closure of a node
 - DFS
@@ -30,11 +34,23 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - general cycle detection
 - Shortest Paths
   - Dijkstra (distances + path)
-## To-Do list
+
+# Installation
+The following software is required:
+- C++
+- Cmake
+- Make
+- Eigen
+- MathGL
+- (Latex)
+
+To build any test file, invoke `install.sh` from within the root folder of this repository. This will create executables in the `build` folder for you to run.
+
+# To-Do list
 - Document algorithm purpose in doxygen files
   
 Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
-#### Data structures
+## Data structures
 - advanced initialization 
   - stream operators
 - simple graph support
@@ -42,7 +58,7 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 - bipartite graphs
 - combining and editing graphs post-initialization
 - threshold graphs, split graphs
-#### Algorithms
+## Algorithms
 - BFS
   - power graphs (for undirected graphs)
 - Shortest Paths
