@@ -14,6 +14,9 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - file input to add edges
   - edges & nodes support individual colours
   - edges & nodes support C++ STL conform iterators
+- Initialization
+  -   YAML input file constructor
+
 #### Algorithms
 - Closure
   - Finding the connected component / transitive closure of a node
@@ -27,11 +30,11 @@ An up-to-date documentation of the source code is available here: [![Documentati
   - Dijkstra (distances + path)
 ## To-Do list
 - Document algorithm purpose in doxygen files
+  
 Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ and _outputting <sth.>_
 #### Data structures
 - advanced initialization 
   - stream operators
-  - JSON input file constructor
   - degree sequence (for undirected graphs)
 - simple graph support
 - multigraph support

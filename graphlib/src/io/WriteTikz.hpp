@@ -109,15 +109,17 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
     pos *= (1 + g.getNodeDegree(i));
     auto color = g.getNodeColor(i);
 
-    s << "  \\Vertex[x=" << pos(0) << ",y=" << pos(1) 
-      << ",RGB,color={" << +color.r() << "," << +color.g() 
-      << "," << +color.b() << "},opacity=" << +color.a() 
-      << ",size=0.4";
-    if (g.getNodeLabel(i)=="") {
+    s << "  \\Vertex[x=" << pos(0) << ",y=" << pos(1)
+      << ",RGB,color={" << +color.r() << "," << +color.g()
+      << "," << +color.b() << "},opacity=" << +color.a()
+      << ",size=" << g.getNodeCapacity(i); // idea: set to capacity of vertex
+    if (g.getNodeLabel(i) == "")
+    {
       s << ",IdAsLabel";
     }
-    else {
-      s << "label=" << g.getNodeLabel(i);
+    else
+    {
+      s << ",label=" << g.getNodeLabel(i) << ",position=above";
     }
     s << (writeNodes ? "" : ",Pseudo")
       << "]{" << i << "}" << std::endl;
@@ -130,9 +132,9 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
     auto color = it->color();
     s << "    \\Edge[" << (g.isDirected() ? "Direct," : "")
       << (it->source() == it->dest() ? "loopshape=45," : "")
-      << "RGB,color={" << +color.r() << "," << +color.g() 
-      << "," << +color.b() << "},opacity=" << +color.a() 
-      << "](" << it->source() << ")(" << it->dest() << ")" << std::endl;
+      << "RGB,color={" << +color.r() << "," << +color.g()
+      << "," << +color.b() << "},opacity=" << +color.a()
+      << ",label=" << it->weight() << "](" << it->source() << ")(" << it->dest() << ")" << std::endl;
   }
 
   // s << "  \\end{scope}" << std::endl;
