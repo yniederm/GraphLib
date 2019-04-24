@@ -32,6 +32,18 @@ An up-to-date documentation of the source code is available here:
   - general cycle detection
 - Shortest Paths
   - Dijkstra (distances + path)
+
+# Installation
+The following software is required:
+- C++
+- Cmake
+- Make
+- Eigen
+- MathGL
+- (Latex)
+
+To build any test file, invoke `install.sh` from within the root folder of this repository. This will create executables in the `build` folder for you to run.
+
 # To-Do list
 - Document algorithm purpose in doxygen files
   
