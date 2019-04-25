@@ -9,9 +9,10 @@ namespace gl::algorithm {
 //    Class declaration
 ///////////////////////////////////////////////////////////
 
-/** Kruskal
- @brief Class that computes a Minimum Spanning Tree using Kruskal's algorithm. A Minimum Spanning Tree (MST) is a subgraph of a given graph that covers all nodes, but wiht minimal edge weight cost.
-  */
+/** A Minimum Spanning Tree (MST) is a subgraph of a given graph that covers all nodes, but with minimal edge weight cost.
+ * @class Kruskal
+ * @brief Class that computes a Minimum Spanning Tree using Kruskal's algorithm. 
+ */
 
 template <class SCALAR, class STORAGE, class DIR>
 class Kruskal {
@@ -29,11 +30,11 @@ public:
   Kruskal(const Graph&);
 
   Kruskal() = delete;
-  Kruskal(Kruskal &&) = default;
-  Kruskal(const Kruskal &) = default;
-  Kruskal &operator=(Kruskal &&) = default;
-  Kruskal &operator=(const Kruskal &) = default;
-  ~Kruskal();
+  Kruskal(const Kruskal &) = default;                ///< @brief Copy constructor
+  Kruskal(Kruskal &&) noexcept = default;            ///< @brief Move constructor
+  Kruskal &operator=(const Kruskal &) = default;     ///< @brief Copy assignment
+  Kruskal &operator=(Kruskal &&) noexcept = default; ///< @brief Move assignment
+  ~Kruskal();                            ///< @brief Destructor
 
   /**
    * @brief Computes the cost of the MST (sum of all edge weights in the MST).
@@ -52,9 +53,6 @@ private:
 };
 
 ///////////////////////////////////////////////////////////
-//    DisjointSets function implementations
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 //    Member function implementations
 ///////////////////////////////////////////////////////////
 
@@ -62,24 +60,27 @@ template <class SCALAR, class STORAGE, class DIR>
 Kruskal<SCALAR,STORAGE,DIR>::~Kruskal() {}
 
 template <class SCALAR, class STORAGE, class DIR>
-Kruskal<SCALAR,STORAGE,DIR>::Kruskal(const Graph& graph) {
+Kruskal<SCALAR,STORAGE,DIR>::Kruskal(const Graph& graph) 
+{
   std::vector<Edge> edges;
   Graph result(graph.numNodes(),std::string(std::string("MST of ")+graph.getGraphLabel()));
   val_t cost {0};
-  // visit_list_t visited(graph.numNodes(), false);
   DisjointSets disjointSets(graph.numNodes());
 
   // get vector of all edges in the graph
-  for (auto it = graph.edge_cbegin(); it != graph.edge_cend(); ++it) {
+  for (auto it = graph.edge_cbegin(); it != graph.edge_cend(); ++it) 
+  {
     edges.push_back(*it);
   }
   // sort edges by increasing weight
-  std::sort(edges.begin(),edges.end(),[](const Edge& lhs, const Edge& rhs){
+  std::sort(edges.begin(),edges.end(),[](const Edge& lhs, const Edge& rhs)
+  {
     return lhs.weight() < rhs.weight();
   });
   
   // construct MST
-  for(auto edge : edges) {
+  for(auto edge : edges) 
+  {
     idx_t one = edge.source();
     idx_t two = edge.dest();
     
@@ -99,12 +100,14 @@ Kruskal<SCALAR,STORAGE,DIR>::Kruskal(const Graph& graph) {
 }
 
 template <class SCALAR, class STORAGE, class DIR>
-typename Kruskal<SCALAR,STORAGE,DIR>::val_t Kruskal<SCALAR,STORAGE,DIR>::getCost () const {
+typename Kruskal<SCALAR,STORAGE,DIR>::val_t Kruskal<SCALAR,STORAGE,DIR>::getCost () const 
+{
   return cost_;
 }
 
 template <class SCALAR, class STORAGE, class DIR>
-typename Kruskal<SCALAR,STORAGE,DIR>::Graph Kruskal<SCALAR,STORAGE,DIR>::getMST () const {
+typename Kruskal<SCALAR,STORAGE,DIR>::Graph Kruskal<SCALAR,STORAGE,DIR>::getMST () const 
+{
   auto result = result_;
   return result;
 }

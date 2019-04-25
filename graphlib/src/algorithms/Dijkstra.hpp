@@ -35,11 +35,11 @@ public:
   Dijkstra(const Graph&, const idx_t);
 
   Dijkstra() = delete;
-  Dijkstra(Dijkstra &&) = default;
-  Dijkstra(const Dijkstra &) = default;
-  Dijkstra &operator=(Dijkstra &&) = default;
-  Dijkstra &operator=(const Dijkstra &) = default;
-  ~Dijkstra();
+  Dijkstra(const Dijkstra &) = default;                ///< @brief Copy constructor
+  Dijkstra(Dijkstra &&) noexcept = default;            ///< @brief Move constructor
+  Dijkstra &operator=(const Dijkstra &) = default;     ///< @brief Copy assignment
+  Dijkstra &operator=(Dijkstra &&) noexcept = default; ///< @brief Move assignment
+  ~Dijkstra();   
 
   /**
    * @brief Computes the shortest path length from src to dest.
@@ -70,6 +70,15 @@ Dijkstra<SCALAR,STORAGE,DIR>::~Dijkstra() {}
 template <class SCALAR, class STORAGE, class DIR>
 Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {
 
+  // verify that all non-self-loop edge weights are positive
+  for (auto it = graph.edge_cbegin(); it != graph.edge_cend(); ++it) {
+    if (it->source() != it->dest()) {
+      std::cout << it->source() << "->" << it->dest() << ": " << (it->weight() > 0) << "\n";
+      GL_ASSERT(it->weight() > 0, "Found non-positive edge weights in the graph.");
+    }
+  }
+
+  // priority queue sorting (possibly non-trivial due to usage of idx_t)
   class prio {
     public:
       bool operator() (pair_t& lhs, pair_t& rhs) {

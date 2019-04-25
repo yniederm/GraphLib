@@ -7,6 +7,8 @@ int main(int argc, char const *argv[])
   dijkstraL.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
   dijkstraM.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
 
+  // dijkstraL.updateEdge(0,1,-5);  // uncomment this to test the positive weights requirement
+
   std::cout << "\n" << dijkstraL << std::endl;
   gl::algorithm::dijkstraLiu pathL5 (dijkstraL,0);
 

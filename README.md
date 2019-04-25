@@ -80,6 +80,7 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
   - flow problems 
 - Cliques
   - cliques of size k
+- Huffman tree w/ visualization
 - node things
   - centralities: 
     - degree
