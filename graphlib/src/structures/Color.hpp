@@ -109,11 +109,11 @@ public:
     }
   }
   //@}
-  Color(const Color &) = default;                ///< @brief copy constructor
-  Color(Color &&) noexcept = default;            ///< @brief move constructor
-  Color &operator=(const Color &) = default;     ///< @brief copy assignment
-  Color &operator=(Color &&) noexcept = default; ///< @brief move assignment
-  ~Color() = default;                            ///< @brief destructor
+  Color(const Color &) = default;                ///< @brief Copy constructor
+  Color(Color &&) noexcept = default;            ///< @brief Move constructor
+  Color &operator=(const Color &) = default;     ///< @brief Copy assignment
+  Color &operator=(Color &&) noexcept = default; ///< @brief Move assignment
+  ~Color() = default;                            ///< @brief Destructor
   /**
    * @name Read access to stored RGBA color values.
    * @brief Getters for stored color values.

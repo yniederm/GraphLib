@@ -581,7 +581,7 @@ public:
   /**
    * @brief Construct Graph from node count and label
    * @param[in] numNodes Number of nodes/vertices in the graph.
-   * @param[in] label label of the graph.
+   * @param[in] label Label of the graph.
    */
   Graph(const idx_t &numNodes, const std::string &label = "Graph") : property_(numNodes, label, 0)
   {
@@ -590,8 +590,9 @@ public:
   /**
    * @brief Construct Graph from node count and label
    * @param[in] degreeSeq Degree Sequence of an undirected graph (e.g. 5 1 1 1 1 1").
+   * @param[in] label Label of the graph.
    */
-  Graph(const std::string& degreeSeq)
+  Graph(const std::string& degreeSeq, const std::string &label = "Simple Undirected Graph")
   {
     std::stringstream iss(degreeSeq);
     idx_t degree;
@@ -600,7 +601,7 @@ public:
       degrees.push_back(degree);
 
     idx_t numNodes = degrees.size();
-    property_ = Property(numNodes,"Simple Undirected Graph", 0);
+    property_ = Property(numNodes,label, 0);
     property_.numNodes(numNodes);
     construct();
     
@@ -622,7 +623,7 @@ public:
   {
     construct();
   }
-  Graph() {construct(); }
+  Graph() {}
   ~Graph()
   {
   }
@@ -1482,7 +1483,7 @@ public:
   /**
    * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
    * @param[in] node edge origin point
-   * @param[in/out] visited boolean list of previously visited nodes
+   * @param[in] visited boolean list of previously visited nodes
    * @return List of all direct neighbours + weights
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1551,7 +1552,7 @@ public:
   /**
    * @brief Returns a list of endpoints + edge weights of unvisited outgoing edges from start.
    * @param[in] node edge origin point
-   * @param[in/out] visited boolean list of previously visited nodes
+   * @param[in] visited boolean list of previously visited nodes
    * @return List of all direct neighbours + weights
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

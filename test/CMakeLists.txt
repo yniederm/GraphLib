@@ -17,6 +17,7 @@ set(TESTS
     DegreeSequence
     Dijkstra
     IOTikz
+    Kruskal
     ListGraph
     MathGL
     MathGLColors

@@ -30,6 +30,8 @@ An up-to-date documentation of the source code is available here:
 - BFS
   - Basic graph traversal
   - finding vertices at the same distance from source
+- Minimum spanning trees
+  - Kruskal
 - Graph properties
   - general cycle detection
 - Shortest Paths
@@ -37,7 +39,7 @@ An up-to-date documentation of the source code is available here:
 
 # Installation
 The following software is required:
-- C++
+- C++17
 - Cmake
 - Make
 - Eigen
@@ -69,7 +71,6 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
   - cycles of specific length (e.g. triad census)
   - eccentricity, radius, diameter
 - Minimum spanning trees
-  - Kruskal
   - Prim
   - Total # of spanning trees
 - Connectivity
