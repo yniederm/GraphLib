@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "../gl_base.hpp"
+
 namespace gl
 {
 /**
@@ -11,7 +13,7 @@ namespace gl
  * @brief Represents disjoint sets. 
  */
 class DisjointSets {
-using idx_t = std::size_t;
+using idx_t = gl::index_type;
 public:
   /**
    * @brief Default constructor.

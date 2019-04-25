@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <exception>
 #include <type_traits>
-#include <cstdint>
 #include <vector>
 #include <string>
 #include <queue>
@@ -15,6 +14,7 @@
 #include <iterator>
 
 #include "Color.hpp"
+#include "../gl_base.hpp"
 
 namespace gl
 {
@@ -44,7 +44,7 @@ class Graph
 
 public:
   using val_t = SCALAR;                                    ///< Value type
-  using idx_t = std::size_t;                               ///< Index type
+  using idx_t = gl::index_type;                               ///< Index type
   using dest_vec_t = std::vector<std::pair<idx_t, val_t>>; ///< Destination-Vector type
   using idx_list_t = std::vector<idx_t>;                   ///< Index List type
   using ordered_list_t = std::list<idx_t>;                 ///< Ordered List type

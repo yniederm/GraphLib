@@ -92,13 +92,6 @@ Kruskal<SCALAR,STORAGE,DIR>::Kruskal(const Graph& graph) {
       cost += edge.weight();
       disjointSets.merge(one,two);
     }
-
-    // if (visited[edge.source()] + visited[edge.dest()] < 2) {
-    //   visited[edge.source()] = true;
-    //   visited[edge.dest()] = true;
-    //   result.setEdge(edge);
-    //   cost += edge.weight();
-    // }
   }
 
   result_ = result;
