@@ -15,6 +15,7 @@
 
 #include "Color.hpp"
 #include "../gl_base.hpp"
+#include "../algorithms/HavelHakimi.hpp"
 
 namespace gl
 {
@@ -599,6 +600,8 @@ public:
     std::deque<idx_t> degrees;
     while( iss >> degree )
       degrees.push_back(degree);
+
+    GL_ASSERT(gl::algorithm::havelHakimi(degrees),"Degree Sequence is not graphic.")
 
     idx_t numNodes = degrees.size();
     property_ = Property(numNodes,label, 0);

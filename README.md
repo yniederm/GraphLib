@@ -36,6 +36,8 @@ An up-to-date documentation of the source code is available here:
   - general cycle detection
 - Shortest Paths
   - Dijkstra (distances + path)
+- Miscellaneous
+  - Havel-Hakimi to verify whether a degree sequence is graphic
 
 # Installation
 The following software is required:

@@ -8,5 +8,14 @@ int main(int argc, char const *argv[])
 
   std::cout << g1 << g2 << g3; 
 
+  try
+  {
+    gl::graphMiu g4("1 1 1 0 0","Not graphic");
+  }
+  catch(const std::exception& e)
+  {
+    std::cerr << e.what() << '\n';
+  }
+  
   return 0;
 }

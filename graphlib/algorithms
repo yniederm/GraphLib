@@ -10,6 +10,7 @@
 #include "src/algorithms/Degrees.hpp"
 #include "src/algorithms/DegreeSequence.hpp"
 #include "src/algorithms/Dijkstra.hpp"
+#include "src/algorithms/HavelHakimi.hpp"
 #include "src/algorithms/Kruskal.hpp"
 #include "src/algorithms/TransitiveClosure.hpp"
 
