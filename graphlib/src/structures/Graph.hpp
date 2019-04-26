@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <exception>
 #include <type_traits>
-#include <cstdint>
 #include <vector>
 #include <string>
 #include <queue>
@@ -15,6 +14,7 @@
 #include <iterator>
 
 #include "Color.hpp"
+#include "../gl_base.hpp"
 
 namespace gl
 {
@@ -44,7 +44,7 @@ class Graph
 
 public:
   using val_t = SCALAR;                                    ///< Value type
-  using idx_t = std::size_t;                               ///< Index type
+  using idx_t = gl::index_type;                               ///< Index type
   using dest_vec_t = std::vector<std::pair<idx_t, val_t>>; ///< Destination-Vector type
   using idx_list_t = std::vector<idx_t>;                   ///< Index List type
   using ordered_list_t = std::list<idx_t>;                 ///< Ordered List type
@@ -65,11 +65,11 @@ public:
   public:
     /**
      * @brief Construct Edge from data
-     * @param src Source index
-     * @param dest Destination index
-     * @param weight The weight of the %Edge
-     * @param color Color of the %Edge
-     * @param exists Whether the %Edge exists
+     * @param[in] src Source index
+     * @param[in] dest Destination index
+     * @param[in] weight The weight of the %Edge
+     * @param[in] color Color of the %Edge
+     * @param[in] exists Whether the %Edge exists
      */
     Edge(const idx_t &src = 0, const idx_t &dest = 0, const val_t &weight = 0, const Color &color = Color(), const bool &exists = false) : src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
 
@@ -188,7 +188,7 @@ public:
     inline idx_t id() const;
     /**
      * @brief Allows changing of node ID.
-     * @param id New value of node ID.
+     * @param[in] id New value of node ID.
      */
     inline void id(const idx_t& id);
     //@}
@@ -203,8 +203,8 @@ public:
      */
     inline std::string label() const;
     /**
-     * @brief Allows changing the lable of a node.
-     * @param label New value of node label.
+     * @brief Allows changing the label of a node.
+     * @param[in] label New value of node label.
      */
     inline void label(const std::string &label);
     //@}
@@ -220,7 +220,7 @@ public:
     inline val_t capacity() const;
     /**
      * @brief Allows changing the capacity of a node.
-     * @param capacity New value of node capacity.
+     * @param[in] capacity New value of node capacity.
      */
     inline void capacity(const val_t& capacity);
     //@}
@@ -302,6 +302,7 @@ public:
   class Property
   {
   public:
+    Property() = default;
     Property(const idx_t &numNodes, const std::string &label = "Graph", const idx_t &numEdges = 0) : numNodes_(numNodes), label_(label), numEdges_(0) {}
     Property(const Property &property) : numNodes_(property.numNodes_), label_(property.label_), numEdges_(property.numEdges_) {}
 
@@ -317,17 +318,17 @@ public:
     inline idx_t numNodes() const;
     /**
      * @brief Allows changing the number of nodes in the graph.
-     * @param numNodes New value of node count.
+     * @param[in] numNodes New value of node count.
      */
     inline void numNodes(const idx_t &numNodes);
     /**
      * @brief Increments the number of nodes in the graph.
-     * @param increment Number of nodes that will be added to the graph.
+     * @param[in] increment Number of nodes that will be added to the graph.
      */
     inline void numNodesIncrement(const idx_t &increment = 1);
     /**
      * @brief Decrements the number of nodes in the graph.
-     * @param decrement Number of nodes that will be removed from the graph.
+     * @param[in] decrement Number of nodes that will be removed from the graph.
      */
     inline void numNodesDecrement(const idx_t &decrement = 1);
     //@}
@@ -343,17 +344,17 @@ public:
     inline idx_t numEdges() const;
     /**
      * @brief Allows changing the number of edges in the graph.
-     * @param numEdges New value of edge count.
+     * @param[in] numEdges New value of edge count.
      */
     inline void numEdges(const idx_t &numEdges);
     /**
      * @brief Increments the number of edges in the graph.
-     * @param increment Number of nodes that will be added to the graph.
+     * @param[in] increment Number of nodes that will be added to the graph.
      */
     inline void numEdgesIncrement(const idx_t &increment = 1);
     /**
      * @brief Decrements the number of edges in the graph.
-     * @param decrement Number of edges that will be removed from the graph.
+     * @param[in] decrement Number of edges that will be removed from the graph.
      */
     inline void numEdgesDecrement(const idx_t &decrement = 1);
     //@}
@@ -369,7 +370,7 @@ public:
     inline std::string label() const;
     /**
      * @brief Allows changing the label of the graph.
-     * @param label New graph name.
+     * @param[in] label New graph name.
      */
     inline void label(const std::string& label);
     //@}
@@ -409,9 +410,9 @@ public:
     Edge_Iterator() {}
     /**
      * @brief Construct EdgeIterator, only used with Matrix Representation
-     * @param ptr Pointer to which edge this iterator should point
-     * @param data1 pointer to first element in the matrix
-     * @param data2 number of entries in the matrix
+     * @param[in] ptr Pointer to which edge this iterator should point
+     * @param[in] data1 pointer to first element in the matrix
+     * @param[in] data2 number of entries in the matrix
      */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_MATRIX
@@ -421,9 +422,9 @@ public:
     }
     /**
      * @brief Construct EdgeIterator, only used with List Representation
-     * @param ptr Pointer to which edge this iterator should point
-     * @param data1 iterator over the root vector
-     * @param data2 pointer to the owner data structure
+     * @param[in] ptr Pointer to which edge this iterator should point
+     * @param[in] data1 iterator over the root vector
+     * @param[in] data2 pointer to the owner data structure
      */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_LIST
@@ -579,31 +580,50 @@ public:
   //@{
   /**
    * @brief Construct Graph from node count and label
-   * @param numNodes Number of nodes/vertices in the graph.
-   * @param label label of the graph.
+   * @param[in] numNodes Number of nodes/vertices in the graph.
+   * @param[in] label Label of the graph.
    */
   Graph(const idx_t &numNodes, const std::string &label = "Graph") : property_(numNodes, label, 0)
   {
     construct();
-    std::vector<Node> nodes();
-    for (idx_t i = 0; i < numNodes; ++i)
-    {
-      nodes_.push_back(Node(i));
+  }
+  /**
+   * @brief Construct Graph from node count and label
+   * @param[in] degreeSeq Degree Sequence of an undirected graph (e.g. 5 1 1 1 1 1").
+   * @param[in] label Label of the graph.
+   */
+  Graph(const std::string& degreeSeq, const std::string &label = "Simple Undirected Graph")
+  {
+    std::stringstream iss(degreeSeq);
+    idx_t degree;
+    std::deque<idx_t> degrees;
+    while( iss >> degree )
+      degrees.push_back(degree);
+
+    idx_t numNodes = degrees.size();
+    property_ = Property(numNodes,label, 0);
+    property_.numNodes(numNodes);
+    construct();
+    
+    for (idx_t i = 0; i < numNodes; ++i) {
+      for (idx_t j = i+1; j < numNodes; ++j) {
+        if (degrees[i] > 0 && degrees[j] > 0) {
+          setEdge(i,j);
+          --degrees[i];
+          --degrees[j];
+        }
+      }
     }
   }
   /**
    * @brief Construct Graph from property
-   * @param property Properties for a graph.
+   * @param[in] property Properties for a graph.
    */
   Graph(const Property& property) : property_(property)
   {
     construct();
-    std::vector<Node> nodes();
-    for (idx_t i = 0; i < numNodes; ++i)
-    {
-      nodes_.push_back(Node(i));
-    }
   }
+  Graph() {}
   ~Graph()
   {
   }
@@ -835,10 +855,10 @@ public:
   //@{
   /**
    * @brief Sets an edge including start/end points and weight.
-   * @param start edge origin point
-   * @param end edge end point
-   * @param weight new edge weight
-   * @param color (Optional) new edge color
+   * @param[in] start edge origin point
+   * @param[in] end edge end point
+   * @param[in] weight new edge weight
+   * @param[in] color (Optional) new edge color
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST_DIRECTED
@@ -910,8 +930,16 @@ public:
   }
 #endif
   /**
+   * @brief Adds an edge directly from an Edge object.
+   * @param[in] edge Edge that will be copied
+   */
+  void setEdge(const Edge& edge) 
+  {
+    setEdge(edge.source(), edge.dest(), edge.weight(), edge.color());
+  }
+  /**
    * @brief Adds edges in the format "<start> <end> <weight>" found in inFile to the graph.
-   * @param inFile file name of input file
+   * @param[in] inFile file name of input file
    */
   void addEdgesFromFile(const std::string& inFile)
   {
@@ -1133,8 +1161,8 @@ public:
 
   /**
    * @brief Deletes the edge going from start to end.
-   * @param start edge origin point
-   * @param end edge end point
+   * @param[in] start edge origin point
+   * @param[in] end edge end point
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST_DIRECTED
@@ -1206,8 +1234,8 @@ public:
 
   /**
    * @brief Checks whether an edge exists from start to end.
-   * @param start edge origin point
-   * @param end edge end point
+   * @param[in] start edge origin point
+   * @param[in] end edge end point
    * @return true if there exists an edge, false otherwise
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1246,8 +1274,8 @@ public:
 
   /**
    * @brief Finds the weight of the edge going from start to end.
-   * @param start edge origin point
-   * @param end edge end point
+   * @param[in] start edge origin point
+   * @param[in] end edge end point
    * @return weight of the selected edge
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1285,8 +1313,8 @@ public:
 #endif
   /**
    * @brief Returns the color of the edge from src to dest.
-   * @param src edge origin point
-   * @param dest edge destination point
+   * @param[in] src edge origin point
+   * @param[in] dest edge destination point
    * @return Color of edge src->dest
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1417,7 +1445,7 @@ public:
   //@{
   /**
    * @brief Returns a list of all endpoints of outgoing edges from start.
-   * @param node edge origin point
+   * @param[in] node edge origin point
    * @return List of all direct neighbours
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1454,8 +1482,8 @@ public:
 
   /**
    * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
-   * @param node edge origin point
-   * @param visited boolean list of previously visited nodes
+   * @param[in] node edge origin point
+   * @param[in] visited boolean list of previously visited nodes
    * @return List of all direct neighbours + weights
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1490,7 +1518,7 @@ public:
 
   /**
    * @brief Returns a list of endpoints + edge weights of outgoing edges from start.
-   * @param node edge origin point
+   * @param[in] node edge origin point
    * @return List of all direct neighbours + weights
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1523,8 +1551,8 @@ public:
 #endif
   /**
    * @brief Returns a list of endpoints + edge weights of unvisited outgoing edges from start.
-   * @param node edge origin point
-   * @param visited boolean list of previously visited nodes
+   * @param[in] node edge origin point
+   * @param[in] visited boolean list of previously visited nodes
    * @return List of all direct neighbours + weights
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1645,7 +1673,7 @@ public:
   }
   /**
    * @brief Finds the degree of the given node (i.e. count of all in- & outgoing edges).
-   * @param id node whose degree is to be found
+   * @param[in] id node whose degree is to be found
    * @return Degree of node
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1686,7 +1714,7 @@ public:
   }
   /**
    * @brief Returns the color of a node.
-   * @param id Node ID
+   * @param[in] id Node ID
    * @return Color of node with ID "id".
    */
   Color getNodeColor(const idx_t& id) const
@@ -1751,6 +1779,11 @@ private:
       }
     }
     edges_ = matrix;
+    std::vector<Node> nodes();
+    for (idx_t i = 0; i < numNodes(); ++i)
+    {
+      nodes_.push_back(Node(i));
+    }
   }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -1762,6 +1795,11 @@ private:
   {
     rootList_t list(numNodes());
     edges_ = list;
+    std::vector<Node> nodes();
+    for (idx_t i = 0; i < numNodes(); ++i)
+    {
+      nodes_.push_back(Node(i));
+    }
   }
 #endif
   /**
@@ -1771,7 +1809,7 @@ private:
   //@{
   /**
    * @brief Only one index that gets range checked.
-   * @param idx1 Index that will be range checked
+   * @param[in] idx1 Index that will be range checked
    */
   inline void checkRange(const idx_t& idx1) const
   {
@@ -1781,8 +1819,8 @@ private:
 
   /**
    * @brief Two indices ("edge") that get range checked.
-   * @param idx1 First index that will be range checked
-   * @param idx2 Second index that will be range checked.
+   * @param[in] idx1 First index that will be range checked
+   * @param[in] idx2 Second index that will be range checked.
    */
   inline void checkRange(const idx_t& idx1, const idx_t& idx2) const
   {

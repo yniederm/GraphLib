@@ -9,6 +9,7 @@ int main(int argc, char const *argv[])
   g.setEdge(2,0);
   g.setEdge(2,1,10);
   g.setEdge(2,2,5,gl::Color("aqua"));
+  g.setEdge(gl::graphMid::Edge(1,4,3,gl::Color("orange")));
   g.numNodes();
   std::cout << "numNodes: " << g.numNodes() << std::endl
             << g << std::endl;

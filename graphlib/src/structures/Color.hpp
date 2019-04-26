@@ -109,11 +109,11 @@ public:
     }
   }
   //@}
-  Color(const Color &) = default;                ///< @brief copy constructor
-  Color(Color &&) noexcept = default;            ///< @brief move constructor
-  Color &operator=(const Color &) = default;     ///< @brief copy assignment
-  Color &operator=(Color &&) noexcept = default; ///< @brief move assignment
-  ~Color() = default;                            ///< @brief destructor
+  Color(const Color &) = default;                ///< @brief Copy constructor
+  Color(Color &&) noexcept = default;            ///< @brief Move constructor
+  Color &operator=(const Color &) = default;     ///< @brief Copy assignment
+  Color &operator=(Color &&) noexcept = default; ///< @brief Move assignment
+  ~Color() = default;                            ///< @brief Destructor
   /**
    * @name Read access to stored RGBA color values.
    * @brief Getters for stored color values.
@@ -203,20 +203,14 @@ public:
   //@}
 
 private:
-  color_val_t r_, /**< 
-                   * @brief Red value. \f$r \in \{0,\ldots,255\}\f$
-                   */
-      g_,         /**< 
-                   * @brief Green value.  \f$g \in \{0,\ldots,255\}\f$
-                   */
-      b_,         /**< 
-                   * @brief Blue value. \f$b \in \{0,\ldots,255\}\f$
-                   */
-      a_;         /**< 
-                   * @brief Alpha/opacity value. \f$a \in \{0,\ldots,100\}\f$
-                   */
+  color_val_t r_, ///< @brief Red value. \f$r \in \{0,\ldots,255\}\f$
+              g_, ///< @brief Green value.  \f$g \in \{0,\ldots,255\}\f$
+              b_, ///< @brief Blue value. \f$b \in \{0,\ldots,255\}\f$
+              a_; ///< @brief Alpha/opacity value. \f$a \in \{0,\ldots,100\}\f$
 };
 
 } // namespace gl
+
+#undef GL_FORCE_INTO_RANGE
 
 #endif // GL_COLOR_HPP

@@ -11,7 +11,7 @@
    * @param ERROR_MSG String that will contain info on the error.
    */
 #define GL_ASSERT(EXPR,ERROR_MSG) \
-if (!EXPR) { \
+if (!(EXPR)) { \
   std::string errorMessage (ERROR_MSG); \
   throw std::runtime_error(errorMessage); \
 } 

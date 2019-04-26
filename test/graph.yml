@@ -1,9 +1,14 @@
 # Example YAML File to use with the YAMLReader
 # 
 # Add comments with the # in the beginning
+#
 # each key-value pair must have following structure
 # key: value
-# the space after the : is intended!
+# 
+# if multiple values correspond to a key, they must be each on it's own line, e.g.
+# key: value1
+# key: value2
+# key: value3
 
 # value_type: double | int | float
 value_type: double
@@ -11,30 +16,25 @@ value_type: double
 # storage_type: Matrix | List
 storage_type: Matrix
 
-# direction: Undirected | Directed
+# direction_type: Undirected | Directed
 direction_type: Undirected
 
-# number of nodes
+# number_nodes: int
 number_nodes: 5
 
-# label of graph
+# label: string
 label: This is a graph
 
-# add some edges to our graph
-# normal
+# edge: from to [weight[, color]]
 edge: 0 1
-# normal with weight
 edge: 0 2 1.3
-# normal with color and weight
 edge: 0 3 2.5 0xaabbcc
-
-# some more edges for testing
 edge: 1 2 1.0 0xff0000
 edge: 2 4
 edge: 2 3
 edge: 3 4
 
-# node: capacity [label]
+# node: idx capacity [label]
 node: 0 0.3 this is cap 0.3
 node: 1 0.2 and this 0.2
 node: 2 1.4 and a big one
