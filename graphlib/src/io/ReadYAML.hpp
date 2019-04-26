@@ -2,6 +2,7 @@
 #define READ_YAML_HPP
 
 #include "../structures/Graph.hpp"
+#include "../gl_base.hpp"
 #include <fstream>
 #include <variant>
 #include <sstream>
@@ -83,16 +84,38 @@ void YAMLReader::setFilename(const char *filename)
 
 void YAMLReader::read()
 {
-    using idx_t = graphMdd::idx_t; // use idx_t from a graph
-    // {{from,to},{weight, color}}
-    using edge_t = std::pair<std::pair<idx_t, idx_t>, std::pair<double, gl::Color>>;
+
+    using idx_t = gl::index_type; // use idx_t from a graph
+
+    struct NodeType
+    {
+        idx_t index;
+        double cap;
+        gl::Color col;
+        std::string label;
+        NodeType(idx_t index, double cap, gl::Color col, std::string label) : index(index),
+                                                                              cap(cap),
+                                                                              col(col),
+                                                                              label(label) {}
+    };
+    struct EdgeType
+    {
+        idx_t from;
+        idx_t to;
+        double weight;
+        gl::Color col;
+        EdgeType(idx_t from, idx_t to, double weight, gl::Color col) : from(from),
+                                                                       to(to),
+                                                                       weight(weight),
+                                                                       col(col) {}
+    };
 
     // temp variables to store data while reading
     std::string value_type, storage_type, direction_type, graph_label;
     idx_t number_of_nodes;
 
-    std::vector<edge_t> edges;
-    std::vector<std::pair<idx_t, std::pair<double, const std::string>>> nodes;
+    std::vector<EdgeType> edges;
+    std::vector<NodeType> nodes;
 
     std::string line;
     while (getline(stream_, line))
@@ -144,7 +167,7 @@ void YAMLReader::read()
                 ss >> std::hex >> hex;
                 c.hex(hex);
             }
-            edges.push_back({{a, b}, {weight, c}});
+            edges.push_back(EdgeType(a, b, weight, c));
         }
         else if (name == "node")
         {
@@ -152,9 +175,16 @@ void YAMLReader::read()
             double cap;
             std::stringstream ss(value);
             ss >> node >> cap;
-            std::string rest;
-            getline(ss, rest);
-            nodes.push_back({node, {cap, rest}});
+            gl::Color col(0, 0, 0);
+            if (!ss.eof())
+            {
+                unsigned int hex;
+                ss >> std::hex >> hex;
+                col.hex(hex);
+            }
+            std::string label;
+            getline(ss, label);
+            nodes.push_back(NodeType(node, cap, col, label));
         }
         else
         {
@@ -217,13 +247,13 @@ void YAMLReader::read()
     }
 
     // add all edges to the graph
-    for (edge_t &e : edges)
+    for (EdgeType &e : edges)
     {
-        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.setEdge(e.first.first, e.first.second, e.second.first, e.second.second));
+        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.setEdge(e.from, e.to, e.weight, e.col));
     }
-    for (auto &n : nodes)
+    for (NodeType &n : nodes)
     {
-        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.updateNode(n.first, n.second.second, n.second.first));
+        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.updateNode(n.index, n.label, n.cap, n.col));
     }
 }
 
