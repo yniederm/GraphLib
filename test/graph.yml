@@ -34,8 +34,8 @@ edge: 2 4
 edge: 2 3
 edge: 3 4
 
-# node: idx capacity [label]
-node: 0 0.3 this is cap 0.3
-node: 1 0.2 and this 0.2
-node: 2 1.4 and a big one
+# node: idx capacity [color label]
+node: 0 0.3 0xaabbcc this is cap 0.3
+node: 1 0.2 0xff0000 and this 0.2
+node: 2 1.4 0xcccccc and a big one
 node: 3 1
