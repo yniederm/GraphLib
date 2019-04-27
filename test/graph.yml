@@ -17,25 +17,30 @@ value_type: double
 storage_type: Matrix
 
 # direction_type: Undirected | Directed
-direction_type: Undirected
+direction_type: Directed
 
 # number_nodes: int
-number_nodes: 5
+number_nodes: 6
 
 # label: string
 label: This is a graph
 
 # edge: from to [weight[, color]]
-edge: 0 1
-edge: 0 2 1.3
-edge: 0 3 2.5 0xaabbcc
-edge: 1 2 1.0 0xff0000
-edge: 2 4
-edge: 2 3
-edge: 3 4
+edge: 0 1 1
+edge: 1 2 2
+edge: 2 4 3
+edge: 3 1 4
+edge: 4 3 5
+edge: 4 5 6
 
 # node: idx capacity [color label]
-node: 0 0.3 0xaabbcc this is cap 0.3
-node: 1 0.2 0xff0000 and this 0.2
-node: 2 1.4 0xcccccc and a big one
-node: 3 1
+node: 0 1.0 0x00ff80 Entry
+node: 5 1.3 0xf75e25 Output
+
+# position idx x y
+position: 0 -3 0
+position: 1 0 0
+position: 2 3 2
+position: 3 3 -2
+position: 4 6 0
+position: 5 7 2

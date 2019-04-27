@@ -109,6 +109,12 @@ void YAMLReader::read()
                                                                        weight(weight),
                                                                        col(col) {}
     };
+    struct PositionType
+    {
+        idx_t id;
+        std::pair<float, float> pos;
+        PositionType(idx_t id, std::pair<float, float> pos) : id(id), pos(pos) {}
+    };
 
     // temp variables to store data while reading
     std::string value_type, storage_type, direction_type, graph_label;
@@ -116,6 +122,7 @@ void YAMLReader::read()
 
     std::vector<EdgeType> edges;
     std::vector<NodeType> nodes;
+    std::vector<PositionType> positions;
 
     std::string line;
     while (getline(stream_, line))
@@ -172,7 +179,7 @@ void YAMLReader::read()
         else if (name == "node")
         {
             idx_t node;
-            double cap;
+            double cap = 1.0;
             std::stringstream ss(value);
             ss >> node >> cap;
             gl::Color col(0, 0, 0);
@@ -185,6 +192,15 @@ void YAMLReader::read()
             std::string label;
             getline(ss, label);
             nodes.push_back(NodeType(node, cap, col, label));
+        }
+        else if (name == "position")
+        {
+            idx_t node;
+            float x, y;
+            std::stringstream ss(value);
+            ss >> node >> x >> y;
+            std::pair<float, float> pos(x, y);
+            positions.push_back(PositionType(node, pos));
         }
         else
         {
@@ -254,6 +270,9 @@ void YAMLReader::read()
     for (NodeType &n : nodes)
     {
         IO_CALL_ON_GRAPH(graph_, IO_GRAPH.updateNode(n.index, n.label, n.cap, n.col));
+    }
+    for(PositionType& p : positions) {
+        IO_CALL_ON_GRAPH(graph_, IO_GRAPH.updateNode(p.id, p.pos));
     }
 }
 

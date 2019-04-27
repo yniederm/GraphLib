@@ -31,7 +31,7 @@ public:
   /**
    * @brief Default constructor.
    */
-  Color() = default;
+  Color() : r_(255), g_(255), b_(255), a_(100) {}
   /**
    * @brief Constructor for integer R,G,B,A values.
    * @param[in] r R value. \f$r \in \{0,\ldots,255\}\f$
