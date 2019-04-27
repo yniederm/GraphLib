@@ -23,7 +23,7 @@ direction_type: Directed
 number_nodes: 6
 
 # label: string
-label: This is a graph
+label: Sample Wikipedia Graph
 
 # edge: from to [weight[, color]]
 edge: 0 1 1

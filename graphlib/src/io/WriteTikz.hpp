@@ -63,10 +63,9 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool useInternalPositions = false, bool writeNodes = true)
 {
-  s << "\\documentclass{amsart}" << std::endl;
+  s << "\\documentclass{standalone}" << std::endl;
   s << "\\usepackage{tikz-network}" << std::endl;
   s << "\\begin{document}" << std::endl;
-  s << "\\begin{center}" << std::endl;
   s << "\\begin{tikzpicture}" << std::endl;
 
   // draw all vertices
@@ -164,8 +163,8 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
   }
 
   // s << "  \\end{scope}" << std::endl;
+  s << "\\node[align=center,font=\\bfseries] at (current bounding box.north) {" << g.getGraphLabel() << "};" << std::endl;
   s << "\\end{tikzpicture}" << std::endl;
-  s << "\\end{center}" << std::endl;
   s << "\\end{document}" << std::endl;
 }
 
