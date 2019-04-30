@@ -419,7 +419,8 @@ public:
     using difference_type = std::ptrdiff_t;                              ///< Pointer Difference type
     using self_t = Edge_Iterator;                                        ///< EdgeIterator type
     /* typedefs for data members */
-    using vector_iterator_t = std::conditional_t<IsConst, typename rootList_t::const_iterator, typename rootList_t::iterator>;
+    using matrix_iterator_t = std::conditional_t<IsConst, typename matrix_t::const_iterator, typename matrix_t::iterator>;
+    using rootList_iterator_t = std::conditional_t<IsConst, typename rootList_t::const_iterator, typename rootList_t::iterator>;
     using list_iterator_t = std::conditional_t<IsConst, typename nodeList_t::const_iterator, typename nodeList_t::iterator>;
     using container_pointer_t = std::conditional_t<IsConst, const Graph<SCALAR, STORAGE_KIND, DIRECTION> *, Graph<SCALAR, STORAGE_KIND, DIRECTION> *>;
     /**
@@ -435,7 +436,7 @@ public:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_MATRIX
 #endif
-    Edge_Iterator(pointer ptr, pointer data1, idx_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    Edge_Iterator(matrix_iterator_t ptr, matrix_iterator_t data1, container_pointer_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
     {
     }
     /**
@@ -447,7 +448,7 @@ public:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_LIST
 #endif
-    Edge_Iterator(list_iterator_t ptr, vector_iterator_t data1, container_pointer_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
+    Edge_Iterator(list_iterator_t ptr, rootList_iterator_t data1, container_pointer_t data2) : ptr_(ptr), data1_(data1), data2_(data2)
     {
     }
 
@@ -461,9 +462,9 @@ public:
     self_t operator++()
     {
       ++ptr_;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      while (ptr_ - data1_ < data2_->edges_.size() && !ptr_->exists())
       {
-        ptr_++;
+        ++ptr_;
       }
       return *this;
     }
@@ -477,10 +478,10 @@ public:
     self_t operator++(int dummy)
     {
       self_t i = *this;
-      ptr_++;
-      while (ptr_ - data1_ < data2_ && !ptr_->exists())
+      ++ptr_;
+      while (ptr_ - data1_ < data2_->edges_.size() && !ptr_->exists())
       {
-        ptr_++;
+        ++ptr_;
       }
       return i;
     }
@@ -518,7 +519,7 @@ public:
     }
 #endif
     /**
-     * @brief Const dreference iterator
+     * @brief Const dereference iterator
      * @return A Reference to the underlying edge
      */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -588,9 +589,9 @@ public:
     }
 
   private:
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, list_iterator_t> ptr_;     ///< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, pointer, vector_iterator_t> data1_; ///< @brief pointer to first element for Matrix, iterator over the rootList for List
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, idx_t, container_pointer_t> data2_; ///< @brief size of adjacency matrix for matrix, pointer to this Graph for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_iterator_t, list_iterator_t> ptr_;     ///< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_iterator_t, rootList_iterator_t> data1_; ///< @brief iterator to first element of Matrix, iterator over the rootList for List
+    container_pointer_t data2_; ///< @brief pointer to Graph
   };
 
   /* Iterator typedefs */
@@ -984,19 +985,14 @@ public:
   {
     std::ifstream is;
     is.open(inFile, std::ios::in);
-    if (!is.is_open())
+    GL_ASSERT(is.is_open(),std::string(std::string("Error: failed to open ")+inFile))
+
+    idx_t start;
+    idx_t end;
+    val_t weight;
+    while (is >> start >> end >> weight)
     {
-      std::cout << "Error: failed to open " << inFile << '\n';
-    }
-    else
-    {
-      idx_t start;
-      idx_t end;
-      val_t weight;
-      while (is >> start >> end >> weight)
-      {
-        setEdge(start, end, weight);
-      }
+      setEdge(start, end, weight);
     }
   }
 
@@ -1398,14 +1394,18 @@ public:
 #endif
   EdgeIterator edge_begin()
   {
-    Edge *ptr = &edges_.front();
-    Edge *start = &edges_.front();
-    idx_t end = numNodes() * numNodes();
-    while (!ptr->exists())
-    {
-      ptr++;
+    auto ptr = edges_.begin();
+    if (numEdges() > 0) {
+      while (!ptr->exists())
+      {
+        ++ptr;
+      }
     }
-    return Edge_Iterator<false>(ptr, start, end);
+    else
+    {
+      ptr = edges_.end();
+    }
+    return Edge_Iterator<false>(ptr, edges_.begin(), this);
   }
   /**
    * @brief EdgeIterator to behind the last edge
@@ -1416,7 +1416,7 @@ public:
 #endif
   EdgeIterator edge_end()
   {
-    return Edge_Iterator<false>(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
+    return Edge_Iterator<false>(edges_.end(), edges_.begin(), this);
   }
   /**
    * @brief ConstEdgeIterator to the first edge
@@ -1427,14 +1427,18 @@ public:
 #endif
   ConstEdgeIterator edge_cbegin() const
   {
-    auto ptr = &edges_.front();
-    const auto start = &edges_.front();
-    idx_t end = numNodes() * numNodes();
-    while (!ptr->exists())
-    {
-      ptr++;
+    auto ptr = edges_.cbegin();
+    if (numEdges() > 0) {
+      while (!ptr->exists())
+      {
+        ++ptr;
+      }
     }
-    return Edge_Iterator<true>(ptr, start, end);
+    else
+    {
+      ptr = edges_.cend();
+    }
+    return Edge_Iterator<true>(ptr, edges_.cbegin(), this);
   }
   /**
    * @brief ConstEdgeIterator to the last edge
@@ -1445,35 +1449,54 @@ public:
 #endif
   ConstEdgeIterator edge_cend() const
   {
-    return Edge_Iterator<true>(&edges_.back() + 1, &edges_.front(), numNodes() * numNodes());
+    return Edge_Iterator<true>(edges_.cend(), edges_.cbegin(), this);
   }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   GL_ENABLE_IF_LIST
   EdgeIterator edge_begin()
   {
-    auto it = edges_.begin();
-    while (it->size() == 0)
-      ++it;
-    return Edge_Iterator<false>(edges_[it - edges_.begin()].begin(), it, this);
+    auto ptr = edges_.begin();
+    if (numEdges() > 0) {
+      while (ptr->size() == 0)
+      {
+        ++ptr;
+      }
+    }
+    else
+    {
+      ptr = edges_.end();
+    }
+    return Edge_Iterator<false>(edges_[ptr - edges_.begin()].begin(), ptr, this);
   }
   GL_ENABLE_IF_LIST
   EdgeIterator edge_end()
   {
-    return Edge_Iterator<false>(edges_.back().end(), edges_.end() - 1, this);
+    return Edge_Iterator<false>(edges_[edges_.size()].end(), edges_.end(), this);
   }
 
   GL_ENABLE_IF_LIST
   ConstEdgeIterator edge_cbegin() const
   {
-    auto it = edges_.cbegin();
-    while (it->size() == 0)
-      ++it;
-    return Edge_Iterator<true>(edges_[it - edges_.begin()].cbegin(), it, this);
+    auto ptr = edges_[0].cbegin(); 
+    auto data1 = edges_.cbegin();
+    if (numEdges() > 0) {
+      while (data1->size() == 0)
+      {
+        ++data1;
+      }
+      ptr = edges_[data1 - edges_.cbegin()].cbegin();
+    }
+    else
+    {
+      ptr = edges_.back().cend();
+      data1 = edges_.cend()-1;
+    }
+    return Edge_Iterator<true>(ptr, data1, this);
   }
   GL_ENABLE_IF_LIST
   ConstEdgeIterator edge_cend() const
   {
-    return Edge_Iterator<true>(edges_.back().cend(), edges_.cend() - 1, this);
+    return Edge_Iterator<true>(edges_.back().cend(), edges_.cend()-1, this);
   }
 #endif
   //@}
