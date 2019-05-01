@@ -16,15 +16,12 @@ namespace gl::algorithm {
  * @brief Class that computes Dijkstra's Shortest Paths algorithm.
  */
 
-template <class SCALAR, class STORAGE, class DIR>
+template <class Graph>
 class Dijkstra {
-  using Graph = gl::Graph<SCALAR,STORAGE,DIR>;
   using idx_t = typename Graph::idx_t;
   using val_t = typename Graph::val_t;
-  using ordered_list_t = typename Graph::ordered_list_t;
   using pair_t = std::pair<val_t,idx_t>;
   using result_t = std::vector<pair_t>;
-  using visit_list_t = typename Graph::visit_list_t;
 
 public: 
   /**
@@ -42,6 +39,18 @@ public:
   ~Dijkstra();   
 
   /**
+   * @brief Provides a Selector Object to color the edges in the Shortest Path Tree.
+   * @param[in] color New color for the SPT edges.
+   * @return Selector Object: std::pair<bool,gl::Color>
+   */
+  std::function<std::pair<bool,gl::Color>(const idx_t src, const idx_t dest)> EdgeSelector(const gl::Color& color = gl::Color("red")) const;
+  /**
+   * @brief Provides a Selector Object to color the nodes in the Shortest Path Tree.
+   * @param[in] color New color for the SPT nodes.
+   * @return Selector Object: std::pair<bool,gl::Color>
+   */
+  std::function<std::pair<bool,gl::Color>(const idx_t node)> NodeSelector(const gl::Color& color = gl::Color("red")) const;
+  /**
    * @brief Computes the shortest path length from src to dest.
    * @param dest Node whose distance to src we want to know.
    * @return shortest path length / weight.
@@ -52,10 +61,11 @@ public:
    * @param dest Node whose shortest path to src we want to know.
    * @return shortest path in form of an ordered list of node indices.
    */
-  ordered_list_t getPath(const idx_t) const;
+  typename Graph::idx_list_t getPath(const idx_t) const;
 
 private:
   Graph const& graph_; ///< @brief Reference to graph
+  Graph result_;       ///< @brief SPT graph
   idx_t src_;          ///< @brief Source node
   result_t final_;     ///< @brief Shortest Path lengths & predecessors
 };
@@ -64,16 +74,16 @@ private:
 //    Member function implementations
 ///////////////////////////////////////////////////////////
 
-template <class SCALAR, class STORAGE, class DIR>
-Dijkstra<SCALAR,STORAGE,DIR>::~Dijkstra() {}
+template <class Graph>
+Dijkstra<Graph>::~Dijkstra() {}
 
-template <class SCALAR, class STORAGE, class DIR>
-Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {
+template <class Graph>
+Dijkstra<Graph>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {
+  graph.checkRange(src);
 
   // verify that all non-self-loop edge weights are positive
   for (auto it = graph.edge_cbegin(); it != graph.edge_cend(); ++it) {
     if (it->source() != it->dest()) {
-      std::cout << it->source() << "->" << it->dest() << ": " << (it->weight() > 0) << "\n";
       GL_ASSERT(it->weight() > 0, "Found non-positive edge weights in the graph.");
     }
   }
@@ -88,7 +98,7 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : gr
 
   std::priority_queue<pair_t,std::vector<pair_t>,prio> pq;
   pair_t emptyPair (GL_INF(val_t), GL_INF(val_t));
-  visit_list_t visited (graph.numNodes());
+  typename Graph::visit_list_t visited (graph.numNodes());
   std::vector<pair_t> out (graph.numNodes(),emptyPair);
 
   pq.push(std::make_pair(0,src));
@@ -110,22 +120,65 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : gr
     }
   }
   final_ = out;
+
+  Graph result(graph.numNodes(),std::string(std::string("SPT of node ")+std::to_string(src)+std::string(" in ")+graph.getGraphLabel()));
+  for (idx_t i = 0; i < graph.numNodes(); ++i)
+  {
+    auto path = getPath(i);
+    if (path.size() > 0) {
+      idx_t i = 0;
+      for (idx_t j = i+1; j < path.size(); ++i, ++j)
+      {
+        if (!result.hasEdge(path[i],path[j])) 
+        {
+          result.setEdge(path[i],path[j]);
+        }
+      }
+    }
+  }
+
+  result_ = result;
+}
+template <class Graph>
+std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const typename Graph::idx_t dest)> Dijkstra<Graph>::EdgeSelector (const gl::Color& color) const 
+{
+  return [&color, this](const idx_t src, const idx_t dest) -> std::pair<bool,gl::Color> {
+    if (result_.hasEdge(src,dest)) 
+      return {true,color};
+    else
+      return {false,gl::Color()};
+  };
 }
 
-template <class SCALAR, class STORAGE, class DIR>
-typename gl::Graph<SCALAR,STORAGE,DIR>::val_t Dijkstra<SCALAR,STORAGE,DIR>::pathLength (const idx_t dest) const {
+template <class Graph>
+std::function<std::pair<bool,gl::Color>(const typename Dijkstra<Graph>::idx_t node)> Dijkstra<Graph>::NodeSelector (const gl::Color& color) const 
+{
+  return [&color, this](const idx_t node) -> std::pair<bool,gl::Color> {
+    if (pathLength(node) != val_t(-1))
+      return {true,color};
+    else return {false,gl::Color("white")};
+  };
+}
+
+template <class Graph>
+typename Graph::val_t Dijkstra<Graph>::pathLength (const idx_t dest) const {
   return final_[dest].first!=GL_INF(val_t) ? final_[dest].first : val_t(-1);
 }
 
-template <class SCALAR, class STORAGE, class DIR>
-typename gl::Graph<SCALAR,STORAGE,DIR>::ordered_list_t Dijkstra<SCALAR,STORAGE,DIR>::getPath (const idx_t dest) const {
-  typename gl::Graph<SCALAR,STORAGE,DIR>::ordered_list_t out;
+template <class Graph>
+typename Graph::idx_list_t Dijkstra<Graph>::getPath (const idx_t dest) const {
+  typename Graph::idx_list_t out;
+  if (pathLength(dest) == val_t(-1))
+  {
+    return {dest};
+  }
   idx_t node = dest;
   while (node != src_) {
-    out.push_front(node);
+    out.push_back(node);
     node = final_[node].second;
   }
-  out.push_front(src_);
+  out.push_back(src_);
+  std::reverse(out.begin(),out.end());
   return out;
 }
 

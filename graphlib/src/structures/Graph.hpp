@@ -884,7 +884,31 @@ public:
     }
     return false;
   }
-#endif
+#endif  /**
+   * @name checkRange
+   * @brief Asserts that the given index/indecies is within the graph.
+   */
+  //@{
+  /**
+   * @brief Only one index that gets range checked.
+   * @param[in] idx1 Index that will be range checked
+   */
+  inline void checkRange(const idx_t &idx1) const
+  {
+    GL_ASSERT((0 <= idx1), (std::string("Negative index: ") + std::to_string(idx1) + std::string(" < 0")))
+    GL_ASSERT((idx1 < numNodes()), ("Index " + std::to_string(idx1) + " is larger than the max: " + std::to_string(numNodes() - 1)))
+  }
+
+  /**
+   * @brief Two indices ("edge") that get range checked.
+   * @param[in] idx1 First index that will be range checked
+   * @param[in] idx2 Second index that will be range checked.
+   */
+  inline void checkRange(const idx_t &idx1, const idx_t &idx2) const
+  {
+    checkRange(idx1);
+    checkRange(idx2);
+  }
   //@}
   /**
    * @name Edge interface
@@ -1911,31 +1935,7 @@ private:
     }
   }
 #endif
-  /**
-   * @name checkRange
-   * @brief Asserts that the given index/indecies is within the graph.
-   */
-  //@{
-  /**
-   * @brief Only one index that gets range checked.
-   * @param[in] idx1 Index that will be range checked
-   */
-  inline void checkRange(const idx_t &idx1) const
-  {
-    GL_ASSERT((0 <= idx1), (std::string("Negative index: ") + std::to_string(idx1) + std::string(" < 0")))
-    GL_ASSERT((idx1 < numNodes()), ("Index " + std::to_string(idx1) + " is larger than the max: " + std::to_string(numNodes() - 1)))
-  }
 
-  /**
-   * @brief Two indices ("edge") that get range checked.
-   * @param[in] idx1 First index that will be range checked
-   * @param[in] idx2 Second index that will be range checked.
-   */
-  inline void checkRange(const idx_t &idx1, const idx_t &idx2) const
-  {
-    checkRange(idx1);
-    checkRange(idx2);
-  }
 };
 
 } /* namespace gl */

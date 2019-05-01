@@ -111,7 +111,7 @@ Kruskal<Graph>::Kruskal(const Graph& graph)
 }
 
 template <class Graph>
-std::function<std::pair<bool,gl::Color>(const typename Kruskal<Graph>::idx_t src, const typename Kruskal<Graph>::idx_t dest)> Kruskal<Graph>::EdgeSelector (const gl::Color& color) const 
+std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const typename Graph::idx_t dest)> Kruskal<Graph>::EdgeSelector (const gl::Color& color) const 
 {
   return [&color, this](const idx_t src, const idx_t dest) -> std::pair<bool,gl::Color> {
     if (result_.hasEdge(src,dest)) 
@@ -122,7 +122,7 @@ std::function<std::pair<bool,gl::Color>(const typename Kruskal<Graph>::idx_t src
 }
 
 template <class Graph>
-std::function<std::pair<bool,gl::Color>(const typename Kruskal<Graph>::idx_t node)> Kruskal<Graph>::NodeSelector (const gl::Color& color) const 
+std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t node)> Kruskal<Graph>::NodeSelector (const gl::Color& color) const 
 {
   return [&color, this](const idx_t node) -> std::pair<bool,gl::Color> {
     if (0 <= node && node < result_.numNodes())

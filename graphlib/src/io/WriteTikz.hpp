@@ -149,21 +149,21 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
         << "]{" << i << "}" << std::endl;
     }
   }
+  s << "\n";
 
   // draw all edges
-  // s << "  \\begin{scope}[every path/.style={->}]" << std::endl;
   for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
   {
-    auto color = it->color();
-    s << "    \\Edge[" << (g.isDirected() ? "Direct," : "")
-      << (it->source() == it->dest() ? "loopshape=45," : "")
-      << "RGB,color={" << +color.r() << "," << +color.g()
-      << "," << +color.b() << "},opacity=" << +color.a()
-      << ",label=" << it->weight() << "](" << it->source() << ")(" << it->dest() << ")" << std::endl;
+    if ((std::is_same_v<DIRECTION,gl::Undirected> && it->source() <= it->dest()) || std::is_same_v<DIRECTION,gl::Directed>) {
+      auto color = it->color();
+      s << "  \\Edge[" << (g.isDirected() ? "Direct," : "")
+        << (it->source() == it->dest() ? "loopshape=45," : "")
+        << "RGB,color={" << +color.r() << "," << +color.g()
+        << "," << +color.b() << "},opacity=" << +color.a()
+        << ",label=" << it->weight() << "](" << it->source() << ")(" << it->dest() << ")" << std::endl;
+    }
   }
-
-  // s << "  \\end{scope}" << std::endl;
-  s << "\\node[align=center,font=\\bfseries] at (current bounding box.north) {" << g.getGraphLabel() << "};" << std::endl;
+  s << "\\node[above,align=center,font=\\bfseries] at (current bounding box.north) {" << g.getGraphLabel() << "};" << std::endl;
   s << "\\end{tikzpicture}" << std::endl;
   s << "\\end{document}" << std::endl;
 }
