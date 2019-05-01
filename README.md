@@ -46,7 +46,7 @@ The following software is required:
 - Make
 - Eigen
 - MathGL
-- (Latex)
+- pdflatex (including tikz-network)
 
 To build any test file, invoke `install.sh` from within the root folder of this repository. This will create executables in the `build` folder for you to run.
 
