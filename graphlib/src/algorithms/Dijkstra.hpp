@@ -1,9 +1,9 @@
 #ifndef GL_DIJKSTRA_HPP
 #define GL_DIJKSTRA_HPP
 
+#include "../gl_base.hpp"
 
 #include <queue>
-#include <limits>
 
 namespace gl::algorithm {
 
@@ -87,8 +87,7 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : gr
   };
 
   std::priority_queue<pair_t,std::vector<pair_t>,prio> pq;
-  val_t INF = std::numeric_limits<val_t>::max();
-  pair_t emptyPair (INF, INF);
+  pair_t emptyPair (GL_INF(val_t), GL_INF(val_t));
   visit_list_t visited (graph.numNodes());
   std::vector<pair_t> out (graph.numNodes(),emptyPair);
 
@@ -115,7 +114,7 @@ Dijkstra<SCALAR,STORAGE,DIR>::Dijkstra(const Graph& graph, const idx_t src) : gr
 
 template <class SCALAR, class STORAGE, class DIR>
 typename gl::Graph<SCALAR,STORAGE,DIR>::val_t Dijkstra<SCALAR,STORAGE,DIR>::pathLength (const idx_t dest) const {
-  return final_[dest].first!=std::numeric_limits<val_t>::max() ? final_[dest].first : val_t(-1);
+  return final_[dest].first!=GL_INF(val_t) ? final_[dest].first : val_t(-1);
 }
 
 template <class SCALAR, class STORAGE, class DIR>
