@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
 
     std::ofstream out("build/test/OUTPUT.tex");
 
-    IO_CALL_ON_GRAPH(g, gl::external::writeTikzToStream2(out, IO_GRAPH, true));
+    IO_CALL_ON_GRAPH(g, gl::external::writeTikzToStream2(out, IO_GRAPH));
     out.close();
 
     gl::io::compileLatex("build/test/OUTPUT.tex", "--output-directory=build/test/");

@@ -3,7 +3,6 @@
 
 #include "../structures/Graph.hpp"
 #include <iostream>
-#include <Eigen/Dense>
 
 namespace gl
 {
@@ -57,104 +56,41 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &
    @brief Write structure to stream, given 
    @param s stream to which it should write
    @param g should be a undirected graph, with at least 2 nodes
-   @param useInternalPositions if this function should use the internal node positions initialized
    @param writeNodes wheter it should write nodes (numbers)
    */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool useInternalPositions = false, bool writeNodes = true)
+void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true)
 {
   s << "\\documentclass{standalone}" << std::endl;
   s << "\\usepackage{tikz-network}" << std::endl;
   s << "\\begin{document}" << std::endl;
   s << "\\begin{tikzpicture}" << std::endl;
 
-  // draw all vertices
-  if (!useInternalPositions)
+  for (gl::index_type i = 0; i < g.numNodes(); i++)
   {
-    // calculate x,y positions
-    using E_MAT = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>;
-    Eigen::Matrix<float, Eigen::Dynamic, 1> degs(g.numNodes());
-    E_MAT adjMat(g.numNodes(), g.numNodes());
-    E_MAT degMat;
-
-    degMat.setZero();
-    adjMat.setZero();
-
-    // build degree matrix
-    for (typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
+    auto color = g.getNodeColor(i);
+    s << "  \\Vertex[x=" << g.getNodePosition(i).first << ",y=" << g.getNodePosition(i).second
+      << ",RGB,color={" << +color.r() << "," << +color.g()
+      << "," << +color.b() << "},opacity=" << +color.a()
+      << ",size=" << g.getNodeCapacity(i); // idea: set to capacity of vertex
+    if (g.getNodeLabel(i) == "")
     {
-      degs(i) = g.getNodeDegree(i);
+      s << ",IdAsLabel";
     }
-    degMat = degs.asDiagonal();
-
-    // build adjacency matrix
-    for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
+    else
     {
-      adjMat(it->source(), it->dest()) = 1;
-      adjMat(it->dest(), it->source()) = 1;
+      s << ",label=" << g.getNodeLabel(i) << ",position=above";
     }
-
-    E_MAT laplacian = degMat - adjMat;
-
-    // calculate eigen vectors
-    Eigen::EigenSolver<E_MAT> solver;
-    solver.compute(laplacian);
-
-    for (typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
-    {
-      Eigen::Vector2d pos;
-      pos << solver.eigenvectors()(0, i).real(), solver.eigenvectors()(1, i).real();
-
-      // Scale by degree
-      pos.normalize();
-      pos *= (1 + g.getNodeDegree(i));
-      auto color = g.getNodeColor(i);
-
-      s << "  \\Vertex[x=" << pos(0) << ",y=" << pos(1)
-        << ",RGB,color={" << +color.r() << "," << +color.g()
-        << "," << +color.b() << "},opacity=" << +color.a()
-        << ",size=" << g.getNodeCapacity(i); // idea: set to capacity of vertex
-      if (g.getNodeLabel(i) == "")
-      {
-        s << ",IdAsLabel";
-      }
-      else
-      {
-        s << ",label=" << g.getNodeLabel(i) << ",position=above";
-      }
-      s << (writeNodes ? "" : ",Pseudo")
-        << "]{" << i << "}" << std::endl;
-    }
-  }
-  else
-  {
-
-    // use internal positions
-    for (gl::index_type i = 0; i < g.numNodes(); i++)
-    {
-      auto color = g.getNodeColor(i);
-      s << "  \\Vertex[x=" << g.getNodePosition(i).first << ",y=" << g.getNodePosition(i).second
-        << ",RGB,color={" << +color.r() << "," << +color.g()
-        << "," << +color.b() << "},opacity=" << +color.a()
-        << ",size=" << g.getNodeCapacity(i); // idea: set to capacity of vertex
-      if (g.getNodeLabel(i) == "")
-      {
-        s << ",IdAsLabel";
-      }
-      else
-      {
-        s << ",label=" << g.getNodeLabel(i) << ",position=above";
-      }
-      s << (writeNodes ? "" : ",Pseudo")
-        << "]{" << i << "}" << std::endl;
-    }
+    s << (writeNodes ? "" : ",Pseudo")
+      << "]{" << i << "}" << std::endl;
   }
   s << "\n";
 
   // draw all edges
   for (auto it = g.edge_cbegin(); it != g.edge_cend(); it++)
   {
-    if ((std::is_same_v<DIRECTION,gl::Undirected> && it->source() <= it->dest()) || std::is_same_v<DIRECTION,gl::Directed>) {
+    if ((std::is_same_v<DIRECTION, gl::Undirected> && it->source() <= it->dest()) || std::is_same_v<DIRECTION, gl::Directed>)
+    {
       auto color = it->color();
       s << "  \\Edge[" << (g.isDirected() ? "Direct," : "")
         << (it->source() == it->dest() ? "loopshape=45," : "")
