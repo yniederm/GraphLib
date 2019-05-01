@@ -72,7 +72,7 @@ public:
      * @param[in] color Color of the %Edge
      * @param[in] exists Whether the %Edge exists
      */
-    Edge(const idx_t &src = 0, const idx_t &dest = 0, const val_t &weight = 0, const Color &color = Color(), const bool &exists = false) : src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
+    Edge(const idx_t &src = 0, const idx_t &dest = 0, const val_t &weight = 0, const Color &color = Color("black"), const bool &exists = false) : src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
 
     /**
      * @name exists
@@ -175,7 +175,7 @@ public:
 
   public:
     Node(const idx_t &id = 0, const val_t &capacity = 1, const std::string &label = "") : id_(id), label_(label), capacity_(capacity),
-                                                                                          inDegree_(0), outDegree_(0) {}
+                                                                                          color_(Color("white")), inDegree_(0), outDegree_(0) {}
 
     /**
      * @name id
@@ -431,7 +431,7 @@ public:
      * @brief Construct EdgeIterator, only used with Matrix Representation
      * @param[in] ptr Pointer to which edge this iterator should point
      * @param[in] data1 pointer to first element in the matrix
-     * @param[in] data2 number of entries in the matrix
+     * @param[in] data2 pointer to the owner data structure
      */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     GL_ENABLE_IF_MATRIX
@@ -589,9 +589,9 @@ public:
     }
 
   private:
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_iterator_t, list_iterator_t> ptr_;     ///< @brief pointer that will be deferenced in Matrix, iterator over the nodeLists for List
-    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_iterator_t, rootList_iterator_t> data1_; ///< @brief iterator to first element of Matrix, iterator over the rootList for List
-    container_pointer_t data2_; ///< @brief pointer to Graph
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_iterator_t, list_iterator_t> ptr_;     ///< @brief [Matrix] Iterator to an element, [List] Iterator over the nodeLists
+    std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_iterator_t, rootList_iterator_t> data1_; ///< @brief [Matrix] Iterator to first element, [List] Iterator over the rootList
+    container_pointer_t data2_; ///< @brief Pointer to owner Graph
   };
 
   /* Iterator typedefs */
@@ -602,7 +602,6 @@ public:
 
 protected:
   Property property_; ///< @brief Stores various properties of the Graph.
-
   std::vector<Node> nodes_;                                                              ///< @brief Stores information about all nodes in the Graph.
   std::conditional_t<std::is_same_v<STORAGE_KIND, Matrix>, matrix_t, rootList_t> edges_; ///< @brief Stores information about all edges in the Graph.
 
@@ -987,8 +986,7 @@ public:
     is.open(inFile, std::ios::in);
     GL_ASSERT(is.is_open(),std::string(std::string("Error: failed to open ")+inFile))
 
-    idx_t start;
-    idx_t end;
+    idx_t start, end;
     val_t weight;
     while (is >> start >> end >> weight)
     {
@@ -1455,23 +1453,26 @@ public:
   GL_ENABLE_IF_LIST
   EdgeIterator edge_begin()
   {
-    auto ptr = edges_.begin();
+    auto ptr = edges_[0].begin(); 
+    auto data1 = edges_.begin();
     if (numEdges() > 0) {
-      while (ptr->size() == 0)
+      while (data1->size() == 0)
       {
-        ++ptr;
+        ++data1;
       }
+      ptr = edges_[data1 - edges_.begin()].begin();
     }
     else
     {
-      ptr = edges_.end();
+      ptr = edges_.back().end();
+      data1 = edges_.end()-1;
     }
-    return Edge_Iterator<false>(edges_[ptr - edges_.begin()].begin(), ptr, this);
+    return Edge_Iterator<false>(ptr, data1, this);
   }
   GL_ENABLE_IF_LIST
   EdgeIterator edge_end()
   {
-    return Edge_Iterator<false>(edges_[edges_.size()].end(), edges_.end(), this);
+    return Edge_Iterator<false>(edges_.back().end(), edges_.end()-1, this);
   }
 
   GL_ENABLE_IF_LIST
@@ -1810,6 +1811,25 @@ public:
   {
     return nodes_[id].color();
   }
+  /**
+   * @brief Updates node positions in the format "<id> <x-coord> <y-coord>" found in inFile.
+   * @param[in] inFile file name of input file
+   */
+  void readPositionsFromFile (const std::string& inFile)
+  {
+    std::ifstream is;
+    is.open(inFile, std::ios::in);
+    GL_ASSERT(is.is_open(),std::string(std::string("Error: failed to open ")+inFile))
+
+    idx_t node;
+    float x, y;
+    while (is >> node >> x >> y)
+    {
+      updateNode(node,std::make_pair(x,y));
+    }
+  }
+
+
   /**
    * @brief NodeIterator to the first node
    * @return Iterator to first node

@@ -14,9 +14,8 @@ namespace gl::algorithm {
  * @brief Class that computes a Minimum Spanning Tree using Kruskal's algorithm. 
  */
 
-template <class SCALAR, class STORAGE, class DIR>
+template <class Graph>
 class Kruskal {
-  using Graph = gl::Graph<SCALAR,STORAGE,DIR>;
   using Edge = typename Graph::Edge;
   using idx_t = typename Graph::idx_t;
   using val_t = typename Graph::val_t;
@@ -37,6 +36,18 @@ public:
   ~Kruskal();                            ///< @brief Destructor
 
   /**
+   * @brief Provides a Selector Object to color the edges in the MST.
+   * @param[in] color New color for the MST edges.
+   * @return Selector Object: std::pair<bool,gl::Color>
+   */
+  std::function<std::pair<bool,gl::Color>(const idx_t src, const idx_t dest)> EdgeSelector(const gl::Color& color = gl::Color("red")) const;
+  /**
+   * @brief Provides a Selector Object to color the nodes in the MST.
+   * @param[in] color New color for the MST nodes.
+   * @return Selector Object: std::pair<bool,gl::Color>
+   */
+  std::function<std::pair<bool,gl::Color>(const idx_t node)> NodeSelector(const gl::Color& color = gl::Color("red")) const;
+  /**
    * @brief Computes the cost of the MST (sum of all edge weights in the MST).
    * @return MST cost.
    */
@@ -56,11 +67,11 @@ private:
 //    Member function implementations
 ///////////////////////////////////////////////////////////
 
-template <class SCALAR, class STORAGE, class DIR>
-Kruskal<SCALAR,STORAGE,DIR>::~Kruskal() {}
+template <class Graph>
+Kruskal<Graph>::~Kruskal() {}
 
-template <class SCALAR, class STORAGE, class DIR>
-Kruskal<SCALAR,STORAGE,DIR>::Kruskal(const Graph& graph) 
+template <class Graph>
+Kruskal<Graph>::Kruskal(const Graph& graph) 
 {
   std::vector<Edge> edges;
   Graph result(graph.numNodes(),std::string(std::string("MST of ")+graph.getGraphLabel()));
@@ -99,14 +110,35 @@ Kruskal<SCALAR,STORAGE,DIR>::Kruskal(const Graph& graph)
   cost_ = cost;
 }
 
-template <class SCALAR, class STORAGE, class DIR>
-typename Kruskal<SCALAR,STORAGE,DIR>::val_t Kruskal<SCALAR,STORAGE,DIR>::getCost () const 
+template <class Graph>
+std::function<std::pair<bool,gl::Color>(const typename Kruskal<Graph>::idx_t src, const typename Kruskal<Graph>::idx_t dest)> Kruskal<Graph>::EdgeSelector (const gl::Color& color) const 
+{
+  return [&color, this](const idx_t src, const idx_t dest) -> std::pair<bool,gl::Color> {
+    if (result_.hasEdge(src,dest)) 
+      return {true,color};
+    else
+      return {false,gl::Color()};
+  };
+}
+
+template <class Graph>
+std::function<std::pair<bool,gl::Color>(const typename Kruskal<Graph>::idx_t node)> Kruskal<Graph>::NodeSelector (const gl::Color& color) const 
+{
+  return [&color, this](const idx_t node) -> std::pair<bool,gl::Color> {
+    if (0 <= node && node < result_.numNodes())
+      return {true,color};
+    else return {false,gl::Color()};
+  };
+}
+
+template <class Graph>
+typename Kruskal<Graph>::val_t Kruskal<Graph>::getCost () const 
 {
   return cost_;
 }
 
-template <class SCALAR, class STORAGE, class DIR>
-typename Kruskal<SCALAR,STORAGE,DIR>::Graph Kruskal<SCALAR,STORAGE,DIR>::getMST () const 
+template <class Graph>
+Graph Kruskal<Graph>::getMST () const 
 {
   auto result = result_;
   return result;

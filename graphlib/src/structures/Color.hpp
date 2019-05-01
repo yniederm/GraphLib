@@ -31,7 +31,7 @@ public:
   /**
    * @brief Default constructor.
    */
-  Color() : r_(255), g_(255), b_(255), a_(100) {}
+  Color() : r_(0), g_(0), b_(0), a_(100) {}
   /**
    * @brief Constructor for integer R,G,B,A values.
    * @param[in] r R value. \f$r \in \{0,\ldots,255\}\f$
@@ -80,22 +80,22 @@ public:
   Color(const char *name, color_val_t a = 100) : a_(a)
   {
     const std::unordered_map<std::string, std::function<void()>> map{
-        {"black", [&]() { hex(0x000000); }},
-        {"gray", [&]() { hex(0x808080); }},
-        {"silver", [&]() { hex(0xC0C0C0); }},
-        {"white", [&]() { hex(0xFFFFFF); }},
-        {"orange", [&]() { hex(0xED9121); }},
-        {"maroon", [&]() { hex(0x800000); }},
-        {"red", [&]() { hex(0xFF0000); }},
-        {"olive", [&]() { hex(0x808000); }},
-        {"yellow", [&]() { hex(0xFFFF00); }},
-        {"green", [&]() { hex(0x008000); }},
-        {"lime", [&]() { hex(0x00FF00); }},
-        {"teal", [&]() { hex(0x008080); }},
-        {"aqua", [&]() { hex(0x00FFFF); }},
-        {"navy", [&]() { hex(0x000080); }},
-        {"blue", [&]() { hex(0x0000FF); }},
-        {"purple", [&]() { hex(0x800080); }},
+        {"black",   [&]() { hex(0x000000); }},
+        {"gray",    [&]() { hex(0x808080); }},
+        {"silver",  [&]() { hex(0xC0C0C0); }},
+        {"white",   [&]() { hex(0xFFFFFF); }},
+        {"orange",  [&]() { hex(0xED9121); }},
+        {"maroon",  [&]() { hex(0x800000); }},
+        {"red",     [&]() { hex(0xFF0000); }},
+        {"olive",   [&]() { hex(0x808000); }},
+        {"yellow",  [&]() { hex(0xFFFF00); }},
+        {"green",   [&]() { hex(0x008000); }},
+        {"lime",    [&]() { hex(0x00FF00); }},
+        {"teal",    [&]() { hex(0x008080); }},
+        {"aqua",    [&]() { hex(0x00FFFF); }},
+        {"navy",    [&]() { hex(0x000080); }},
+        {"blue",    [&]() { hex(0x0000FF); }},
+        {"purple",  [&]() { hex(0x800080); }},
         {"fuchsia", [&]() { hex(0xFF00FF); }},
     };
     auto it = map.find(name);

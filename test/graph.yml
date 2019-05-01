@@ -33,7 +33,7 @@ edge: 3 1 4
 edge: 4 3 5
 edge: 4 5 6
 
-# node: idx capacity [color label]
+# node: idx capacity [color (0xRRGGBB)] [label]
 node: 0 1.0 0x00ff80 Entry
 node: 5 1.3 0xf75e25 Output
 

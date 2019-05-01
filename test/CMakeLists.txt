@@ -28,6 +28,7 @@ set(TESTS
     ReadYAML
     TransitiveClosure
     Traversal
+    UpdateFlaggedEntities
     )
 
 set(EIGEN_TESTS
@@ -35,6 +36,7 @@ set(EIGEN_TESTS
     MathGL
     MathGLColors
     ReadYAML
+    UpdateFlaggedEntities
     )
 
 set(MATHGL_TESTS
