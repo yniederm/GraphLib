@@ -1,0 +1,12 @@
+#ifndef GL_INTERFACE
+#define GL_INTERFACE
+
+#include "structures"
+
+#include "src/partial_specialization_on"
+
+#include "src/interface/UpdateFlaggedEntities.hpp"
+
+#include "src/partial_specialization_off"
+
+#endif // GL_INTERFACE

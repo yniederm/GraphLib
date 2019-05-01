@@ -4,5 +4,6 @@
 #include "structures"
 #include "io"
 #include "algorithms"
+#include "interface"
 
 #endif /* GL_GL */
