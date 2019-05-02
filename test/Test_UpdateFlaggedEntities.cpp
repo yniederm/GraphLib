@@ -28,6 +28,9 @@ int main(int argc, char const *argv[])
   std::ofstream outDijkstra("build/test/UpdateFlaggedDijkstra.tex");
   gl::external::writeTikzToStream2(outDijkstra, graph2, true);
   outDijkstra.close();
+
+  gl::io::compileLatex("build/test/UpdateFlaggedDijkstra.tex", "--output-directory=build/test/");
+  gl::io::compileLatex("build/test/UpdateFlaggedKruskal.tex", "--output-directory=build/test/");
   
   return 0;
 }
