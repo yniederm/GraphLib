@@ -5,12 +5,12 @@ int main(int argc, char const *argv[])
 {
   // prepare test graphs
   gl::graphLiu graph1(9,"Kruskal Minimum Spanning Tree");
-  graph1.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
-  graph1.readPositionsFromFile("test/dijkstra9_positions");
+  graph1.addEdgesFromFile("test/input/dijkstra9"); // assumes running from project root folder
+  graph1.readPositionsFromFile("test/input/dijkstra9_positions");
 
   gl::graphMiu graph2(9,"Dijkstra Shortest Paths");
-  graph2.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
-  graph2.readPositionsFromFile("test/dijkstra9_positions");
+  graph2.addEdgesFromFile("test/input/dijkstra9"); // assumes running from project root folder
+  graph2.readPositionsFromFile("test/input/dijkstra9_positions");
 
   // test Kruskal coloring
   gl::algorithm::kruskalLiu kruskal(graph1);
@@ -20,6 +20,7 @@ int main(int argc, char const *argv[])
   gl::external::writeTikzToStream2(outKruskal, graph1, true);
   outKruskal.close();
 
+  gl::io::compileLatex("build/test/UpdateFlaggedKruskal.tex", "--output-directory=build/test/");
 
   // test Dijkstra coloring
   gl::algorithm::dijkstraMiu dijkstra(graph2,0);
@@ -30,7 +31,6 @@ int main(int argc, char const *argv[])
   outDijkstra.close();
 
   gl::io::compileLatex("build/test/UpdateFlaggedDijkstra.tex", "--output-directory=build/test/");
-  gl::io::compileLatex("build/test/UpdateFlaggedKruskal.tex", "--output-directory=build/test/");
   
   return 0;
 }

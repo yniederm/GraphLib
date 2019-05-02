@@ -33,7 +33,6 @@ void plotData(gl::Graph<SCALAR, STORAGE_KIND, DIRECTION> g, mglGraph *gr)
 
 int main(int argc, char const *argv[])
 {
-    //gl::Graph<int, gl::Matrix, gl::Directed> g(10); // gl::GraphMiu
     gl::graphMiu g(100);
     g.setEdge(89, 97, 1, gl::Color(0.5680268140472136, 0.7097487536559117, 0.691474082905443));
     g.setEdge(74, 12, 1, gl::Color(0.5734269126810962, 0.28493681251199954, 0.09825670614211257));
@@ -140,8 +139,8 @@ int main(int argc, char const *argv[])
 
     plotData(g, &gr);
 
-    gr.WritePNG("build/mathgl_placing.png");
-    std::cout << "saved to build/mathgl_placing.png" << std::endl;
+    gr.WritePNG("build/test/mathgl_placing.png");
+    std::cout << "saved to build/test/mathgl_placing.png" << std::endl;
 
     return 0;
 }

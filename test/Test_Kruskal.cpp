@@ -4,8 +4,8 @@ int main(int argc, char const *argv[])
 {
   gl::graphLiu kruskalL(9, "Kruskal List");
   gl::graphMiu kruskalM(9, "Kruskal Matrix");
-  kruskalL.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
-  kruskalM.addEdgesFromFile("test/Input_Dijkstra9"); // assumes running from project root folder
+  kruskalL.addEdgesFromFile("test/input/dijkstra9"); // assumes running from project root folder
+  kruskalM.addEdgesFromFile("test/input/dijkstra9"); // assumes running from project root folder
 
   gl::algorithm::kruskalLiu mstL5(kruskalL);
   gl::algorithm::kruskalMiu mstM5(kruskalM);

@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
   } catch (const std::runtime_error& e) {
     std::cout << "Caught exception: " << e.what() << "\n";
   }
-  g.addEdgesFromFile("test/Input_singleEdge"); // assumes running from build folder
+  g.addEdgesFromFile("test/input/singleEdge"); // assumes running from build folder
 
   try {
     g.setEdge(1000,2,1);  // test out of range check

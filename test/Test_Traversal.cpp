@@ -4,8 +4,8 @@ int main(int argc, char const *argv[])
 {
   gl::graphMiu tree(12);
   gl::graphLiu connected(10);
-  tree.addEdgesFromFile("test/Input_tree12"); // assumes running from project root folder
-  connected.addEdgesFromFile("test/Input_graph10"); // assumes running from project root folder
+  tree.addEdgesFromFile("test/input/tree12"); // assumes running from project root folder
+  connected.addEdgesFromFile("test/input/graph10"); // assumes running from project root folder
   gl::graphMiu::ordered_list_t tree_search;
   gl::graphLiu::ordered_list_t conn_search;
 
