@@ -57,6 +57,7 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &
    @param s stream to which it should write
    @param g should be a undirected graph, with at least 2 nodes
    @param writeNodes wheter it should write nodes (numbers)
+   @param writeEdgeWeights whether it should write edge weights
    */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true, bool writeEdgeWeights = true)

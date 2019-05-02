@@ -26,6 +26,7 @@ set(TESTS
     MatrixGraph
     PrintContainer
     ReadYAML
+    SwitzerlandDijkstra
     TransitiveClosure
     Traversal
     UpdateFlaggedEntities
