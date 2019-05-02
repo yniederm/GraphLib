@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
   std::cout << g3_expected;
   GL_TEST_COMPARE(g3_actual,g3_expected,"More complicated, graphic")
 
-  GL_TEST_CATCH_ERROR(gl::graphMiu g4("1 1 0 0 0","Not graphic");,"Degree Sequence is not graphic.","Non-graphic sequence")
+  GL_TEST_CATCH_ERROR(gl::graphMiu g4("1 1 1 0 0","Not graphic");,"Degree Sequence is not graphic.","Non-graphic sequence")
   
   GL_TEST_TERM
   return 0;
