@@ -59,7 +59,7 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &
    @param writeNodes wheter it should write nodes (numbers)
    */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true)
+void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true, bool writeEdgeWeights = true)
 {
   s << "\\documentclass{standalone}" << std::endl;
   s << "\\usepackage{tikz-network}" << std::endl;
@@ -81,7 +81,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
     {
       s << ",label=" << g.getNodeLabel(i) << ",position=above";
     }
-    s << (writeNodes ? "" : ",Pseudo")
+    s << (writeNodes ? "" : ",NoLabel")
       << "]{" << i << "}" << std::endl;
   }
   s << "\n";
@@ -95,8 +95,12 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
       s << "  \\Edge[" << (g.isDirected() ? "Direct," : "")
         << (it->source() == it->dest() ? "loopshape=45," : "")
         << "RGB,color={" << +color.r() << "," << +color.g()
-        << "," << +color.b() << "},opacity=" << +color.a()
-        << ",label=" << it->weight() << "](" << it->source() << ")(" << it->dest() << ")" << std::endl;
+        << "," << +color.b() << "},opacity=" << +color.a();
+      if (writeEdgeWeights)
+      {
+        s << ",label=" << it->weight();
+      }
+      s << "](" << it->source() << ")(" << it->dest() << ")" << std::endl;
     }
   }
   s << "\\node[above,align=center,font=\\bfseries] at (current bounding box.north) {" << g.getGraphLabel() << "};" << std::endl;
