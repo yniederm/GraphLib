@@ -26,5 +26,7 @@ int main(int argc, char const *argv[])
     std::cout << i << "\t" << pathM5.pathLength(i) << "\t";
     gl::io::printContainer(pathM5.getPath(i));
   }
+
+  std::cout << pathM5.getSPT();
   return 0;
 }

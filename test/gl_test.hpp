@@ -33,12 +33,18 @@ for (auto x : __gl_test_fail__) \
   std::cout << "  " << x << "\n"; \
 }
 
-#define GL_TEST_SUCCESS(TestName) \
+/**
+ * @brief Marks the given test as Passed.
+ */
+#define __GL_TEST_SUCCESS__(TestName) \
 ++__gl_test_success_count__; \
 __gl_test_success__.push_back(TestName); \
 std::cout << "\033[32m'" << TestName << "' passed.\033[00m\n";
 
-#define GL_TEST_FAIL(TestName) \
+/**
+ * @brief Marks the given test as Failed.
+ */
+#define __GL_TEST_FAIL__(TestName) \
   ++__gl_test_fail_count__; \
   __gl_test_fail__.push_back(TestName); \
   std::cout << "\033[31m'" << TestName << "' failed.\033[00m\n";
@@ -53,11 +59,11 @@ std::cout << "\033[32m'" << TestName << "' passed.\033[00m\n";
 #define GL_TEST_COMPARE(Actual,Expected,TestName) \
 if (Actual == Expected ) \
 { \
-  GL_TEST_SUCCESS(TestName) \
+  __GL_TEST_SUCCESS__(TestName) \
 } \
 else \
 { \
-  GL_TEST_FAIL(TestName) \
+  __GL_TEST_FAIL__(TestName) \
 }
 
 /**
@@ -79,10 +85,8 @@ catch(const std::exception& e) \
 } \
 if (!__gl_test_except_flag__) { \
   std::cout << "No exception was thrown when one was expected.\n"; \
-  GL_TEST_FAIL(TestName) \
+  __GL_TEST_FAIL__(TestName) \
 } \
 __gl_test_except_flag__ = false;
-
-
 
 #endif // GL_TEST_HPP

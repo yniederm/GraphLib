@@ -62,6 +62,11 @@ public:
    * @return shortest path in form of an ordered list of node indices.
    */
   typename Graph::idx_list_t getPath(const idx_t) const;
+  /**
+   * @brief Returns a graph that only contains the edges of the SPT (Shortest Path Tree)
+   * @return SPT Graph.
+   */
+  Graph getSPT() const;
 
 private:
   Graph const& graph_; ///< @brief Reference to graph
@@ -180,6 +185,13 @@ typename Graph::idx_list_t Dijkstra<Graph>::getPath (const idx_t dest) const {
   out.push_back(src_);
   std::reverse(out.begin(),out.end());
   return out;
+}
+
+template <class Graph>
+Graph Dijkstra<Graph>::getSPT () const 
+{
+  auto result = result_;
+  return result;
 }
 
 } // namespace gl::algorithm  
