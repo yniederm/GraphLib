@@ -33,7 +33,7 @@ public:
   Kruskal(Kruskal &&) noexcept = default;            ///< @brief Move constructor
   Kruskal &operator=(const Kruskal &) = default;     ///< @brief Copy assignment
   Kruskal &operator=(Kruskal &&) noexcept = default; ///< @brief Move assignment
-  ~Kruskal();                            ///< @brief Destructor
+  ~Kruskal();                                        ///< @brief Destructor
 
   /**
    * @brief Provides a Selector Object to color the edges in the MST.
@@ -73,6 +73,7 @@ Kruskal<Graph>::~Kruskal() {}
 template <class Graph>
 Kruskal<Graph>::Kruskal(const Graph& graph) 
 {
+  GL_ASSERT(!graph.isDirected(),(std::string("Kruskal: '")+graph.getGraphLabel()+std::string("' is not undirected.\n")))
   std::vector<Edge> edges;
   Graph result(graph.numNodes(),std::string(std::string("MST of ")+graph.getGraphLabel()));
   val_t cost {0};

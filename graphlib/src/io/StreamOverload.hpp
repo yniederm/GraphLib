@@ -66,6 +66,17 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl:
  */
 //@{
 /**
+ * @brief Prints the value of a gl::Distance.
+ */
+template <class val_t>
+std::ostream& operator<< (std::ostream& os, const gl::Distance<val_t>& dist)
+{
+  os << dist.getWeight();
+  return os;
+}
+
+
+/**
  * @brief Prints all elements of an std::list.
  */
 template <class idx_t>
