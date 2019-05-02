@@ -11,58 +11,71 @@ namespace gl {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-/* \internal getter for numNodes */
+// equality operator
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+bool Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::operator== (const Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property& rhs) const
+{
+  return numNodes_ == rhs.numNodes_ 
+      && numEdges_ == rhs.numEdges_
+      && label_ == rhs.label_;
+}
+// inequality operator
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+bool Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::operator!= (const Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property& rhs) const
+{
+  return !operator!=(rhs);
+}
+
+// getter for numNodes
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodes() const {
   return numNodes_;
 }
-
-/* \internal setter for numNodes */
+// setter for numNodes
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodes(const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& numNodes) {
   numNodes_ = numNodes;
 }
 
-/* \internal increment for numNodes */
+// increment for numNodes
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodesIncrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& increment) {
   numNodes_ += increment;
 }
-/* \internal decrement for numNodes */
+// decrement for numNodes
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodesDecrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& decrement) {
   numNodes_ -= decrement;
 }
 
-/* \internal getter for numEdges */
+// getter for numEdges
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdges() const {
   return numEdges_;
 }
-
-/* \internal setter for numEdges */
+// setter for numEdges
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdges(const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& numEdges) {
   numEdges_ = numEdges;
 }
 
-/* \internal increment for numEdges */
+// increment for numEdges
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdgesIncrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& increment) {
   numEdges_ += increment;
 }
-/* \internal decrement for numEdges */
+// decrement for numEdges
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdgesDecrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& decrement) {
   numEdges_ -= decrement;
 }
-/* \internal getter for label */
+
+// getter for label
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::label() const {
   return label_;
 }
-
-/* \internal setter for label */
+// setter for label
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::label(const std::string& label) {
   label_ = label;

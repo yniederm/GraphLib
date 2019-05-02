@@ -75,6 +75,17 @@ public:
     Edge(const idx_t &src = 0, const idx_t &dest = 0, const val_t &weight = 0, const Color &color = Color("black"), const bool &exists = false) : src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
 
     /**
+     * @brief Check whether two edges are equal.
+     * @return true if equal, false otherwise.
+     */
+    bool operator== (const Edge& rhs) const;
+    /**
+     * @brief Check whether two edges are not equal.
+     * @return true if not equal, false otherwise.
+     */
+    bool operator!= (const Edge& rhs) const;
+
+    /**
      * @name exists
      * @brief Access to boolean value exists.
      * This signifies the existance of an edge in the graph.
@@ -176,6 +187,17 @@ public:
   public:
     Node(const idx_t &id = 0, const val_t &capacity = 1, const std::string &label = "") : id_(id), label_(label), capacity_(capacity),
                                                                                           color_(Color("white")), inDegree_(0), outDegree_(0) {}
+
+    /**
+     * @brief Check whether two nodes are equal.
+     * @return true if equal, false otherwise.
+     */
+    bool operator== (const Node& rhs) const;
+    /**
+     * @brief Check whether two nodes are not equal.
+     * @return true if not equal, false otherwise.
+     */
+    bool operator!= (const Node& rhs) const;
 
     /**
      * @name id
@@ -324,6 +346,16 @@ public:
     Property(const idx_t &numNodes, const std::string &label = "Graph", const idx_t &numEdges = 0) : numNodes_(numNodes), label_(label), numEdges_(0) {}
     Property(const Property &property) : numNodes_(property.numNodes_), label_(property.label_), numEdges_(property.numEdges_) {}
 
+    /**
+     * @brief Check whether two propertes are equal.
+     * @return true if equal, false otherwise.
+     */
+    bool operator== (const Property& rhs) const;
+    /**
+     * @brief Check whether two propertes are not equal.
+     * @return true if not equal, false otherwise.
+     */
+    bool operator!= (const Property& rhs) const;
     /**
      * @name numNodes
      * @brief Access to the number of nodes in the graph.
@@ -1888,6 +1920,18 @@ public:
     checkRange(idx2);
   }
   //@}
+
+  bool operator== (const Graph<SCALAR,STORAGE_KIND,DIRECTION>& rhs)
+  {
+    return property_ == rhs.property_ 
+        && edges_ == rhs.edges_
+        && nodes_ == rhs.nodes_;
+  }
+  bool operator!= (const Graph<SCALAR,STORAGE_KIND,DIRECTION>& rhs)
+  {
+    return !operator!=(rhs);
+  }
+
 
   ///////////////////////////////////////////////////////////
   //    Private member declarations

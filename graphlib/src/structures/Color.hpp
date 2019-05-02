@@ -114,6 +114,26 @@ public:
   Color &operator=(const Color &) = default;     ///< @brief Copy assignment
   Color &operator=(Color &&) noexcept = default; ///< @brief Move assignment
   ~Color() = default;                            ///< @brief Destructor
+
+  /**
+   * @brief Check whether two colors are equal.
+   * @return true if equal, false otherwise.
+   */
+  bool operator== (const Color& rhs) const
+  {
+    return r_ == rhs.r_ 
+        && g_ == rhs.g_
+        && b_ == rhs.b_
+        && a_ == rhs.a_;
+  }
+  /**
+   * @brief Check whether two colors are not equal.
+   * @return true if not equal, false otherwise.
+   */
+  bool operator!= (const Color& rhs) const
+  {
+    return !operator!=(rhs);
+  }
   /**
    * @name Read access to stored RGBA color values.
    * @brief Getters for stored color values.
