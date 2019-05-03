@@ -26,14 +26,14 @@ public:
    * @brief Constructor. This is where the MST is computed based on a * greedy heuristic that only adds the cheapest edges.
    * @param graph Input graph on which the Minimum Spanning Tree will * be computed.
    */
-  Kruskal(const Graph&);
+  explicit Kruskal(const Graph&);
 
   Kruskal() = delete;
   Kruskal(const Kruskal &) = default;                ///< @brief Copy constructor
   Kruskal(Kruskal &&) noexcept = default;            ///< @brief Move constructor
   Kruskal &operator=(const Kruskal &) = default;     ///< @brief Copy assignment
   Kruskal &operator=(Kruskal &&) noexcept = default; ///< @brief Move assignment
-  ~Kruskal();                                        ///< @brief Destructor
+  ~Kruskal() = default;                              ///< @brief Destructor
 
   /**
    * @brief Provides a Selector Object to color the edges in the MST.
@@ -68,10 +68,7 @@ private:
 ///////////////////////////////////////////////////////////
 
 template <class Graph>
-Kruskal<Graph>::~Kruskal() {}
-
-template <class Graph>
-Kruskal<Graph>::Kruskal(const Graph& graph) 
+Kruskal<Graph>::Kruskal(const Graph& graph)
 {
   GL_ASSERT(!graph.isDirected(),(std::string("Kruskal: '")+graph.getGraphLabel()+std::string("' is not undirected.\n")))
   std::vector<Edge> edges;

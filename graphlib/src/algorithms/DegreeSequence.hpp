@@ -24,7 +24,7 @@ typename Graph<SCALAR,STORAGE_KIND,DIR>::idx_list_t degreeSequence (const Graph<
   return out;
 }
 
-} /* namespace algorithm */
-} /* namespace gl */
+} // namespace algorithm
+} // namespace gl
 
-#endif /* GL_DEGREE_SEQUENCE_HPP */
+#endif // GL_DEGREE_SEQUENCE_HPP

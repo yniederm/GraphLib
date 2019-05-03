@@ -3,8 +3,7 @@
 
 #include "Graph.hpp"
 
-namespace gl
-{
+namespace gl {
 
 ///////////////////////////////////////////////////////////
 //    Graph::Node function implementations

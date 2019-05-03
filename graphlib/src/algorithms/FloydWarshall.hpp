@@ -3,7 +3,8 @@
 
 #include "../gl_base.hpp"
 
-namespace gl::algorithm {
+namespace gl {
+namespace algorithm {
 
 ///////////////////////////////////////////////////////////
 //    Class declaration
@@ -11,9 +12,8 @@ namespace gl::algorithm {
 
 /** 
  * @class FloydWarshall
- * @brief Class that Shortest Paths for all pairs of nodes in the graph using the Floyd-Warshall algorithm.
+ * @brief Class computes that Shortest Paths for all pairs of nodes in the graph using the Floyd-Warshall algorithm.
  */
-
 template <class Graph>
 class FloydWarshall {
   using idx_t = typename Graph::idx_t;
@@ -28,10 +28,10 @@ public:
   FloydWarshall(FloydWarshall &&) noexcept = default;            ///< @brief Move constructor
   FloydWarshall &operator=(const FloydWarshall &) = default;     ///< @brief Copy assignment
   FloydWarshall &operator=(FloydWarshall &&) noexcept = default; ///< @brief Move assignment
-  ~FloydWarshall();   
+  ~FloydWarshall() = default;                                    ///< @brief Destructor
 
   /**
-   * @brief Computation. This is where the shortest distances and the predecessors of each node pair gets computed.
+   * @brief Computation. This is where the shortest distances and the successors of each node pair gets computed.
    * @param graph Input graph on which the shortest paths will be computed.
    */
   void compute(const Graph& graph);
@@ -49,7 +49,7 @@ public:
   Distance<val_t> pathLength(const idx_t src, const idx_t dest) const;
   /**
    * @brief Computes the node sequence that represents the shortest path from src to dest.
-   * @param src Node whose distance to dest we want to know.
+   * @param src Node whose shortest path to dest we want to know.
    * @param dest Node whose shortest path to src we want to know.
    * @return boolean stating existance of a path & shortest path in form of an ordered list of node indices.
    */
@@ -62,10 +62,10 @@ public:
   Graph getSPT (const idx_t src) const;
 
 private:
-  bool isInitialized_;                 ///< @brief Boolean storing initialization status
+  bool isInitialized_ = false;         ///< @brief Boolean storing initialization status
   std::pair<bool,idx_t> negativePath_; ///< @brief Boolean storing info on negative path in graph
   Graph graph_;                        ///< @brief Reference to graph
-  distance_matrix_t dist_;                      ///< @brief Shortest Path lengths
+  distance_matrix_t dist_;             ///< @brief Shortest Path lengths
   idx_list_t next_;                    ///< @brief Shortest Path successors
 };
 
@@ -77,13 +77,11 @@ template <class Graph>
 FloydWarshall<Graph>::FloydWarshall() : isInitialized_(false), negativePath_(std::make_pair<bool,idx_t>(false,0)) {}
 
 template <class Graph>
-FloydWarshall<Graph>::~FloydWarshall() {}
-
-template <class Graph>
 void FloydWarshall<Graph>::compute(const Graph& graph)
 {
   idx_t i, j, k;
   idx_t numNodes = graph.numNodes();
+  val_t weight;
   distance_matrix_t dist (numNodes*numNodes);
   idx_list_t next (numNodes*numNodes,GL_INF(idx_t));
   // fill initial known edges
@@ -91,7 +89,13 @@ void FloydWarshall<Graph>::compute(const Graph& graph)
   {
     i = edge->source();
     j = edge->dest();
-    dist[i*numNodes+j].setWeight(graph.getEdgeWeight(i,j));
+    weight = graph.getEdgeWeight(i,j);
+    // check for negative weights in undirected graphs
+    if (!graph.isDirected()) 
+    {
+      GL_ASSERT(weight >= 0,"Floyd-Warshall: Graph is undirected and contains negative weights")
+    }
+    dist[i*numNodes+j].setWeight(weight);
     next[i*numNodes+j] = j;
   }
   // set diagonals
@@ -101,12 +105,9 @@ void FloydWarshall<Graph>::compute(const Graph& graph)
     next[i*numNodes+i] = i;
   }
   // Actual Floyd-Warshall Algorithm
-  for (k = 0; k < numNodes; ++k)
-  {
-    for (j = 0; j < numNodes; ++j)
-    {
-      for (i = 0; i < numNodes; ++i)
-      {
+  for (k = 0; k < numNodes; ++k) {
+    for (j = 0; j < numNodes; ++j) {
+      for (i = 0; i < numNodes; ++i) {
         if (dist[i*numNodes+k] + dist[k*numNodes+j] < dist[i*numNodes+j])
         {
           dist[i*numNodes+j] = dist[i*numNodes+k] + dist[k*numNodes+j];
@@ -116,12 +117,9 @@ void FloydWarshall<Graph>::compute(const Graph& graph)
     }
   }
   // Check for negative cycles
-  for (idx_t i = 0; i < numNodes; ++i)
+  if (!dist[i*numNodes+i].isZero()) 
   {
-    if (!dist[i*numNodes+i].isZero()) 
-    {
-      negativePath_ = {true,i};
-    }
+    negativePath_ = {true,i};
   }
   dist_ = dist;
   graph_ = graph;
@@ -139,6 +137,7 @@ bool FloydWarshall<Graph>::hasNegativePath () const {
 template <class Graph>
 Distance<typename Graph::val_t> FloydWarshall<Graph>::pathLength (const idx_t src, const idx_t dest) const {
   GL_ASSERT(isInitialized_,"FloydWarshall has not been initialized with a graph.")
+  graph_.checkRange(src,dest);
   GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall: The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
   
   return dist_[src*graph_.numNodes()+dest];
@@ -147,6 +146,7 @@ Distance<typename Graph::val_t> FloydWarshall<Graph>::pathLength (const idx_t sr
 template <class Graph>
 std::pair<bool,typename Graph::idx_list_t> FloydWarshall<Graph>::getPath (const idx_t src, const idx_t dest) const {
   GL_ASSERT(isInitialized_,"FloydWarshall has not been initialized with a graph.")
+  graph_.checkRange(src,dest);
   GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall: The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
 
   // Check for path existance
@@ -169,7 +169,9 @@ template <class Graph>
 Graph FloydWarshall<Graph>::getSPT (const idx_t src) const
 {
   GL_ASSERT(isInitialized_,"FloydWarshall has not been initialized with a graph.")
+  graph_.checkRange(src);
   GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall: The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
+
   Graph result(graph_.numNodes(),std::string(std::string("SPT of node ")+std::to_string(src)+std::string(" in ")+graph_.getGraphLabel()));
   for (idx_t i = 0; i < graph_.numNodes(); ++i)
   {
@@ -188,6 +190,7 @@ Graph FloydWarshall<Graph>::getSPT (const idx_t src) const
   return result;
 }
 
-} // namespace gl::algorithm  
+} // namespace algorithm  
+} // namespace gl
 
 #endif // GL_FLOYD_WARSHALL_HPP

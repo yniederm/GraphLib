@@ -7,4 +7,4 @@
 #include "src/io/WriteTikz.hpp"
 #include "src/algorithms/SpectralPlacing.hpp"
 
-#endif /* GL_EXTERNAL */
+#endif // GL_EXTERNAL

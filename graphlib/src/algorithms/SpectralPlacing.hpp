@@ -4,10 +4,8 @@
 #include "../structures/Graph.hpp"
 #include <Eigen/Dense>
 
-namespace gl
-{
-namespace algorithm
-{
+namespace gl {
+namespace algorithm {
 
 /**
  * @brief Compute positions using spectral placing
@@ -57,8 +55,7 @@ void computeSpectralPlacing(gl::Graph<SCALAR, STORAGE_KIND, DIRECTION> &g)
     }
 }
 
-} /* namespace algorithm */
+} // namespace algorithm
+} // namespace gl
 
-} /* namespace gl */
-
-#endif /* SPECTRAL_PLACING_HPP */
+#endif // SPECTRAL_PLACING_HPP

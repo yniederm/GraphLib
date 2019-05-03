@@ -151,4 +151,4 @@ std::ostream& operator<< (std::ostream& os, const gl::Color& rhs)
   return os;
 }
 
-#endif /* GL_STREAM_OVERLOAD_HPP */
+#endif // GL_STREAM_OVERLOAD_HPP

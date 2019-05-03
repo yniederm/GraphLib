@@ -60,10 +60,10 @@ public:
    * @brief Constructor for combined hexadecimal R,G,B,A values.
    * @param[in] hex Hexadecimal color code. Format: \f$ 0xAARRGGBB \f$ where \f$ RR, GG, BB \f$ signify the red, blue and green bytes. \f$ AA \f$ is optional and signifies the alpha (opacity) byte.
    */
-  Color(const unsigned int hex) : a_(0x64),
-                                  r_((hex >> 16) & 0xFF),
-                                  g_((hex >> 8) & 0xFF),
-                                  b_((hex)&0xFF)
+  explicit Color(const unsigned int hex) : a_(0x64),
+                                           r_((hex >> 16) & 0xFF),
+                                           g_((hex >> 8) & 0xFF),
+                                           b_((hex)&0xFF)
   {
     if ((hex >> 24) > 0)
     {

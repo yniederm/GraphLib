@@ -1,13 +1,10 @@
-#ifndef GENERAL_HPP
-#define GENERAL_HPP
+#ifndef GL_GENERAL_HPP
+#define GL_GENERAL_HPP
 
 #include <string>
 
-namespace gl
-{
-
-namespace io
-{
+namespace gl {
+namespace io {
 
 /**
  * @brief Invokes pdflatex command to compile tex to pdf
@@ -44,8 +41,7 @@ void compileLatex(const char *filename, const char *arguments = "")
     std::cout << "Generated " << filename_without_extension << ".png" << std::endl;
 }
 
-} /* namespace io */
+} // namespace io
+} // namespace gl
 
-} /* namespace gl */
-
-#endif /* GENERAL_HPP */
+#endif // GL_GENERAL_HPP

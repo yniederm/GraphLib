@@ -35,4 +35,3 @@
 #define GL_ENABLE_IF_MATRIX_UNDIRECTED template <typename DIR = DIRECTION, typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_MATRIX_UNDIRECTED, int>* = nullptr>
 #define GL_ENABLE_IF_LIST_DIRECTED template <typename DIR = DIRECTION, typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_LIST_DIRECTED, int>* = nullptr>
 #define GL_ENABLE_IF_LIST_UNDIRECTED template <typename DIR = DIRECTION, typename STORAGE = STORAGE_KIND, std::enable_if_t<GL_IS_LIST_UNDIRECTED, int>* = nullptr>
-
