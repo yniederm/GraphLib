@@ -20,6 +20,7 @@ set(TESTS
     GraphicSequence
     IOTikz
     Kruskal
+    Laplacian
     ListGraph
     MathGL
     MathGLColors
@@ -35,9 +36,11 @@ set(TESTS
 
 set(EIGEN_TESTS
     IOTikz
+    Laplacian
     MathGL
     MathGLColors
     ReadYAML
+    SwitzerlandDijkstra
     UpdateFlaggedEntities
     )
 

@@ -5,6 +5,8 @@
 
 #include "src/io/WriteImage.hpp"
 #include "src/io/WriteTikz.hpp"
+#include "src/algorithms/LaplacianEigen.hpp"
+#include "src/algorithms/LaplacianSTL.hpp"
 #include "src/algorithms/SpectralPlacing.hpp"
 
 #endif // GL_EXTERNAL
