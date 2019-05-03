@@ -49,7 +49,7 @@ namespace io {
   } 
   //@}
 
-} /* namespace io */
-} /* namespace gl */
+} // namespace io
+} // namespace gl
 
-#endif /* GL_PRINT_CONTAINER_HPP */
+#endif // GL_PRINT_CONTAINER_HPP

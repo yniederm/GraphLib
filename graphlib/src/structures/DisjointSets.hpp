@@ -23,7 +23,7 @@ public:
    * @brief Constructor for fixed number of elements.
    * @param[in] numElems Number of elements in the disjoint sets.
    */
-  DisjointSets (idx_t numElems);
+  explicit DisjointSets (idx_t numElems);
   // other constructors
   DisjointSets(const DisjointSets &) = default;                ///< @brief Copy constructor
   DisjointSets(DisjointSets &&) noexcept = default;            ///< @brief Move constructor

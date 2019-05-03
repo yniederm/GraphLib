@@ -36,6 +36,7 @@ An up-to-date documentation of the source code is available here:
   - general cycle detection
 - Shortest Paths
   - Dijkstra (distances + path)
+  - Floyd-Warshall (distances + path)
 - Miscellaneous
   - Havel-Hakimi to verify whether a degree sequence is graphic
 
@@ -67,7 +68,6 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 - BFS
   - power graphs (for undirected graphs)
 - Shortest Paths
-  - Floyd-Warshall
   - Bellman-Ford
   - Johnson
 - Graph properties
@@ -80,7 +80,7 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
   - Eulerian paths
   - finding all possible walks from source to destination
 - Network algorithms
-  - flow problems 
+  - Edmonds-Karp
 - Cliques
   - cliques of size k
 - Huffman tree w/ visualization

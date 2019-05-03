@@ -4,15 +4,13 @@
 #include "../structures/Graph.hpp"
 #include <iostream>
 
-namespace gl
-{
-namespace external
-{
+namespace gl {
+namespace external {
 
 /**
-   @brief Simple function, writes structure to the given stream,
-   which then can be run through pdflatex to generate a pdf.
-   */
+ * @brief Simple function, writes structure to the given stream,
+ * which then can be run through pdflatex to generate a pdf.
+ */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g)
 {
@@ -53,12 +51,12 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &
 }
 
 /**
-   @brief Write structure to stream, given 
-   @param s stream to which it should write
-   @param g should be a undirected graph, with at least 2 nodes
-   @param writeNodes wheter it should write nodes (numbers)
-   @param writeEdgeWeights whether it should write edge weights
-   */
+ * @brief Write structure to stream, given 
+ * @param s stream to which it should write
+ * @param g should be a undirected graph, with at least 2 nodes
+ * @param writeNodes whether the nodes shall be labeled (numbers)
+ * @param writeEdgeWeights whether the edges shall be labeled (weights)
+ */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true, bool writeEdgeWeights = true)
 {
@@ -110,7 +108,7 @@ void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> 
   s << "\\end{document}" << std::endl;
 }
 
-} /* namespace external */
-} /* namespace gl */
+} // namespace external
+} // namespace gl
 
-#endif /* GL_WRITE_TIKZ_HPP */
+#endif // GL_WRITE_TIKZ_HPP

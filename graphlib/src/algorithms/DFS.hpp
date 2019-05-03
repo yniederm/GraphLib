@@ -33,17 +33,18 @@ namespace algorithm {
    * @brief Traverses the connected component of node using DFS
    * @param graph The graph to run the algorithm on
    * @param node Start point of the graph search
+   * @tparam Graph Type of graph
    * @return Sequence of all nodes visited by a DFS run.
    */
-  template <class GRAPH>
-  typename GRAPH::ordered_list_t DFS (const GRAPH& graph, const typename GRAPH::idx_t node) {
-    typename GRAPH::visit_list_t visited(graph.numNodes(),false);  // list of visited nodes
-    typename GRAPH::ordered_list_t out;      // result node lists
+  template <class Graph>
+  typename Graph::ordered_list_t DFS (const Graph& graph, const typename Graph::idx_t node) {
+    typename Graph::visit_list_t visited(graph.numNodes(),false);  // list of visited nodes
+    typename Graph::ordered_list_t out;      // result node lists
     DFS_recursive(graph, node, visited, out);
     return out;
   }
 
-} /* namespace algorithm */
-} /* namespace gl */
+} // namespace algorithm
+} // namespace gl
 
-#endif /* GL_DFS_HPP */
+#endif // GL_DFS_HPP

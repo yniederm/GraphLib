@@ -33,13 +33,13 @@ public:
    * @param[in] graph Graph that will be traversed
    * @param[in] src Source node. Starting point of the Breadth First Search.
    */
-  BFS(const Graph&, const idx_t);
+  explicit BFS(const Graph&, const idx_t);
   BFS() = delete;
   BFS(BFS &&) = default;
   BFS(const BFS &) = default;
   BFS &operator=(BFS &&) = default;
   BFS &operator=(const BFS &) = default;
-  ~BFS();
+  ~BFS() = default;
 
   /**
    * @brief Computes the BFS node traversal order from the source.
@@ -67,18 +67,15 @@ public:
   idx_list_t getNodesMaxDistance (const idx_t& distance) const;
 
 private:
-  Graph const& graph_; ///< @brief Reference to graph
-  idx_t src_; ///< @brief Source node
-  ordered_list_t final_; ///< @brief BFS Traversal order
+  Graph const& graph_;        ///< @brief Reference to graph
+  idx_t src_;                 ///< @brief Source node
+  ordered_list_t final_;      ///< @brief BFS Traversal order
   distance_list_t distances_; ///< @brief List containing distances from source
 };
 
 ///////////////////////////////////////////////////////////
 //    Member function implementations
 ///////////////////////////////////////////////////////////
-
-template <class SCALAR, class STORAGE, class DIRECTION>
-BFS<SCALAR,STORAGE,DIRECTION>::~BFS() {}
 
 template <class SCALAR, class STORAGE, class DIRECTION>
 BFS<SCALAR,STORAGE,DIRECTION>::BFS(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {

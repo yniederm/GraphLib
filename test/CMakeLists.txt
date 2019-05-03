@@ -16,6 +16,7 @@ set(TESTS
     CycleDetection
     DegreeSequence
     Dijkstra
+    FloydWarshall
     GraphicSequence
     IOTikz
     Kruskal

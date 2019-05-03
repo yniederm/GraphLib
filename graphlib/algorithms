@@ -10,6 +10,7 @@
 #include "src/algorithms/Degrees.hpp"
 #include "src/algorithms/DegreeSequence.hpp"
 #include "src/algorithms/Dijkstra.hpp"
+#include "src/algorithms/FloydWarshall.hpp"
 #include "src/algorithms/HavelHakimi.hpp"
 #include "src/algorithms/Kruskal.hpp"
 #include "src/algorithms/TransitiveClosure.hpp"
@@ -22,7 +23,8 @@ namespace algorithm {
 #define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar,ScalarSuffix,Storage,StorageSuffix,Direction,DirectionSuffix) \
 using BFS##StorageSuffix##ScalarSuffix##DirectionSuffix = BFS<Scalar,Storage,Direction>; \
 using dijkstra##StorageSuffix##ScalarSuffix##DirectionSuffix = Dijkstra<gl::Graph<Scalar,Storage,Direction>>; \
-using kruskal##StorageSuffix##ScalarSuffix##DirectionSuffix = Kruskal<gl::Graph<Scalar,Storage,Direction>>;
+using kruskal##StorageSuffix##ScalarSuffix##DirectionSuffix = Kruskal<gl::Graph<Scalar,Storage,Direction>>; \
+using floydwarshall##StorageSuffix##ScalarSuffix##DirectionSuffix = FloydWarshall<gl::Graph<Scalar,Storage,Direction>>;
 
 #define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix) \
 GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar, ScalarSuffix, gl::Matrix, M, Direction, DirectionSuffix) \

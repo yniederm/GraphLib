@@ -1,5 +1,5 @@
-#ifndef READ_YAML_HPP
-#define READ_YAML_HPP
+#ifndef GL_YAML_READER_HPP
+#define GL_YAML_READER_HPP
 
 #include "../structures/Graph.hpp"
 #include "../gl_base.hpp"
@@ -7,10 +7,8 @@
 #include <variant>
 #include <sstream>
 
-namespace gl
-{
-namespace io
-{
+namespace gl {
+namespace io {
 
 /**
   * @brief Template object to use with IO_CALL_ON_GRAPH
@@ -276,7 +274,7 @@ void YAMLReader::read()
     }
 }
 
-} /* namespace io */
-} /* namespace gl */
+} // namespace io
+} // namespace gl
 
-#endif
+#endif // GL_YAML_READER_HPP

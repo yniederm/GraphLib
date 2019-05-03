@@ -8,17 +8,15 @@
 #include <vector>
 #include <mgl2/mgl.h>
 
-namespace gl
-{
-namespace external
-{
+namespace gl {
+namespace external {
 
 /**
-   @brief Plot graph using mgl2
-   @param gr Pointer to mglGraph
-   @param g the graph to plot
-   @param lineArgs arguments for plotting the lines
-   */
+ * @brief Plot graph using mgl2
+ * @param gr Pointer to mglGraph
+ * @param g the graph to plot
+ * @param lineArgs arguments for plotting the lines
+ */
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void saveImage(mglGraph *gr, gl::Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, const char *lineArgs = "")
 {
@@ -104,7 +102,7 @@ void saveImage(mglGraph *gr, gl::Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, cons
   }
 }
 
-} /* namespace external */
-} /* namespace gl */
+} // namespace external
+} // namespace gl
 
-#endif /* GL_WRITE_IMAGE_HPP */
+#endif // GL_WRITE_IMAGE_HPP

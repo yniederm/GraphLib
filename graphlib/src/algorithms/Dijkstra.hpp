@@ -29,14 +29,14 @@ public:
    * @param graph Input graph on which the shortest paths will be computed.
    * @param src Source node. All shortest paths will be computed from here.
    */
-  Dijkstra(const Graph&, const idx_t);
+  explicit Dijkstra(const Graph&, const idx_t);
 
   Dijkstra() = delete;
   Dijkstra(const Dijkstra &) = default;                ///< @brief Copy constructor
   Dijkstra(Dijkstra &&) noexcept = default;            ///< @brief Move constructor
   Dijkstra &operator=(const Dijkstra &) = default;     ///< @brief Copy assignment
   Dijkstra &operator=(Dijkstra &&) noexcept = default; ///< @brief Move assignment
-  ~Dijkstra();   
+  ~Dijkstra() = default;                               ///< @brief Destructor
 
   /**
    * @brief Provides a Selector Object to color the edges in the Shortest Path Tree.
@@ -78,9 +78,6 @@ private:
 ///////////////////////////////////////////////////////////
 //    Member function implementations
 ///////////////////////////////////////////////////////////
-
-template <class Graph>
-Dijkstra<Graph>::~Dijkstra() {}
 
 template <class Graph>
 Dijkstra<Graph>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {

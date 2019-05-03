@@ -17,8 +17,7 @@
 #include "../gl_base.hpp"
 #include "../algorithms/HavelHakimi.hpp"
 
-namespace gl
-{
+namespace gl {
 
 class Matrix;
 class List;
