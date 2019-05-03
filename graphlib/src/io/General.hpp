@@ -20,7 +20,7 @@ void compileLatex(const char *filename, const char *arguments = "")
     std::cout << "to" << std::endl;
     std::cout << "<policy domain=\"coder\" rights=\"read\" pattern=\"PDF\" />" << std::endl;
 
-    std::string command = "pdflatex --interaction=nonstopmode ";
+    std::string command = "lualatex --interaction=nonstopmode ";
 
     command += std::string(arguments);
     command += " " + std::string(filename);

@@ -60,6 +60,7 @@ void writeTikzToStream(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &
 template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void writeTikzToStream2(std::ostream &s, Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, bool writeNodes = true, bool writeEdgeWeights = true)
 {
+  s << "\\RequirePackage{luatex85}" << std::endl;
   s << "\\documentclass{standalone}" << std::endl;
   s << "\\usepackage{tikz-network}" << std::endl;
   s << "\\begin{document}" << std::endl;
