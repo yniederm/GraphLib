@@ -8,7 +8,7 @@
 #include "src/io/StreamOverload.hpp"
 #include "src/io/PrintContainer.hpp"
 #include "src/io/YAMLReader.hpp"
-#include "src/io/General.hpp"
+#include "src/io/CompileLatex.hpp"
 
 #include "src/partial_specialization_off"
 

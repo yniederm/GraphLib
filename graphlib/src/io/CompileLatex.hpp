@@ -1,5 +1,5 @@
-#ifndef GL_GENERAL_HPP
-#define GL_GENERAL_HPP
+#ifndef GL_COMPILE_LATEX_HPP
+#define GL_COMPILE_LATEX_HPP
 
 #include <string>
 
@@ -7,18 +7,19 @@ namespace gl {
 namespace io {
 
 /**
- * @brief Invokes pdflatex command to compile tex to pdf
+ * @brief Invokes lualatex command to compile tex to pdf
  * @param filename Name of the file to compile
  * @param arguments Optional additional arguments
  */
 void compileLatex(const char *filename, const char *arguments = "")
 {
-    std::cout << "Compiling latex..." << std::endl;
-    std::cout << "If this fails because of permissions within the \"convert\" command, do the following:" << std::endl;
-    std::cout << "In the file /etc/ImageMagick-6/policy.xml change the line with" << std::endl;
-    std::cout << "<policy domain=\"coder\" rights=\"none\" pattern=\"PDF\" />" << std::endl;
-    std::cout << "to" << std::endl;
-    std::cout << "<policy domain=\"coder\" rights=\"read\" pattern=\"PDF\" />" << std::endl;
+    std::cout << "Compiling latex..." << std::endl
+              << "If this fails because of permissions within the \"convert\" command, do the following:" << std::endl
+              << "In the files /etc/ImageMagick-6/policy.xml && /etc/ImageMagick-7/policy.xml" << std::endl
+              << "change the line containing" << std::endl
+              << "<policy domain=\"coder\" rights=\"none\" pattern=\"PDF\" />" << std::endl
+              << "to" << std::endl
+              << "<policy domain=\"coder\" rights=\"read\" pattern=\"PDF\" />" << std::endl;
 
     std::string command = "lualatex --interaction=nonstopmode ";
 
@@ -44,4 +45,4 @@ void compileLatex(const char *filename, const char *arguments = "")
 } // namespace io
 } // namespace gl
 
-#endif // GL_GENERAL_HPP
+#endif // GL_COMPILE_LATEX_HPP
