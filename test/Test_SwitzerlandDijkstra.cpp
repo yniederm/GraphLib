@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
 
     for (auto it = g.node_cbegin(); it != g.node_cend(); it++)
     {
-        if (it->label() == " 8200") // change this
+        if (it->label() == " 5000") // change this
         {
             source = it->id();
             break;
@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
     }
     for (auto it = g.node_cbegin(); it != g.node_cend(); it++)
     {
-        if (it->label() == " 6516") // change this
+        if (it->label() == " 7000") // change this
         {
             dest = it->id();
             break;

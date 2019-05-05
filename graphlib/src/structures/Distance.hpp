@@ -5,10 +5,13 @@
 
 namespace gl 
 {
+/**
+ * @class Distance
+ * @brief Implements a numerical distance that supports "infinite distance".
+ */
 template <class SCALAR>
 struct Distance
 {
-
   Distance () : isInfinite_(true), distance_(0) {}     ///< @brief Default constructor
   Distance(const Distance &) = default;                ///< @brief Copy constructor
   Distance(Distance &&) noexcept = default;            ///< @brief Move constructor
@@ -61,12 +64,12 @@ struct Distance
    * @param[in] rhs Distance that will get added to 'this'
    * @return Distance with the combined distances.
    */
-  Distance operator+ (const Distance& rhs)
+  inline Distance operator+ (const Distance& rhs)
   {
     Distance res; // set to infinite
     if (isInfinite_ || rhs.isInfinite_)
       return res;
-    res.setWeight(distance_+rhs.distance_);
+    res.setDistance(distance_+rhs.distance_);
     return res;
   }
 
@@ -74,38 +77,45 @@ struct Distance
    * @brief Gets the distance
    * @return Numerical distance, or 'Inf' if the distance is infinite.
    */
-  std::string getWeight() const
+  inline std::string getDistance() const
   {
-    if (isInfinite_) return "Inf";
+    if (isInfinite()) return "Inf";
     return std::to_string(distance_);
   }
-
   /**
    * @brief Allows updating the distance.
    * @param[in] distance New distance.
    */
-  void setWeight (SCALAR distance)
+  inline void setDistance (SCALAR distance)
   {
     distance_ = distance;
     isInfinite_ = false;
   }
 
   /**
-   * @brief Checks whether the distance is zero.
-   * @return true if the distance is zero, false otherwise
-   */
-  bool isZero() const
-  {
-    return !isInfinite_ && distance_ == 0;
-  }
-
-  /**
    * @brief Checks whether the distance is infinite.
    * @return true if the distance is infinite, false otherwise
    */
-  bool isInfinite() const
+  inline bool isInfinite() const
   {
     return isInfinite_;
+  }
+  /**
+   * @brief Sets the distance to infinity.
+   */
+  inline void setInfinite() const
+  {
+    distance_ = 0;
+    isInfinite_ = true;
+  }
+
+  /**
+   * @brief Checks whether the distance is zero.
+   * @return true if the distance is zero, false otherwise
+   */
+  inline bool isZero() const
+  {
+    return !isInfinite() && distance_ == 0;
   }
 
 private:

@@ -71,7 +71,7 @@ std::ostream& operator<< (std::ostream& os, const gl::Graph<SCALAR, STORAGE, gl:
 template <class val_t>
 std::ostream& operator<< (std::ostream& os, const gl::Distance<val_t>& dist)
 {
-  os << dist.getWeight();
+  os << dist.getDistance();
   return os;
 }
 

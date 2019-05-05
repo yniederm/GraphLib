@@ -95,13 +95,13 @@ void FloydWarshall<Graph>::compute(const Graph& graph)
     {
       GL_ASSERT(weight >= 0,"Floyd-Warshall: Graph is undirected and contains negative weights")
     }
-    dist[i*numNodes+j].setWeight(weight);
+    dist[i*numNodes+j].setDistance(weight);
     next[i*numNodes+j] = j;
   }
   // set diagonals
   for (idx_t i = 0; i < numNodes; ++i)
   {
-    dist[i*numNodes+i].setWeight(0);
+    dist[i*numNodes+i].setDistance(0);
     next[i*numNodes+i] = i;
   }
   // Actual Floyd-Warshall Algorithm
