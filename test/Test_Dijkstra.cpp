@@ -10,7 +10,8 @@ int main(int argc, char const *argv[])
   // dijkstraL.updateEdge(0,1,-5);  // uncomment this to test the positive weights requirement
 
   std::cout << "\n" << dijkstraL << std::endl;
-  gl::algorithm::dijkstraLiu pathL5 (dijkstraL,0);
+  gl::algorithm::dijkstraLiu pathL5;
+  pathL5.compute(dijkstraL,0);
 
   std::cout << "dest\tlength\tpath" << std::endl;
   for (int i = 0; i < dijkstraL.numNodes(); ++i) {
@@ -19,7 +20,8 @@ int main(int argc, char const *argv[])
   }
 
   std::cout << "\n" << dijkstraM << std::endl;
-  gl::algorithm::dijkstraMiu pathM5 (dijkstraM,0);
+  gl::algorithm::dijkstraMiu pathM5;
+  pathM5.compute(dijkstraM,0);
 
   std::cout << "dest\tlength\tpath" << std::endl;
   for (int i = 0; i < dijkstraM.numNodes(); ++i) {

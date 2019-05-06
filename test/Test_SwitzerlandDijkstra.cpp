@@ -36,7 +36,8 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    gl::algorithm::dijkstraMdu dijkstra(g, source);
+    gl::algorithm::dijkstraMdu dijkstra;
+    dijkstra.compute(g,source);
     auto path = dijkstra.getPath(dest);
 
     for (gl::index_type i = 0; i < path.size() - 2; i++)

@@ -93,7 +93,7 @@ void FloydWarshall<Graph>::compute(const Graph& graph)
     // check for negative weights in undirected graphs
     if (!graph.isDirected()) 
     {
-      GL_ASSERT(weight >= 0,"Floyd-Warshall: Graph is undirected and contains negative weights")
+      GL_ASSERT(weight >= 0,"Floyd-Warshall::compute | Graph is undirected and contains negative weights")
     }
     dist[i*numNodes+j].setDistance(weight);
     next[i*numNodes+j] = j;
@@ -129,25 +129,25 @@ void FloydWarshall<Graph>::compute(const Graph& graph)
 
 template <class Graph>
 bool FloydWarshall<Graph>::hasNegativePath () const {
-  GL_ASSERT(isInitialized_,"FloydWarshall has not been initialized with a graph.")
+  GL_ASSERT(isInitialized_,"FloydWarshall::hasNegativePath | FloydWarshall has not been initialized with a graph.")
   
   return negativePath_.first;
 }
 
 template <class Graph>
 Distance<typename Graph::val_t> FloydWarshall<Graph>::pathLength (const idx_t src, const idx_t dest) const {
-  GL_ASSERT(isInitialized_,"FloydWarshall has not been initialized with a graph.")
+  GL_ASSERT(isInitialized_,"FloydWarshall::pathLength | FloydWarshall has not been initialized with a graph.")
   graph_.checkRange(src,dest);
-  GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall: The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
+  GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall::pathLength | The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
   
   return dist_[src*graph_.numNodes()+dest];
 }
 
 template <class Graph>
 std::pair<bool,typename Graph::idx_list_t> FloydWarshall<Graph>::getPath (const idx_t src, const idx_t dest) const {
-  GL_ASSERT(isInitialized_,"FloydWarshall has not been initialized with a graph.")
+  GL_ASSERT(isInitialized_,"FloydWarshall::getPath | FloydWarshall has not been initialized with a graph.")
   graph_.checkRange(src,dest);
-  GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall: The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
+  GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall::getPath | The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
 
   // Check for path existance
   if (dist_[src*graph_.numNodes()+dest].isInfinite())
@@ -168,9 +168,9 @@ std::pair<bool,typename Graph::idx_list_t> FloydWarshall<Graph>::getPath (const 
 template <class Graph>
 Graph FloydWarshall<Graph>::getSPT (const idx_t src) const
 {
-  GL_ASSERT(isInitialized_,"FloydWarshall has not been initialized with a graph.")
+  GL_ASSERT(isInitialized_,"FloydWarshall::getSPT | FloydWarshall has not been initialized with a graph.")
   graph_.checkRange(src);
-  GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall: The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
+  GL_ASSERT(!negativePath_.first,std::string("Floyd-Warshall::getSPT | The input graph has a negative cycle at node ")+std::to_string(negativePath_.second))
 
   Graph result(graph_.numNodes(),std::string(std::string("SPT of node ")+std::to_string(src)+std::string(" in ")+graph_.getGraphLabel()));
   for (idx_t i = 0; i < graph_.numNodes(); ++i)

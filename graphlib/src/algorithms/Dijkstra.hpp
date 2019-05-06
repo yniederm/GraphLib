@@ -24,14 +24,8 @@ class Dijkstra {
   using result_t = std::vector<pair_t>;
 
 public: 
-  /**
-   * @brief Constructor. This is where the shortest distances and the predecessors of each node on the shortest path tree get computed.
-   * @param graph Input graph on which the shortest paths will be computed.
-   * @param src Source node. All shortest paths will be computed from here.
-   */
-  explicit Dijkstra(const Graph&, const idx_t);
+  Dijkstra();
 
-  Dijkstra() = delete;
   Dijkstra(const Dijkstra &) = default;                ///< @brief Copy constructor
   Dijkstra(Dijkstra &&) noexcept = default;            ///< @brief Move constructor
   Dijkstra &operator=(const Dijkstra &) = default;     ///< @brief Copy assignment
@@ -51,6 +45,12 @@ public:
    */
   std::function<std::pair<bool,gl::Color>(const idx_t node)> NodeSelector(const gl::Color& color = gl::Color("red")) const;
   /**
+   * @brief Computation. This is where the shortest distances and the predecessors of each node on the shortest path tree get computed.
+   * @param graph Input graph on which the shortest paths will be computed.
+   * @param src Source node. All shortest paths will be computed from here.
+   */
+  void compute(const Graph& graph, const idx_t);
+  /**
    * @brief Computes the shortest path length from src to dest.
    * @param dest Node whose distance to src we want to know.
    * @return shortest path length / weight.
@@ -68,11 +68,12 @@ public:
    */
   Graph getSPT() const;
 
-private:
-  Graph const& graph_; ///< @brief Reference to graph
-  Graph result_;       ///< @brief SPT graph
-  idx_t src_;          ///< @brief Source node
-  result_t final_;     ///< @brief Shortest Path lengths & predecessors
+private:  
+  bool isInitialized_ = false; ///< @brief Boolean storing initialization status
+  Graph graph_;                ///< @brief Reference to graph
+  Graph result_;               ///< @brief SPT graph
+  idx_t src_;                  ///< @brief Source node
+  result_t final_;             ///< @brief Shortest Path lengths & predecessors
 };
 
 ///////////////////////////////////////////////////////////
@@ -80,13 +81,17 @@ private:
 ///////////////////////////////////////////////////////////
 
 template <class Graph>
-Dijkstra<Graph>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {
+Dijkstra<Graph>::Dijkstra() : isInitialized_(false) {}
+
+template <class Graph>
+void Dijkstra<Graph>::compute(const Graph& graph, const idx_t src)
+{
   graph.checkRange(src);
 
   // verify that all non-self-loop edge weights are positive
   for (auto it = graph.edge_cbegin(); it != graph.edge_cend(); ++it) {
     if (it->source() != it->dest()) {
-      GL_ASSERT(it->weight() > 0, "Found non-positive edge weights in the graph.");
+      GL_ASSERT(it->weight() > 0, "Dijkstra::compute | Found non-positive edge weights in the graph.");
     }
   }
 
@@ -121,7 +126,10 @@ Dijkstra<Graph>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), 
       }
     }
   }
+  graph_ = graph;
+  src_ = src;
   final_ = out;
+  isInitialized_ = true;
 
   Graph result(graph.numNodes(),std::string(std::string("SPT of node ")+std::to_string(src)+std::string(" in ")+graph.getGraphLabel()));
   for (idx_t i = 0; i < graph.numNodes(); ++i)
@@ -138,12 +146,13 @@ Dijkstra<Graph>::Dijkstra(const Graph& graph, const idx_t src) : graph_(graph), 
       }
     }
   }
-
   result_ = result;
 }
+
 template <class Graph>
 std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const typename Graph::idx_t dest)> Dijkstra<Graph>::EdgeSelector (const gl::Color& color) const 
 {
+  GL_ASSERT(isInitialized_,"Dijkstra::EdgeSelector | Dijkstra has not been initialized with a graph.")
   return [&color, this](const idx_t src, const idx_t dest) -> std::pair<bool,gl::Color> {
     if (result_.hasEdge(src,dest)) 
       return {true,color};
@@ -155,6 +164,8 @@ std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const t
 template <class Graph>
 std::function<std::pair<bool,gl::Color>(const typename Dijkstra<Graph>::idx_t node)> Dijkstra<Graph>::NodeSelector (const gl::Color& color) const 
 {
+  GL_ASSERT(isInitialized_,"Dijkstra::NodeSelector | Dijkstra has not been initialized with a graph.")
+
   return [&color, this](const idx_t node) -> std::pair<bool,gl::Color> {
     if (pathLength(node) != val_t(-1))
       return {true,color};
@@ -164,11 +175,15 @@ std::function<std::pair<bool,gl::Color>(const typename Dijkstra<Graph>::idx_t no
 
 template <class Graph>
 typename Graph::val_t Dijkstra<Graph>::pathLength (const idx_t dest) const {
+  GL_ASSERT(isInitialized_,"Dijkstra::pathLength | Dijkstra has not been initialized with a graph.")
+
   return final_[dest].first!=GL_INF(val_t) ? final_[dest].first : val_t(-1);
 }
 
 template <class Graph>
 typename Graph::idx_list_t Dijkstra<Graph>::getPath (const idx_t dest) const {
+  GL_ASSERT(isInitialized_,"Dijkstra::getPath | Dijkstra has not been initialized with a graph.")
+
   typename Graph::idx_list_t out;
   if (pathLength(dest) == val_t(-1))
   {
@@ -187,6 +202,8 @@ typename Graph::idx_list_t Dijkstra<Graph>::getPath (const idx_t dest) const {
 template <class Graph>
 Graph Dijkstra<Graph>::getSPT () const 
 {
+  GL_ASSERT(isInitialized_,"Dijkstra::getSPT | Dijkstra has not been initialized with a graph.")
+
   auto result = result_;
   return result;
 }
