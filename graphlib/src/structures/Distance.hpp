@@ -83,6 +83,14 @@ struct Distance
     return std::to_string(distance_);
   }
   /**
+   * @brief Gets the numerical value of the distance. If the distance is infinite, returns the maximum value of the Distance type.
+   * @return Numerical distance
+   */
+  inline SCALAR getNumericalDistance() const
+  {
+    return isInfinite_ ? GL_INF(SCALAR) : distance_;
+  }
+  /**
    * @brief Allows updating the distance.
    * @param[in] distance New distance.
    */

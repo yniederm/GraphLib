@@ -3,6 +3,7 @@
 
 #include "src/partial_specialization_on"
 #include "src/gl_assert.hpp"
+#include "src/gl_base.hpp"
 
 #include "src/structures/DisjointSets.hpp"
 #include "src/structures/Distance.hpp"

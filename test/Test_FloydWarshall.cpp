@@ -1,4 +1,5 @@
 #include <graphlib/gl>
+#include <chrono>
 
 int main(int argc, char const *argv[])
 {
@@ -11,7 +12,20 @@ int main(int argc, char const *argv[])
 
   std::cout << "\n" << graphL << std::endl;
   gl::algorithm::floydwarshallLid fwL;
-  fwL.compute(graphL);
+
+  std::chrono::time_point< std::chrono::high_resolution_clock > t_start, t_end;
+  t_start = std::chrono::high_resolution_clock::now();
+  
+  for (int i = 0; i < 400000; ++i)
+  {
+    fwL.compute(graphL);
+  }
+
+  t_end = std::chrono::high_resolution_clock::now();
+
+  std::cout << "FloydWarshall took: " << static_cast<std::chrono::duration<double> >(t_end - t_start).count()
+		        << " seconds." << std::endl;
+
 
   std::cout << "src->dest: pathLength path" << std::endl;
   for (int i = 0; i < graphL.numNodes(); ++i) {

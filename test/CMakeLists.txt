@@ -10,6 +10,7 @@ link_directories(
 )
 
 set(TESTS
+    Centrality
     Color
     ConstructFromDegSeq
     Conversion

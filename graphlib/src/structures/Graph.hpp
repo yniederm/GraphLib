@@ -1795,7 +1795,7 @@ public:
    * @return Degree of node
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  GL_ENABLE_IF_LIST
+  GL_ENABLE_IF_LIST_UNDIRECTED
 #endif
   inline idx_t getNodeDegree(const idx_t &id) const
   {
@@ -1805,7 +1805,7 @@ public:
   /**
    * @brief Gets the degree of a node in a Matrix Graph.
    */
-  GL_ENABLE_IF_MATRIX
+  GL_ENABLE_IF_MATRIX_UNDIRECTED
   idx_t getNodeDegree(const idx_t &id) const
   {
     idx_t count = 0;

@@ -65,6 +65,32 @@ else \
 { \
   __GL_TEST_FAIL__(TestName) \
 }
+/**
+ * @brief Comparison operator that can be used for testing numerical equality of two container.
+ * @param Actual Computed container that will be compared to the expected container.
+ * @param Expected Expected Value for the computed result.
+ * @param AbsTol Absolute tolerance for numerical error.
+ * @param TestName A string that can be used as an identifier for which test case is executed.
+ */
+#define GL_TEST_NUMERIC_CONTAINER_COMPARE(Actual,Expected,AbsTol,TestName) \
+if (Actual.size() != Expected.size()) { \
+  __GL_TEST_FAIL__(TestName) \
+} else { \
+  auto et = Expected.begin(); \
+  for (auto at = Actual.begin(); at != Actual.end(); ++at, ++et) \
+  { \
+    if (std::abs(*at - *et) >= AbsTol) \
+    { \
+      __gl_test_except_flag__ = true; \
+    } \
+  } \
+  if (__gl_test_except_flag__) { \
+    __GL_TEST_FAIL__(TestName) \
+  } else { \
+    __GL_TEST_SUCCESS__(TestName) \
+  } \
+  __gl_test_except_flag__ = false; \
+}
 
 /**
  * @brief Macro that encapsulates a try/catch block and compares the producederror messages.
@@ -84,7 +110,7 @@ catch(const std::exception& e) \
   GL_TEST_COMPARE(std::string(e.what()),ExpectedError,TestName) \
 } \
 if (!__gl_test_except_flag__) { \
-  std::cout << "No exception was thrown when one was expected.\n"; \
+  std::cerr << "No exception was thrown when one was expected.\n"; \
   __GL_TEST_FAIL__(TestName) \
 } \
 __gl_test_except_flag__ = false;
