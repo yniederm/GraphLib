@@ -3,10 +3,17 @@
 
 #include "structures"
 
+#include "src/partial_specialization_on"
+
 #include "src/io/WriteImage.hpp"
 #include "src/io/WriteTikz.hpp"
-#include "src/algorithms/LaplacianEigen.hpp"
 #include "src/algorithms/LaplacianSTL.hpp"
-#include "src/algorithms/SpectralPlacing.hpp"
+#include "src/algorithms/LaplacianEigenDense.hpp"
+#include "src/algorithms/LaplacianEigenSparse.hpp"
+#include "src/algorithms/PositionsFromLaplacian.hpp"
+#include "src/algorithms/SpectralPlacingDense.hpp"
+#include "src/algorithms/SpectralPlacingSparse.hpp"
+
+#include "src/partial_specialization_off"
 
 #endif // GL_EXTERNAL

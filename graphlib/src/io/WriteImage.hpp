@@ -34,7 +34,7 @@ void saveImage(mglGraph *gr, gl::Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, cons
   for (typename Graph<SCALAR, STORAGE_KIND, DIRECTION>::idx_t i = 0; i < g.numNodes(); i++)
   {
     //degs(i) = g.getDegree(i);
-    triplets.emplace_back(i, i, g.getNodeDegree(i));
+    triplets.emplace_back(i, i, g.getNodeOutDegree(i));
   }
   //degMat = degs.asDiagonal();
 
@@ -79,7 +79,7 @@ void saveImage(mglGraph *gr, gl::Graph<SCALAR, STORAGE_KIND, DIRECTION> &g, cons
     // Scale by degree
     pos.normalize();
     pos *= 15;
-    pos /= (1 + g.getNodeDegree(i)); // Todo: nodes with high degree are now outside, they should be in the middle
+    pos /= (1 + g.getNodeOutDegree(i)); // Todo: nodes with high degree are now outside, they should be in the middle
 
     positions.col(i) = pos;
   }

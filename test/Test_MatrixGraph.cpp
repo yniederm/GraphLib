@@ -3,13 +3,13 @@
 int main(int argc, char const *argv[])
 {
 
-  gl::graphMid g (5);
+  gl::graphMiu g (5);
   g.setEdge(0,1,4); // initial set
   g.setEdge(1,2);   // set as simple undirected
   g.setEdge(2,0);
   g.setEdge(2,1,10);
   g.setEdge(2,2,5,gl::Color("aqua"));
-  g.setEdge(gl::graphMid::Edge(1,4,3,gl::Color("orange")));
+  g.setEdge(gl::graphMiu::Edge(1,4,3,gl::Color("orange")));
   g.numNodes();
   std::cout << "numNodes: " << g.numNodes() << std::endl
             << g << std::endl;

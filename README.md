@@ -37,6 +37,10 @@ An up-to-date documentation of the source code is available here:
 - Shortest Paths
   - Dijkstra (distances + path)
   - Floyd-Warshall (distances + path)
+- Node centralities
+  - Degree
+  - Closeness
+  - Harmonic
 - Miscellaneous
   - Havel-Hakimi to verify whether a degree sequence is graphic
 
@@ -84,14 +88,20 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
 - Cliques
   - cliques of size k
 - Huffman tree w/ visualization
+- Markov Chain
+  - hitting time
+  - commute time
+  - arrival probability
+  - ergodicity
+  - stationary distribution
+  - reducibility
+  - periodicity
 - node things
   - centralities: 
-    - degree
-    - closeness
-    - betweenness
-    - eigenvector
+    - Betweenness
+    - Eigenvector
+    - Katz
     - PageRank
-    - katz
 - Split graph
   - find constructing degree sequence
   - computing splittance

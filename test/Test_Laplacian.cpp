@@ -7,15 +7,15 @@ int main(int argc, char const *argv[])
   gl::graphMiu g (9,"Laplacian source");
   g.addEdgesFromFile("test/input/dijkstra9"); // assumes running from project root folder
 
-  auto eigen = gl::algorithm::laplacianEigen(g);
-  auto stl = gl::algorithm::laplacianSTL(g);
+  auto eigen = gl::algorithm::LaplacianEigenDense(g);
+  auto stl = gl::algorithm::LaplacianSTL(g);
 
   std::chrono::time_point< std::chrono::high_resolution_clock > t_start, t_end;
   t_start = std::chrono::high_resolution_clock::now();
 
-  for (int i = 0; i < 400000; ++i)
+  for (int i = 0; i < 100000; ++i)
   {
-    auto eigen = gl::algorithm::laplacianEigen(g);
+    auto eigen = gl::algorithm::LaplacianEigenDense(g);
   }
 
   t_end = std::chrono::high_resolution_clock::now();
@@ -24,9 +24,9 @@ int main(int argc, char const *argv[])
 		        << " seconds." << std::endl;
   t_start = std::chrono::high_resolution_clock::now();
 
-  for (int i = 0; i < 400000; ++i)
+  for (int i = 0; i < 100000; ++i)
   {
-   stl = gl::algorithm::laplacianSTL(g);
+   stl = gl::algorithm::LaplacianSTL(g);
   }
 
   t_end = std::chrono::high_resolution_clock::now();

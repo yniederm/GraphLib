@@ -12,7 +12,7 @@ namespace algorithm {
  * @return Laplacian Matrix in STL vector format
  */
 template <class Graph>
-std::vector<float> laplacianSTL(const Graph& g)
+std::vector<float> LaplacianSTL(const Graph& g)
 {
     using matrix_t = std::vector<float>;
     auto numNodes = g.numNodes();
@@ -21,7 +21,7 @@ std::vector<float> laplacianSTL(const Graph& g)
     // build degree matrix
     for (typename Graph::idx_t i = 0; i < numNodes; i++)
     {
-        matrix[i*numNodes+i] = g.getNodeDegree(i);
+        matrix[i*numNodes+i] = g.getNodeOutDegree(i);
     }
 
     // build adjacency matrix

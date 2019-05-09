@@ -3,7 +3,7 @@
 int main(int argc, char const *argv[])
 {
 
-  gl::graphLid g (5,"ListGraph");
+  gl::graphLiu g (5,"ListGraph");
   g.setEdge(2,1,8); // initial set
   g.setEdge(1,0);   // set as simple undirected
   g.setEdge(2,0,5);
