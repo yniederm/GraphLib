@@ -24,13 +24,20 @@ class Dijkstra {
   using result_t = std::vector<pair_t>;
 
 public: 
-  Dijkstra();
+  /**
+   * This is where the Dijkstra Shortest Paths get computed.
+   * @brief Computation constructor.
+   * @param[in] graph Graph that will be traversed
+   * @param[in] src Source node. Starting point of the Dijkstra Algorithm.
+   */
+  explicit Dijkstra(const Graph& graph, idx_t src);    ///< Computation Constructor
 
-  Dijkstra(const Dijkstra &) = default;                ///< @brief Copy constructor
-  Dijkstra(Dijkstra &&) noexcept = default;            ///< @brief Move constructor
-  Dijkstra &operator=(const Dijkstra &) = default;     ///< @brief Copy assignment
-  Dijkstra &operator=(Dijkstra &&) noexcept = default; ///< @brief Move assignment
-  ~Dijkstra() = default;                               ///< @brief Destructor
+  Dijkstra();                                          ///< Default constructor
+  Dijkstra(const Dijkstra &) = default;                ///< Copy constructor
+  Dijkstra(Dijkstra &&) noexcept = default;            ///< Move constructor
+  Dijkstra &operator=(const Dijkstra &) = default;     ///< Copy assignment
+  Dijkstra &operator=(Dijkstra &&) noexcept = default; ///< Move assignment
+  ~Dijkstra() = default;                               ///< Default destructor
 
   /**
    * @brief Provides a Selector Object to color the edges in the Shortest Path Tree.
@@ -49,7 +56,7 @@ public:
    * @param graph Input graph on which the shortest paths will be computed.
    * @param src Source node. All shortest paths will be computed from here.
    */
-  void compute(const Graph& graph, const idx_t);
+  void compute(const Graph&, const idx_t);
   /**
    * @brief Computes the shortest path length from src to dest.
    * @param dest Node whose distance to src we want to know.
@@ -70,7 +77,6 @@ public:
 
 private:  
   bool isInitialized_ = false; ///< @brief Boolean storing initialization status
-  Graph graph_;                ///< @brief Reference to graph
   Graph result_;               ///< @brief SPT graph
   idx_t src_;                  ///< @brief Source node
   result_t final_;             ///< @brief Shortest Path lengths & predecessors
@@ -82,6 +88,11 @@ private:
 
 template <class Graph>
 Dijkstra<Graph>::Dijkstra() : isInitialized_(false) {}
+
+template <class Graph>
+Dijkstra<Graph>::Dijkstra(const Graph& graph, const idx_t src) : isInitialized_(false) {
+  compute(graph,src);
+}
 
 template <class Graph>
 void Dijkstra<Graph>::compute(const Graph& graph, const idx_t src)
@@ -126,7 +137,6 @@ void Dijkstra<Graph>::compute(const Graph& graph, const idx_t src)
       }
     }
   }
-  graph_ = graph;
   src_ = src;
   final_ = out;
   isInitialized_ = true;

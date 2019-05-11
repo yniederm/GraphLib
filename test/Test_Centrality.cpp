@@ -7,8 +7,7 @@ int main(int argc, char const *argv[])
   gl::graphLiu g1 ("2 4 2 1 1","Connected");
   std::cout << g1;
 
-  gl::algorithm::floydwarshallLiu fw;
-  fw.compute(g1);
+  gl::algorithm::floydwarshallLiu fw(g1);
 
   std::vector<double> cc1_actual(g1.numNodes());
   std::vector<double> cc1_expect {4./6,1.,4./6,4./7,4./7};

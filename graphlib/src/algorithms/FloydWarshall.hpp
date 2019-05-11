@@ -24,11 +24,13 @@ class FloydWarshall {
 public:
 
   FloydWarshall();                                               ///< @brief Default constructor
-  FloydWarshall(const FloydWarshall &) = default;                ///< @brief Copy constructor
-  FloydWarshall(FloydWarshall &&) noexcept = default;            ///< @brief Move constructor
-  FloydWarshall &operator=(const FloydWarshall &) = default;     ///< @brief Copy assignment
-  FloydWarshall &operator=(FloydWarshall &&) noexcept = default; ///< @brief Move assignment
-  ~FloydWarshall() = default;                                    ///< @brief Destructor
+  explicit FloydWarshall(const Graph& graph);                    ///< @brief Computation Constructor
+
+  FloydWarshall(const FloydWarshall &) = default;                ///< Copy constructor
+  FloydWarshall(FloydWarshall &&) noexcept = default;            ///< Move constructor
+  FloydWarshall &operator=(const FloydWarshall &) = default;     ///< Copy assignment
+  FloydWarshall &operator=(FloydWarshall &&) noexcept = default; ///< Move assignment
+  ~FloydWarshall() = default;                                    ///< Default destructor
 
   /**
    * @brief Computation. This is where the shortest distances and the successors of each node pair gets computed.
@@ -89,6 +91,12 @@ private:
 
 template <class Graph>
 FloydWarshall<Graph>::FloydWarshall() : isInitialized_(false), negativePath_(std::make_pair<bool,idx_t>(false,0)) {}
+
+template <class Graph>
+FloydWarshall<Graph>::FloydWarshall(const Graph& graph) : isInitialized_(false), negativePath_(std::make_pair<bool,idx_t>(false,0)) 
+{
+  compute(graph);
+}
 
 template <class Graph>
 void FloydWarshall<Graph>::compute(const Graph& graph)

@@ -23,8 +23,7 @@ int main(int argc, char const *argv[])
   gl::io::compileLatex("build/test/UpdateFlaggedKruskal.tex", "--output-directory=build/test/");
 
   // test Dijkstra coloring
-  gl::algorithm::dijkstraMiu dijkstra;
-  dijkstra.compute(graph2,0);
+  gl::algorithm::dijkstraMiu dijkstra(graph2,0);
   gl::interface::colorFlaggedEntities(graph2, dijkstra.EdgeSelector(),dijkstra.NodeSelector(gl::Color("fuchsia")));
 
   std::ofstream outDijkstra("build/test/UpdateFlaggedDijkstra.tex");

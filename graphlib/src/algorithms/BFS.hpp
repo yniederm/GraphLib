@@ -17,9 +17,8 @@ namespace algorithm {
  * @brief Class that provides Graph traversal using the BFS scheme.
  */
 
-template <class SCALAR, class STORAGE, class DIRECTION>
+template <class Graph>
 class BFS {
-  using Graph = gl::Graph<SCALAR,STORAGE,DIRECTION>;
   using idx_t = typename Graph::idx_t;                   ///< @brief Type of indices
   using ordered_list_t = typename Graph::ordered_list_t; ///< @brief Ordered node ID list.
   using visit_list_t = typename Graph::visit_list_t;     ///< @brief Boolean list that stored previously visited nodes.
@@ -29,18 +28,26 @@ class BFS {
 
 public: 
   /**
-   * @brief Constructor. This is where the BFS tree gets computed.
+   * Directly computes the BFS algorithm on the specified graph
+   * @brief Computation constructor.
    * @param[in] graph Graph that will be traversed
    * @param[in] src Source node. Starting point of the Breadth First Search.
    */
   explicit BFS(const Graph&, const idx_t);
-  BFS() = delete;
-  BFS(BFS &&) = default;
-  BFS(const BFS &) = default;
-  BFS &operator=(BFS &&) = default;
-  BFS &operator=(const BFS &) = default;
-  ~BFS() = default;
 
+  BFS();                                 ///< Default constructor
+  BFS(const BFS &) = default;            ///< Copy constructor
+  BFS(BFS &&) noexcept = default;        ///< Move constructor
+  BFS &operator=(const BFS &) = default; ///< Copy assignment
+  BFS &operator=(BFS &&) = default;      ///< Move assignment
+  ~BFS() = default;                      ///< Default destructor
+
+  /**
+   * @brief Computation. This is where the BFS algorithm is performed.
+   * @param[in] graph Input graph on which the BFS will be computed.
+   * @param[in] src source node of BFS.
+   */
+  void compute(const Graph& graph, const idx_t src);
   /**
    * @brief Computes the BFS node traversal order from the source.
    * @return ordered BFS traversal order
@@ -67,18 +74,28 @@ public:
   idx_list_t getNodesMaxDistance (const idx_t& distance) const;
 
 private:
-  Graph const& graph_;        ///< @brief Reference to graph
-  idx_t src_;                 ///< @brief Source node
-  ordered_list_t final_;      ///< @brief BFS Traversal order
-  distance_list_t distances_; ///< @brief List containing distances from source
+  bool isInitialized_ = false; ///< @brief Boolean storing initialization status
+  idx_t src_;                  ///< @brief Source node
+  ordered_list_t final_;       ///< @brief BFS Traversal order
+  distance_list_t distances_;  ///< @brief List containing distances from source
 };
 
 ///////////////////////////////////////////////////////////
 //    Member function implementations
 ///////////////////////////////////////////////////////////
 
-template <class SCALAR, class STORAGE, class DIRECTION>
-BFS<SCALAR,STORAGE,DIRECTION>::BFS(const Graph& graph, const idx_t src) : graph_(graph), src_(src) {
+template <class Graph>
+BFS<Graph>::BFS() : isInitialized_(false) {}
+
+template <class Graph>
+BFS<Graph>::BFS(const Graph& graph, const idx_t src) : isInitialized_(false), src_(src) 
+{
+  compute(graph, src);
+}
+
+template <class Graph>
+void BFS<Graph>::compute (const Graph& graph, const idx_t src) 
+{
   idx_t INF = std::numeric_limits<idx_t>::max();
 
   BFS_queue_t queue;      // nodes to check the neighbours of
@@ -105,14 +122,15 @@ BFS<SCALAR,STORAGE,DIRECTION>::BFS(const Graph& graph, const idx_t src) : graph_
   }
   final_ = out;
   distances_ = distances;
+  isInitialized_ = true;
 }
 
-template <class SCALAR, class STORAGE, class DIRECTION>
-typename Graph<SCALAR,STORAGE,DIRECTION>::ordered_list_t BFS<SCALAR,STORAGE,DIRECTION>::getTraversalOrder () const {
+template <class Graph>
+typename Graph::ordered_list_t BFS<Graph>::getTraversalOrder () const {
   return final_;
 }
-template <class SCALAR, class STORAGE, class DIRECTION>
-typename Graph<SCALAR,STORAGE,DIRECTION>::ordered_list_t BFS<SCALAR,STORAGE,DIRECTION>::getTraversalOrderMaxDistance (const idx_t& distance) const {
+template <class Graph>
+typename Graph::ordered_list_t BFS<Graph>::getTraversalOrderMaxDistance (const idx_t& distance) const {
   ordered_list_t result;
   for (auto x : final_) {
     if (distances_[x] > distance) continue;
@@ -121,8 +139,8 @@ typename Graph<SCALAR,STORAGE,DIRECTION>::ordered_list_t BFS<SCALAR,STORAGE,DIRE
   return result;
 }
 
-template <class SCALAR, class STORAGE, class DIRECTION>
-typename Graph<SCALAR,STORAGE,DIRECTION>::idx_list_t BFS<SCALAR,STORAGE,DIRECTION>::getNodesExactDistance (const idx_t& distance) const {
+template <class Graph>
+typename Graph::idx_list_t BFS<Graph>::getNodesExactDistance (const idx_t& distance) const {
   idx_list_t result;
   for (auto elem : final_) {
     if (distances_[elem] == distance) result.push_back(elem);
@@ -130,8 +148,8 @@ typename Graph<SCALAR,STORAGE,DIRECTION>::idx_list_t BFS<SCALAR,STORAGE,DIRECTIO
   return result;
 }
 
-template <class SCALAR, class STORAGE, class DIRECTION>
-typename Graph<SCALAR,STORAGE,DIRECTION>::idx_list_t BFS<SCALAR,STORAGE,DIRECTION>::getNodesMaxDistance (const idx_t& distance) const {
+template <class Graph>
+typename Graph::idx_list_t BFS<Graph>::getNodesMaxDistance (const idx_t& distance) const {
   idx_list_t result;
   for (auto elem : final_) {
     if (distances_[elem] <= distance) result.push_back(elem);
@@ -139,7 +157,7 @@ typename Graph<SCALAR,STORAGE,DIRECTION>::idx_list_t BFS<SCALAR,STORAGE,DIRECTIO
   return result;
 }
 
-} /* namespace algorithm */
-} /* namespace gl */
+} // namespace algorithm
+} // namespace gl
 
-#endif /* GL_BFS_HPP */
+#endif // GL_BFS_HPP

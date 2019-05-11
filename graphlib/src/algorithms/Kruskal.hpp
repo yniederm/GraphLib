@@ -22,18 +22,14 @@ class Kruskal {
   using visit_list_t = typename Graph::visit_list_t;
 
 public: 
-  /**
-   * @brief Constructor. This is where the MST is computed based on a * greedy heuristic that only adds the cheapest edges.
-   * @param graph Input graph on which the Minimum Spanning Tree will * be computed.
-   */
-  explicit Kruskal(const Graph&);
+  Kruskal();                                         ///< Default constructor
+  explicit Kruskal(const Graph&);                    ///< Computation constructor
 
-  Kruskal() = delete;
-  Kruskal(const Kruskal &) = default;                ///< @brief Copy constructor
-  Kruskal(Kruskal &&) noexcept = default;            ///< @brief Move constructor
-  Kruskal &operator=(const Kruskal &) = default;     ///< @brief Copy assignment
-  Kruskal &operator=(Kruskal &&) noexcept = default; ///< @brief Move assignment
-  ~Kruskal() = default;                              ///< @brief Destructor
+  Kruskal(const Kruskal &) = default;                ///< Copy constructor
+  Kruskal(Kruskal &&) noexcept = default;            ///< Move constructor
+  Kruskal &operator=(const Kruskal &) = default;     ///< Copy assignment
+  Kruskal &operator=(Kruskal &&) noexcept = default; ///< Move assignment
+  ~Kruskal() = default;                              ///< Default destructor
 
   /**
    * @brief Provides a Selector Object to color the edges in the MST.
@@ -48,6 +44,11 @@ public:
    */
   std::function<std::pair<bool,gl::Color>(const idx_t node)> NodeSelector(const gl::Color& color = gl::Color("red")) const;
   /**
+   * @brief Computation. This is where the MST is computed based on a * greedy heuristic that only adds the cheapest edges.
+   * @param graph Input graph on which the Minimum Spanning Tree will * be computed.
+   */
+  void compute(const Graph& graph);
+  /**
    * @brief Computes the cost of the MST (sum of all edge weights in the MST).
    * @return MST cost.
    */
@@ -59,6 +60,7 @@ public:
   Graph getMST() const;
 
 private:
+  bool isInitialized_ = false; ///< @brief Boolean storing initialization status
   Graph result_;       ///< @brief MST graph
   val_t cost_;         ///< @brief MST cost (sum of all edge weights)
 };
@@ -68,9 +70,17 @@ private:
 ///////////////////////////////////////////////////////////
 
 template <class Graph>
-Kruskal<Graph>::Kruskal(const Graph& graph)
+Kruskal<Graph>::Kruskal() : isInitialized_(false) {}
+
+template <class Graph>
+Kruskal<Graph>::Kruskal(const Graph& graph) : isInitialized_(false) {
+  compute(graph);
+}
+
+template <class Graph>
+void Kruskal<Graph>::compute(const Graph& graph)
 {
-  GL_ASSERT(!graph.isDirected(),(std::string("Kruskal: '")+graph.getGraphLabel()+std::string("' is not undirected.\n")))
+  GL_ASSERT(!graph.isDirected(),(std::string("Kruskal::compute | '")+graph.getGraphLabel()+std::string("' is not undirected.\n")))
   std::vector<Edge> edges;
   Graph result(graph.numNodes(),std::string(std::string("MST of ")+graph.getGraphLabel()));
   val_t cost {0};
@@ -106,11 +116,13 @@ Kruskal<Graph>::Kruskal(const Graph& graph)
 
   result_ = result;
   cost_ = cost;
+  isInitialized_ = true;
 }
 
 template <class Graph>
 std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const typename Graph::idx_t dest)> Kruskal<Graph>::EdgeSelector (const gl::Color& color) const 
 {
+  GL_ASSERT(isInitialized_,"Kruskal::EdgeSelector | Kruskal has not been initialized with a graph.")
   return [&color, this](const idx_t src, const idx_t dest) -> std::pair<bool,gl::Color> {
     if (result_.hasEdge(src,dest)) 
       return {true,color};
@@ -122,6 +134,7 @@ std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const t
 template <class Graph>
 std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t node)> Kruskal<Graph>::NodeSelector (const gl::Color& color) const 
 {
+  GL_ASSERT(isInitialized_,"Kruskal::NodeSelector | Kruskal has not been initialized with a graph.")
   return [&color, this](const idx_t node) -> std::pair<bool,gl::Color> {
     if (0 <= node && node < result_.numNodes())
       return {true,color};
@@ -132,12 +145,14 @@ std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t node)> Krusk
 template <class Graph>
 typename Kruskal<Graph>::val_t Kruskal<Graph>::getCost () const 
 {
+  GL_ASSERT(isInitialized_,"Kruskal::getCost | Kruskal has not been initialized with a graph.")
   return cost_;
 }
 
 template <class Graph>
 Graph Kruskal<Graph>::getMST () const 
 {
+  GL_ASSERT(isInitialized_,"Kruskal::getMST | Kruskal has not been initialized with a graph.")
   auto result = result_;
   return result;
 }
