@@ -1928,7 +1928,7 @@ public:
   }
   bool operator!= (const Graph<SCALAR,STORAGE_KIND,DIRECTION>& rhs)
   {
-    return !operator!=(rhs);
+    return !operator==(rhs);
   }
 
 
