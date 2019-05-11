@@ -49,22 +49,6 @@ std::cout << "\033[32m'" << TestName << "' passed.\033[00m\n";
   __gl_test_fail__.push_back(TestName); \
   std::cout << "\033[31m'" << TestName << "' failed.\033[00m\n";
 
-
-/**
- * @brief Comparison operator that can be used for testing equality.
- * @param Actual Computed result that will be compared to the expected value.
- * @param Expected Expected Value for the computed result.
- * @param TestName A string that can be used as an identifier for which test case is executed.
- */
-#define GL_TEST_COMPARE(Actual,Expected,TestName) \
-if (Actual == Expected ) \
-{ \
-  __GL_TEST_SUCCESS__(TestName) \
-} \
-else \
-{ \
-  __GL_TEST_FAIL__(TestName) \
-}
 /**
  * @brief Comparison operator that can be used for testing numerical equality of two container.
  * @param Actual Computed container that will be compared to the expected container.
@@ -72,24 +56,12 @@ else \
  * @param AbsTol Absolute tolerance for numerical error.
  * @param TestName A string that can be used as an identifier for which test case is executed.
  */
-#define GL_TEST_NUMERIC_CONTAINER_COMPARE(Actual,Expected,AbsTol,TestName) \
-if (Actual.size() != Expected.size()) { \
-  __GL_TEST_FAIL__(TestName) \
-} else { \
-  auto et = Expected.begin(); \
-  for (auto at = Actual.begin(); at != Actual.end(); ++at, ++et) \
-  { \
-    if (std::abs(*at - *et) >= AbsTol) \
-    { \
-      __gl_test_except_flag__ = true; \
-    } \
-  } \
-  if (__gl_test_except_flag__) { \
-    __GL_TEST_FAIL__(TestName) \
-  } else { \
-    __GL_TEST_SUCCESS__(TestName) \
-  } \
-  __gl_test_except_flag__ = false; \
+#define GL_TEST_NUMERIC_CONTAINER_COMPARE(Actual,Expected,AbsTol) \
+GL_ASSERT_EQUAL_DESC(Actual.size(),Expected.size(),"Container sizes") \
+auto et = Expected.begin(); \
+for (auto at = Actual.begin(); at != Actual.end(); ++at, ++et) \
+{ \
+  GL_ASSERT_EQUAL_ABSTOL(*at,*et,AbsTol) \
 }
 
 /**
@@ -107,12 +79,102 @@ catch(const std::exception& e) \
 { \
   std::cerr << e.what() << '\n'; \
   __gl_test_except_flag__ = true; \
-  GL_TEST_COMPARE(std::string(e.what()),ExpectedError,TestName) \
+  GL_ASSERT_EQUAL(std::string(e.what()),ExpectedError) \
 } \
 if (!__gl_test_except_flag__) { \
   std::cerr << "No exception was thrown when one was expected.\n"; \
   __GL_TEST_FAIL__(TestName) \
 } \
 __gl_test_except_flag__ = false;
+
+/**
+ * @brief Operator that can be used to assert a condition.
+ * @param Condition Predicate that is expected to be true.
+ */
+#define GL_ASSERT_THROW(Condition)                                \
+{                                                                 \
+  if( !(Condition) )                                              \
+  {                                                               \
+    throw std::runtime_error(   std::string(__FILE__)             \
+                              + std::string(":")                  \
+                              + std::to_string(__LINE__)          \
+                              + std::string(" in ")               \
+                              + std::string(__PRETTY_FUNCTION__)  \
+    );                                                            \
+  }                                                               \
+}
+
+/**
+ * @brief Comparison operator that can be used for testing equality.
+ * @param A First value in the binary comparison.
+ * @param B Second value in the binary comparison.
+ */
+#define GL_ASSERT_EQUAL(A,B)                                     \
+{                                                                \
+  if( (A) != (B) )                                               \
+  {                                                              \
+    throw std::runtime_error(   std::string(__FILE__)            \
+                              + std::string(":")                 \
+                              + std::to_string(__LINE__)         \
+                              + std::string(" in ")              \
+                              + std::string(__PRETTY_FUNCTION__) \
+                              + std::string(": ")                \
+                              + std::to_string(A)                \
+                              + std::string(" != ")              \
+                              + std::to_string(B)                \
+    );                                                           \
+  }                                                              \
+}
+
+/**
+ * @brief Comparison operator that can be used for testing equality.
+ * @param A First value in the binary comparison.
+ * @param B Second value in the binary comparison.
+ * @param Description A string that can be used as an identifier for which comparison is performed.
+ */
+#define GL_ASSERT_EQUAL_DESC(A,B,Description)                    \
+{                                                                \
+  if( (A) != (B) )                                               \
+  {                                                              \
+    throw std::runtime_error(   std::string(__FILE__)            \
+                              + std::string(":")                 \
+                              + std::to_string(__LINE__)         \
+                              + std::string(" in ")              \
+                              + std::string(__PRETTY_FUNCTION__) \
+                              + std::string(": (")               \
+                              + std::string(Description)         \
+                              + std::string(") ")                \
+                              + std::to_string(A)                \
+                              + std::string(" != ")              \
+                              + std::to_string(B)                \
+    );                                                           \
+  }                                                              \
+}
+
+/**
+ * @brief Comparison operator that can be used for testing equality for numerical values.
+ * @param A First value in the binary comparison.
+ * @param B Second value in the binary comparison.
+ * @param AbsTol Absolute tolerance for the difference between the two values.
+ */
+#define GL_ASSERT_EQUAL_ABSTOL(A,B,AbsTol)                       \
+{                                                                \
+  if( std::abs(A - B) >= AbsTol )                                \
+  {                                                              \
+    throw std::runtime_error(   std::string(__FILE__)            \
+                              + std::string(":")                 \
+                              + std::to_string(__LINE__)         \
+                              + std::string(" in ")              \
+                              + std::string(__PRETTY_FUNCTION__) \
+                              + std::string(": (Tolerance: ")    \
+                              + std::to_string(AbsTol)           \
+                              + std::string(") ")                \
+                              + std::to_string(A)                \
+                              + std::string(" != ")              \
+                              + std::to_string(B)                \
+    );                                                           \
+  }                                                              \
+}
+
 
 #endif // GL_TEST_HPP
