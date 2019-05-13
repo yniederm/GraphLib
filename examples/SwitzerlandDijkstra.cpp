@@ -49,10 +49,10 @@ int main(int argc, char const *argv[])
 
     for (gl::index_type i = 0; i < path.size() - 2; i++)
     {
-        g.updateEdge(path[i], path[i + 1], gl::Color("blue"));
+        g.updateEdge(path[i], path[i + 1], gl::Color("aqua"));
         if (i > 0)
         {
-            g.updateNode(path[i], gl::Color("blue"));
+            g.updateNode(path[i], gl::Color("aqua"));
         }
     }
 
