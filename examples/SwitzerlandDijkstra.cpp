@@ -4,16 +4,24 @@
 
 int main(int argc, char const *argv[])
 {
-    gl::io::YAMLReader reader("../../test/input/switzerland.yml");
+    gl::io::YAMLReader reader("../../examples/input/switzerland.yml");
 
     gl::graphMdu g = *std::get<gl::graphMdu *>(reader.get());
 
     gl::index_type source = g.numNodes();
     gl::index_type dest = g.numNodes();
 
+    /**
+     * Pass in two command line arguments to change the Dijkstra targets.
+     * Accepted are (probably) any two Swiss Post Codes.
+     * Example (Path from Basel to Zurich): ./SwitzerlandDijkstra 4000 8000
+     */
+    std::string source_label (argc == 3 ? " " + std::string(argv[1]) : " 5000");
+    std::string target_label (argc == 3 ? " " + std::string(argv[2]) : " 7000");
+
     for (auto it = g.node_cbegin(); it != g.node_cend(); it++)
     {
-        if (it->label() == " 5000") // change this
+        if (it->label() == source_label)
         {
             source = it->id();
             break;
@@ -21,7 +29,7 @@ int main(int argc, char const *argv[])
     }
     for (auto it = g.node_cbegin(); it != g.node_cend(); it++)
     {
-        if (it->label() == " 7000") // change this
+        if (it->label() == target_label)
         {
             dest = it->id();
             break;

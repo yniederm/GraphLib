@@ -29,7 +29,6 @@ set(TESTS
     MatrixGraph
     ReadYAML
     StreamOverload
-    SwitzerlandDijkstra
     TransitiveClosure
     Traversal
     UpdateFlaggedEntities
@@ -41,7 +40,6 @@ set(EIGEN_TESTS
     MathGL
     MathGLColors
     ReadYAML
-    SwitzerlandDijkstra
     UpdateFlaggedEntities
     Traversal
     )
