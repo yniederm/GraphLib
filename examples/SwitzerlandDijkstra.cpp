@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
 {
     gl::io::YAMLReader reader("examples/input/switzerland.yml");  // assumes running from project root folder
 
-    gl::graphMdu g = *std::get<gl::graphMdu *>(reader.get());
+    auto g = *std::get<gl::graphLdu *>(reader.get());
 
     gl::index_type source = g.numNodes();
     gl::index_type dest = g.numNodes();
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    gl::algorithm::dijkstraMdu dijkstra(g,source);
+    gl::algorithm::dijkstraLdu dijkstra(g,source);
     auto path = dijkstra.getPath(dest);
 
     for (gl::index_type i = 0; i < path.size() - 2; i++)
@@ -56,7 +56,7 @@ int main(int argc, char const *argv[])
         }
     }
 
-    g.updateNode(source, gl::Color("green"));
+    g.updateNode(source, gl::Color("lime"));
     g.updateNode(dest, gl::Color("red"));
 
     std::ofstream out("build/examples/switzerland.tex");
