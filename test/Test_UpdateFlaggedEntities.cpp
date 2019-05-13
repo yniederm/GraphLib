@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
   gl::interface::colorFlaggedEntities(graph1, kruskal.EdgeSelector(gl::Color("orange")),kruskal.NodeSelector(gl::Color("lime")));
 
   std::ofstream outKruskal("UpdateFlaggedKruskal.tex");
-  gl::external::writeTikzToStream2(outKruskal, graph1, true);
+  gl::external::writeTikzNetwork(outKruskal, graph1, true);
   outKruskal.close();
 
   // gl::io::compileLatex("UpdateFlaggedKruskal.tex");
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[])
   gl::interface::colorFlaggedEntities(graph2, dijkstra.EdgeSelector(),dijkstra.NodeSelector(gl::Color("fuchsia")));
 
   std::ofstream outDijkstra("UpdateFlaggedDijkstra.tex");
-  gl::external::writeTikzToStream2(outDijkstra, graph2, true);
+  gl::external::writeTikzNetwork(outDijkstra, graph2, true);
   outDijkstra.close();
 
   // gl::io::compileLatex("UpdateFlaggedDijkstra.tex");

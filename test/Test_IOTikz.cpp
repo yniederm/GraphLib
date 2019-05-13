@@ -40,12 +40,12 @@ int main(int argc, char const *argv[])
 
   gl::algorithm::SpectralPlacingSparse(g);
   std::ofstream out("IOTikz_sparse.tex");
-  gl::external::writeTikzToStream2(out, g);
+  gl::external::writeTikzNetwork(out, g);
   out.close();
   // gl::io::compileLatex("IOTikz_sparse.tex");
   gl::algorithm::SpectralPlacingDense(g);
   std::ofstream out2("IOTikz_dense.tex");
-  gl::external::writeTikzToStream2(out2, g);
+  gl::external::writeTikzNetwork(out2, g);
   out2.close();
   // gl::io::compileLatex("IOTikz_dense.tex");
 

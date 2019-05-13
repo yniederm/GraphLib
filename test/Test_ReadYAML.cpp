@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
 
     std::ofstream out("ReadYAML.tex");
 
-    IO_CALL_ON_GRAPH(g, gl::external::writeTikzToStream2(out, IO_GRAPH));
+    IO_CALL_ON_GRAPH(g, gl::external::writeTikzNetwork(out, IO_GRAPH));
     out.close();
 
     // gl::io::compileLatex("ReadYAML.tex");
