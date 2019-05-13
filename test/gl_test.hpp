@@ -9,81 +9,20 @@
 #include "../graphlib/src/io/StreamOverload.hpp"
 
 /**
- * @brief Initializes test status variables.
+ * @brief Used to signal the start of a test
+ * @param TestName string used to identify a test.
  */
-// #define GL_TEST_INIT \
-// int __gl_test_success_count__ = 0; \
-// int __gl_test_fail_count__ = 0; \
-// bool __gl_test_except_flag__ = false; \
-// std::vector<std::string> __gl_test_success__, __gl_test_fail__;
-
-// /**
-//  * @brief Provides a summary of all exectuted tests.
-//  */
-// #define GL_TEST_TERM \
-// std::cout << std::string(15,'-') << " TEST SUMMARY " << std::string(15,'-') << "\n"; \
-// std::cout << __gl_test_success_count__ + __gl_test_fail_count__ << " tests run.\n"; \
-// std::cout << "\033[32m Passed Tests (" << __gl_test_success_count__ << ")\033[00m\n"; \
-// for (auto x : __gl_test_success__) \
-// { \
-//   std::cout << "  " << x << "\n"; \
-// } \
-// std::cout << "\033[31m Failed Tests (" << __gl_test_fail_count__ << ")\033[00m\n"; \
-// for (auto x : __gl_test_fail__) \
-// { \
-//   std::cout << "  " << x << "\n"; \
-// }
-
-/**
- * @brief Marks the given test as Passed.
- */
-// #define __GL_TEST_SUCCESS__(TestName) \
-// ++__gl_test_success_count__; \
-// __gl_test_success__.push_back(TestName); \
-// std::cout << "\033[32m'" << TestName << "' passed.\033[00m\n";
-
-// /**
-//  * @brief Marks the given test as Failed.
-//  */
-// #define __GL_TEST_FAIL__(TestName) \
-//   ++__gl_test_fail_count__; \
-//   __gl_test_fail__.push_back(TestName); \
-//   std::cout << "\033[31m'" << TestName << "' failed.\033[00m\n";
-
-/**
- * @brief Comparison operator that can be used for testing numerical equality of two container.
- * @param Actual Computed container that will be compared to the expected container.
- * @param Expected Expected Value for the computed result.
- * @param AbsTol Absolute tolerance for numerical error.
- * @param TestName A string that can be used as an identifier for which test case is executed.
- */
-#define GL_NUMERIC_CONTAINER_COMPARE(Actual,Expected,AbsTol)            \
-GL_ASSERT_EQUAL_DESC(Actual.size(),Expected.size(),"Container sizes")   \
-auto et = Expected.begin();                                             \
-for (auto at = Actual.begin(); at != Actual.end(); ++at, ++et)          \
-{                                                                       \
-  GL_ASSERT_EQUAL_ABSTOL(*at,*et,AbsTol)                                \
+#define GL_TEST_BEGIN(TestName)                                               \
+{                                                                             \
+  std::cerr << "\033[32m-- Running test \"" << TestName << "\"...\033[00m\n"; \
 }
 
 /**
- * @brief Macro that encapsulates a try/catch block and compares the producederror messages.
- * @param Expression Code block that is expected to produce an exception.
- * @param ExceptionType Expected Exception type.
- * @param ExpectedError Expected error message.
+ * @brief Used to signal the end of a test
  */
-#define GL_TEST_CATCH_ERROR(Expression,ExceptionType,ExpectedError) \
-try                                                               \
-{                                                                 \
-  Expression                                                      \
-  GL_FAIL("An exception was expected, but not thrown.")           \
-}                                                                 \
-catch(const ExceptionType& e)                                     \
-{                                                                 \
-  GL_ASSERT_EQUAL_STRING(std::string(e.what()),ExpectedError)     \
-}                                                                 \
-catch (...)                                                       \
-{                                                                 \
-  GL_FAIL("Wrong exception type")                                 \
+#define GL_TEST_END()                        \
+{                                            \
+  std::cerr << "\033[32mfinished\033[00m\n"; \
 }
 
 /**
@@ -147,15 +86,18 @@ throw std::runtime_error(   std::string(__FILE__)               \
 {                                                                \
   if( (A) != (B) )                                               \
   {                                                              \
+    std::stringstream ssA, ssB;                                  \
+    ssA << A;                                                    \
+    ssB << B;                                                    \
     throw std::runtime_error(   std::string(__FILE__)            \
                               + std::string(":")                 \
                               + std::to_string(__LINE__)         \
                               + std::string(" in ")              \
                               + std::string(__PRETTY_FUNCTION__) \
-                              + std::string(": ")                \
-                              + A.getGraphLabel()                \
-                              + std::string(" != ")              \
-                              + B.getGraphLabel()                \
+                              + std::string(":\n")               \
+                              + ssA.str()                        \
+                              + std::string("\n!=\n")            \
+                              + ssB.str()                        \
     );                                                           \
   }                                                              \
 }
@@ -173,14 +115,24 @@ throw std::runtime_error(   std::string(__FILE__)               \
                               + std::to_string(__LINE__)         \
                               + std::string(" in ")              \
                               + std::string(__PRETTY_FUNCTION__) \
-                              + std::string(": ")                \
+                              + std::string(":\n")               \
                               + A                                \
-                              + std::string(" != ")              \
+                              + std::string("!=\n")              \
                               + B                                \
     );                                                           \
   }                                                              \
 }
-
+/**
+ * @brief Comparison operator that can be used for testing equality of a stream and a string.
+ * @param A Object that will be read into a stream.
+ * @param B Expected string.
+ */
+#define GL_ASSERT_EQUAL_STREAM(A,B)                              \
+{                                                                \
+  std::stringstream ssA, ssB (B);                                \
+  ssA << A;                                                      \
+  GL_ASSERT_EQUAL_STRING(ssA.str(), ssB.str())                   \
+}
 
 /**
  * @brief Comparison operator that can be used for testing equality.
@@ -215,7 +167,7 @@ throw std::runtime_error(   std::string(__FILE__)               \
  */
 #define GL_ASSERT_EQUAL_ABSTOL(A,B,AbsTol)                       \
 {                                                                \
-  if( std::abs(A - B) >= AbsTol )                                \
+  if( std::max(A,B) - std::min(A,B) >= AbsTol )                  \
   {                                                              \
     throw std::runtime_error(   std::string(__FILE__)            \
                               + std::string(":")                 \
@@ -231,6 +183,69 @@ throw std::runtime_error(   std::string(__FILE__)               \
     );                                                           \
   }                                                              \
 }
+/**
+ * @brief Comparison operator that can be used for testing numerical equality of two containers.
+ * @param Actual Computed container that will be compared to the expected container.
+ * @param Expected Expected Value for the computed result.
+ * @param AbsTol Absolute tolerance for numerical error.
+ * @param TestName A string that can be used as an identifier for which test case is executed.
+ */
+#define GL_NUMERIC_CONTAINER_COMPARE(Actual,Expected,AbsTol)            \
+GL_ASSERT_EQUAL_DESC(Actual.size(),Expected.size(),"Container sizes")   \
+auto et = Expected.begin();                                             \
+for (auto at = Actual.begin(); at != Actual.end(); ++at, ++et)          \
+{                                                                       \
+  GL_ASSERT_EQUAL_ABSTOL(*at,*et,AbsTol)                                \
+}
 
+/**
+ * @brief Comparison operator that can be used for testing numerical equality of two Eigen Matrices.
+ * @param A First Eigen Matrix for comparison
+ * @param A Second Eigen Matrix for comparison
+ * @param AbsTol Absolute tolerance for numerical error.
+ */
+#define GL_EIGEN_MATRIX_COMPARE(A,B,AbsTol)                      \
+{                                                                \
+  if( (A - B).norm() >= AbsTol )                                 \
+  {                                                              \
+    std::stringstream ssA, ssB;                                  \
+    ssA << A;                                                    \
+    ssB << B;                                                    \
+    throw std::runtime_error(   std::string(__FILE__)            \
+                              + std::string(":")                 \
+                              + std::to_string(__LINE__)         \
+                              + std::string(" in ")              \
+                              + std::string(__PRETTY_FUNCTION__) \
+                              + std::string(" (Norm Tolerance: ")\
+                              + std::to_string(AbsTol)           \
+                              + std::string("):\n")              \
+                              + ssA.str()                        \
+                              + std::string("\n != \n")          \
+                              + ssB.str()                        \
+    );                                                           \
+  }                                                              \
+}
+
+/**
+ * @brief Macro that encapsulates a try/catch block and compares the producederror messages.
+ * @param Expression Code block that is expected to produce an exception.
+ * @param ExceptionType Expected Exception type.
+ * @param ExpectedError Expected error message.
+ */
+#define GL_TEST_CATCH_ERROR(Expression,ExceptionType,ExpectedError) \
+try                                                               \
+{                                                                 \
+  Expression                                                      \
+  GL_FAIL("An exception was expected, but not thrown.")           \
+}                                                                 \
+catch(const ExceptionType& e)                                     \
+{                                                                 \
+  std::cerr << e.what() << std::endl;                             \
+  GL_ASSERT_EQUAL_STRING(std::string(e.what()),ExpectedError)     \
+}                                                                 \
+catch (...)                                                       \
+{                                                                 \
+  GL_FAIL("Wrong exception type")                                 \
+}
 
 #endif // GL_TEST_HPP

@@ -54,7 +54,8 @@ The following software is required:
 - lualatex (including tikz-network)
 - convert (built in on linux)
 
-To build any test file, invoke `install.sh` from within the root folder of this repository. This will create executables in the `build` folder for you to run.
+To build any test file, invoke `install.sh` from within the root folder of this repository. This will create executables in the `build/test` folder for you to run.
+Alternatively you can directly call all tests by running './test/test.sh' from the root folder.
 
 # To-Do list
 - Document algorithm purpose in doxygen files
@@ -96,12 +97,11 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
   - stationary distribution
   - reducibility
   - periodicity
-- node things
-  - centralities: 
-    - Betweenness
-    - Eigenvector
-    - Katz
-    - PageRank
+- node centralities
+  - Betweenness
+  - Eigenvector
+  - Katz
+  - PageRank
 - Split graph
   - find constructing degree sequence
   - computing splittance

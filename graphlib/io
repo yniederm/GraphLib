@@ -5,6 +5,8 @@
 
 #include "src/partial_specialization_on"
 
+#include "src/gl_base.hpp"
+
 #include "src/io/StreamOverload.hpp"
 #include "src/io/PrintContainer.hpp"
 #include "src/io/YAMLReader.hpp"

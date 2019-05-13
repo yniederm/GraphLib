@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
     mglGraph gr;
     gr.SetSize(1000, 1000);
     gl::external::saveImage(&gr, g, ""); // black lines
-    gr.WritePNG("build/test/mathgl_colors.png");
+    gr.WritePNG("mathgl_colors.png");
     std::cout << "saved to build/test/mathgl_colors.png" << std::endl;
     return 0;
 }

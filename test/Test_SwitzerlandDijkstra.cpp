@@ -4,7 +4,7 @@
 
 int main(int argc, char const *argv[])
 {
-    gl::io::YAMLReader reader("test/input/switzerland.yml");
+    gl::io::YAMLReader reader("../../test/input/switzerland.yml");
 
     gl::graphMdu g = *std::get<gl::graphMdu *>(reader.get());
 
@@ -51,11 +51,11 @@ int main(int argc, char const *argv[])
     g.updateNode(source, gl::Color("green"));
     g.updateNode(dest, gl::Color("red"));
 
-    std::ofstream out("build/test/switzerland.tex");
+    std::ofstream out("switzerland.tex");
     gl::external::writeTikzToStream2(out, g, false, false);
     out.close();
 
     std::cout << "LATEX FILE GENERATED." << std::endl << "ATTENTION: Compiling latex might take up to 5 minutes." << std::endl;
-    gl::io::compileLatex("build/test/switzerland.tex","--output-directory=build/test");
+    // gl::io::compileLatex("switzerland.tex");
     return 0;
 }

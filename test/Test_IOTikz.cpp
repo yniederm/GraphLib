@@ -39,15 +39,15 @@ int main(int argc, char const *argv[])
   g.setEdge(3, 13, 1, gl::Color(0.36376376463902516, 0.9434075364792681, 0.10837703956648426));
 
   gl::algorithm::SpectralPlacingSparse(g);
-  std::ofstream out("build/test/IOTikz_sparse.tex");
+  std::ofstream out("IOTikz_sparse.tex");
   gl::external::writeTikzToStream2(out, g);
   out.close();
-  gl::io::compileLatex("build/test/IOTikz_sparse.tex", "--output-directory=build/test/");
+  // gl::io::compileLatex("IOTikz_sparse.tex");
   gl::algorithm::SpectralPlacingDense(g);
-  std::ofstream out2("build/test/IOTikz_dense.tex");
+  std::ofstream out2("IOTikz_dense.tex");
   gl::external::writeTikzToStream2(out2, g);
   out2.close();
-  gl::io::compileLatex("build/test/IOTikz_dense.tex", "--output-directory=build/test/");
+  // gl::io::compileLatex("IOTikz_dense.tex");
 
   return 0;
 }

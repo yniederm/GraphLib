@@ -9,6 +9,12 @@ std::numeric_limits<ValueType>::max()
 
 namespace gl
 {
+  class Matrix;
+  class List;
+
+  class Directed;
+  class Undirected;
+  
   using index_type = std::size_t;
 } // namespace gl
 

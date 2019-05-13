@@ -58,19 +58,15 @@ public:
                                                 a_(static_cast<color_val_t>(GL_FORCE_INTO_RANGE(a, 0., 1.) * 100)) {}
   /**
    * @brief Constructor for combined hexadecimal R,G,B,A values.
-   * @param[in] hex Hexadecimal color code. Format: \f$ 0xAARRGGBB \f$ where \f$ RR, GG, BB \f$ signify the red, blue and green bytes. \f$ AA \f$ is optional and signifies the alpha (opacity) byte.
+   * @param[in] hex Hexadecimal color code. Format: \f$ 0xRRGGBB \f$ where \f$ RR, GG, BB \f$ signify the red, blue and green bytes. 
+   * @param[in] a Hexadecimal color code for A value. Format: \f$ 0xAA \f$ where \f$ AA \f$ is optional and signifies the alpha (opacity) byte.
    */
-  explicit Color(const unsigned int hex) : a_(0x64),
-                                           r_((hex >> 16) & 0xFF),
-                                           g_((hex >> 8) & 0xFF),
-                                           b_((hex)&0xFF)
-  {
-    if ((hex >> 24) > 0)
-    {
-      const color_val_t a = (hex >> 24) & 0xFF;
-      a_ = a > 0x64 ? 0x64 : a;
-    }
-  }
+  explicit Color(const unsigned int hex, const unsigned int a=0x64) : 
+    a_(a),
+    r_((hex >> 16) & 0xFF),
+    g_((hex >> 8) & 0xFF),
+    b_((hex) & 0xFF)
+  {}
   /**
    * @brief Constructor for combined hexadecimal R,G,B,A values.
    * @param[in] name Name of color. Available are the following: \f$
@@ -105,7 +101,7 @@ public:
     }
     else
     {
-      hex(0x000000);
+      hex(0xFFFFFF);
     }
   }
   //@}
@@ -132,7 +128,7 @@ public:
    */
   bool operator!= (const Color& rhs) const
   {
-    return !operator!=(rhs);
+    return !operator==(rhs);
   }
   /**
    * @name Read access to stored RGBA color values.
@@ -191,18 +187,25 @@ public:
   //@{
   /**
    * @brief Sets all values of the RGBA color.
-   * @param[in] hex Input hexadecimal color code. 
+   * @param[in] hex New hexadecimal color code (0xRRGGBB). 
    */
   inline void hex(const int hex)
   {
     r_ = (hex >> 16) & 0xFF;
     g_ = (hex >> 8) & 0xFF;
-    b_ = (hex)&0xFF;
-    if ((hex >> 24) > 0)
-    {
-      const color_val_t a = (hex >> 24) & 0xFF;
-      a_ = a > 0x64 ? 0x64 : a;
-    }
+    b_ = (hex) & 0xFF;
+  }
+  /**
+   * @brief Sets all values of the RGBA color.
+   * @param[in] hex New hexadecimal color code (0xRRGGBB). 
+   * @param[in] a Optional new alpha/opacity value (0xAA). 
+   */
+  inline void hex(const int hex, const unsigned int a)
+  {
+    r_ = (hex >> 16) & 0xFF;
+    g_ = (hex >> 8) & 0xFF;
+    b_ = (hex) & 0xFF;
+    a_ = GL_FORCE_INTO_RANGE(a, 0, 100);
   }
   /**
    * @brief Sets the red value of the RGBA color.

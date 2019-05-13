@@ -3,6 +3,7 @@
 
 void TestConnectedClosenessCentrality()
 {
+  GL_TEST_BEGIN("Closeness Centrality of connected Graph")
   gl::graphLiu g1 ("2 4 2 1 1","Connected");
   std::cout << g1;
 
@@ -18,10 +19,12 @@ void TestConnectedClosenessCentrality()
 
   std::cout << "cc_connected: " << cc1_actual;
   GL_NUMERIC_CONTAINER_COMPARE(cc1_actual,cc1_expect,1e-9)
+  GL_TEST_END()
 }
 
 void TestConnectedHarmonicCentrality ()
 {
+  GL_TEST_BEGIN("Harmonic Centrality of connected Graph")
   gl::graphLiu g1 ("2 4 2 1 1","Connected");
   std::cout << g1;
 
@@ -36,10 +39,12 @@ void TestConnectedHarmonicCentrality ()
   }
   std::cout << "hc_connected: " << hc1_actual;
   GL_NUMERIC_CONTAINER_COMPARE(hc1_actual,hc1_expect,1e-9)
+  GL_TEST_END()
 }
 
 void TestDisconnectedClosenessCentrality ()
 {
+  GL_TEST_BEGIN("Closeness Centrality of disconnected Graph")
   gl::graphLiu g2 (11,"Disconnected");
   g2.setEdge(0,1);
   g2.setEdge(0,2);
@@ -63,10 +68,12 @@ void TestDisconnectedClosenessCentrality ()
   }
   std::cout << "cc_disconnected: " << cc2_actual;
   GL_NUMERIC_CONTAINER_COMPARE(cc2_actual,cc2_expect,1e-9)
+  GL_TEST_END()
 }
 
 void TestDisconnectedHarmonicCentrality ()
 {
+  GL_TEST_BEGIN("Harmonic Centrality of disconnected Graph")
   gl::graphLiu g2 (11,"Disconnected");
   g2.setEdge(0,1);
   g2.setEdge(0,2);
@@ -91,10 +98,12 @@ void TestDisconnectedHarmonicCentrality ()
   }
   std::cout << "hc_disconnected: " << hc2_actual;
   GL_NUMERIC_CONTAINER_COMPARE(hc2_actual,hc2_expect,1e-9)
+  GL_TEST_END()
 }
 
 void TestDirectedInDegreeCentrality ()
 {
+  GL_TEST_BEGIN("In-Degree Centrality of directed Graph")
   gl::graphMid dc_d(9, "Directed Matrix");
   dc_d.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_d;
@@ -109,10 +118,12 @@ void TestDirectedInDegreeCentrality ()
 
   std::cout << "idc_directed: " << idcd_actual;
   GL_NUMERIC_CONTAINER_COMPARE(idcd_actual,idcd_expect,1e-9)
+  GL_TEST_END()
 }
 
 void TestDirectedOutDegreeCentrality ()
 {
+  GL_TEST_BEGIN("Out-Degree Centrality of directed Graph")
   gl::graphMid dc_d(9, "Directed Matrix");
   dc_d.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_d;
@@ -126,11 +137,13 @@ void TestDirectedOutDegreeCentrality ()
 
   std::cout << "odc_directed: " << odcd_actual;
   GL_NUMERIC_CONTAINER_COMPARE(odcd_actual,odcd_expect,1e-9)
+  GL_TEST_END()
 }
 
 
 void TestUndirectedInDegreeCentrality ()
 {
+  GL_TEST_BEGIN("In-Degree Centrality of undirected Graph")
   gl::graphMiu dc_u(9, "Unirected Matrix");
   dc_u.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_u;
@@ -144,9 +157,11 @@ void TestUndirectedInDegreeCentrality ()
   }
   std::cout << "idc_undirected: " << idcu_actual;
   GL_NUMERIC_CONTAINER_COMPARE(idcu_actual,idcu_expect,1e-9)
+  GL_TEST_END()
 }
 void TestUndirectedOutDegreeCentrality ()
 {
+  GL_TEST_BEGIN("Out-Degree Centrality of undirected Graph")
   gl::graphMiu dc_u(9, "Undirected Matrix");
   dc_u.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_u;
@@ -160,9 +175,11 @@ void TestUndirectedOutDegreeCentrality ()
   }
   std::cout << "odc_undirected: " << odcu_actual;
   GL_NUMERIC_CONTAINER_COMPARE(odcu_actual,odcu_expect,1e-9)
+  GL_TEST_END()
 }
 void TestUndirectedDegreeCentrality ()
 {
+  GL_TEST_BEGIN("Degree Centrality of undirected Graph")
   gl::graphMiu dc_u(9, "Undirected Matrix");
   dc_u.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_u;
@@ -176,6 +193,7 @@ void TestUndirectedDegreeCentrality ()
   }
   std::cout << "dc_directed: " << dcu_actual;
   GL_NUMERIC_CONTAINER_COMPARE(dcu_actual,dcu_expect,1e-9)
+  GL_TEST_END()
 }
 
 int main(int argc, char const *argv[])
