@@ -72,7 +72,7 @@ This repository also has a few example programs that demonstrate certain feature
 They can be found in the 'examples' folder.
 Example names can be deduced as follows: examples/SwitzerlandDijkstra.cpp <-> 'install.sh SwitzerlandDijkstra'
 
-![Shortest Path Visualization](https://github.com/guetzli32/GraphLib/doc/img/switzerland.png)
+![Shortest Path Visualization](doc/img/switzerland.png)
 
 # To-Do list
 - Document algorithm purpose in doxygen files
