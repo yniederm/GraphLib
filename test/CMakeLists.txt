@@ -35,7 +35,7 @@ set(TESTS
     UpdateFlaggedEntities
     )
 
-set(EIGEN_TESTS
+set(BLAS_TESTS
     IOTikz
     Laplacian
     MathGL
@@ -56,14 +56,15 @@ foreach(TEST_NAME ${TESTS})
   add_test(${TEST_NAME} ${TEST_NAME})
 endforeach()
 
-# Add the Eigen library to the tests that require it
-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-if(NOT EIGEN3_INCLUDE_DIR)
-  message("Eigen3 package path not found.")
-endif(NOT EIGEN3_INCLUDE_DIR)
-if(EIGEN3_INCLUDE_DIR)
-  foreach(TEST_NAME ${EIGEN_TESTS})
-  target_link_libraries(${TEST_NAME} Eigen3::Eigen)
+
+# Add the BLAS library to the tests that require it
+find_package(BLAS REQUIRED)
+if(NOT BLAS_INCLUDE_DIR)
+  message("BLAS package path not found.")
+endif(NOT BLAS_INCLUDE_DIR)
+if(BLAS_INCLUDE_DIR)
+  foreach(TEST_NAME ${BLAS_TESTS})
+  target_link_libraries(${TEST_NAME} ${BLAS_LIBRARIES})
   endforeach()
 endif()
 

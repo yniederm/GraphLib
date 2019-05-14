@@ -2,61 +2,52 @@
 #define GL_POSITIONS_FROM_LAPLACIAN_HPP
 
 #include "../structures/Graph.hpp"
-#include "LaplacianEigenDense.hpp"
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
 
-namespace gl {
-namespace algorithm {
-
-/**
- * @brief Compute node 2D positions using an Eigensolver
- * @param laplacian (Eigen::MatrixXf compatible) Input Laplacian matrix
- * @return Matrix containing 2D-coordinates of node positions
- */
-Eigen::MatrixXf PositionsFromLaplacian(Eigen::MatrixXf& laplacian)
+namespace gl
 {
-  Eigen::EigenSolver<Eigen::MatrixXf> solver;
-  solver.compute(laplacian);
-
-  Eigen::MatrixXf positions(2, laplacian.cols());
-  for (unsigned int i = 0; i < laplacian.cols(); i++)
-  {
-    Eigen::Vector2f pos;
-    pos << solver.eigenvectors()(0, i).real(), solver.eigenvectors()(1, i).real();
-
-    // Scale by degree
-    pos.normalize();
-    pos *= (1 + laplacian(i,i));
-
-    positions.col(i) = pos;
-  }
-  return positions;
-}
-
-/**
- * @brief Compute node 2D positions using an Eigensolver
- * @param laplacian (Eigen::SparseMatrix<float> compatible) Input Laplacian matrix
- * @return Matrix containing 2D-coordinates of node positions
- */
-Eigen::MatrixXf PositionsFromLaplacian(Eigen::SparseMatrix<float>& laplacian)
+namespace algorithm
 {
-  Eigen::SelfAdjointEigenSolver<Eigen::SparseMatrix<float>> solver;
-  solver.compute(laplacian);
-
-  Eigen::MatrixXf positions(2, laplacian.cols());
-  for (unsigned int i = 0; i < laplacian.cols(); i++)
+  
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/**
+ * @brief Signature of blas function
+ */
+extern "C" void sgeev_(
+    const char &, const char &, const int &, float *,
+    const int &, float *, float *, float *, const int &,
+    float *, const int &, float *, const int &, int *);
+#endif
+/**
+ * @brief Compute Positions from Laplacian using BLAS routine
+ * @param laplacian Vector of floats containing the laplacian of the graph
+ * @param factor Stretching-factor for positions
+ * @return a pair of the first two eigenvectors scaled by degree and factor
+ */
+std::pair<std::vector<float>, std::vector<float>> PositionsFromLaplacian(std::vector<float> laplacian, double factor = 2.0)
+{
+  int N = std::sqrt(laplacian.size());
+  int NN = N * N;
+  float wr[N];
+  float wi[N];
+  float eigenvectorsL[NN];
+  float work[4 * N];
+  int info;
+  float eigenvectorsR[NN];
+  float data[NN];
+  for (int i = 0; i < NN; i++)
   {
-    Eigen::Vector2f pos;
-    pos << solver.eigenvectors()(0, i), solver.eigenvectors()(1, i);
-
-    // Scale by degree
-    pos.normalize();
-    pos *= (1 + laplacian.coeffRef(i,i));
-
-    positions.col(i) = pos;
+    data[i] = laplacian.data()[i];
   }
-  return positions;
+  sgeev_('V', 'N', N, data, N, wr, wi, eigenvectorsR, N, eigenvectorsL, N, work, NN, &info);
+  std::vector<float> ev1(N);
+  std::vector<float> ev2(N);
+
+  for (int i = 0; i < N; i++)
+  {
+    ev1[i] = eigenvectorsR[i * N] * (1 + laplacian[N * i + i]) * factor; // and scale by degree
+    ev2[i] = eigenvectorsR[i * N + 1] * (1 + laplacian[N * i + i]) * factor;
+  }
+  return std::make_pair(ev1, ev2);
 }
 
 } // namespace algorithm
