@@ -17,3 +17,6 @@
 .vscode
 build/
 doc/html
+
+# specific un-ignores
+!doc/img/switzerland.png

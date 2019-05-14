@@ -5,6 +5,8 @@
 
 #include "src/partial_specialization_on"
 
+#include "src/gl_base.hpp"
+
 #include "src/algorithms/BFS.hpp"
 #include "src/algorithms/DFS.hpp"
 #include "src/algorithms/Degrees.hpp"
@@ -20,18 +22,18 @@
 namespace gl {
 namespace algorithm {
 
-#define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar,ScalarSuffix,Storage,StorageSuffix,Direction,DirectionSuffix) \
-using BFS##StorageSuffix##ScalarSuffix##DirectionSuffix = BFS<gl::Graph<Scalar,Storage,Direction>>; \
-using dijkstra##StorageSuffix##ScalarSuffix##DirectionSuffix = Dijkstra<gl::Graph<Scalar,Storage,Direction>>; \
-using kruskal##StorageSuffix##ScalarSuffix##DirectionSuffix = Kruskal<gl::Graph<Scalar,Storage,Direction>>; \
+#define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar,ScalarSuffix,Storage,StorageSuffix,Direction,DirectionSuffix)     \
+using BFS##StorageSuffix##ScalarSuffix##DirectionSuffix = BFS<gl::Graph<Scalar,Storage,Direction>>;                     \
+using dijkstra##StorageSuffix##ScalarSuffix##DirectionSuffix = Dijkstra<gl::Graph<Scalar,Storage,Direction>>;           \
+using kruskal##StorageSuffix##ScalarSuffix##DirectionSuffix = Kruskal<gl::Graph<Scalar,Storage,Direction>>;             \
 using floydwarshall##StorageSuffix##ScalarSuffix##DirectionSuffix = FloydWarshall<gl::Graph<Scalar,Storage,Direction>>;
 
-#define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix) \
+#define GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar,ScalarSuffix,Direction,DirectionSuffix)               \
 GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar, ScalarSuffix, gl::Matrix, M, Direction, DirectionSuffix) \
 GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR_DIR(Scalar, ScalarSuffix, gl::List,   L, Direction, DirectionSuffix)
 
-#define GL_TYPEDEFS_ALGORITHM(Scalar,ScalarSuffix) \
-GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Directed,   d)\
+#define GL_TYPEDEFS_ALGORITHM(Scalar,ScalarSuffix)                          \
+GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Directed,   d) \
 GL_TYPEDEFS_ALGORITHM_FIXED_SCALAR(Scalar, ScalarSuffix, gl::Undirected, u)
 
 GL_TYPEDEFS_ALGORITHM(int,    i)

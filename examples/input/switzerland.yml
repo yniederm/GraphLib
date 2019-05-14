@@ -9056,10 +9056,10 @@ edge: 3241 2121 0.06584518537569448
 edge: 3241 2117 0.06966593902331224
 edge: 3241 2116 0.1264607165921489
 value_type: double
-storage_type: Matrix
+storage_type: List
 direction_type: Undirected
 number_nodes: 3242
-label: Ortschaften in der Schweiz
+label: Towns in Switzerland
 node: 0 0.02 0x000000 2743
 position: 0 74.0423 472.63485000000003
 node: 1 0.02 0x000000 1007

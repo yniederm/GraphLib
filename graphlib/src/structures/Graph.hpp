@@ -19,12 +19,6 @@
 
 namespace gl {
 
-class Matrix;
-class List;
-
-class Directed;
-class Undirected;
-
 ///////////////////////////////////////////////////////////
 //    Graph Class declaration
 ///////////////////////////////////////////////////////////
@@ -53,6 +47,7 @@ public:
   using BFS_queue_t = std::deque<info_t>; ///< BFS type
   using DFS_queue_t = std::stack<idx_t>;  ///< DFS type
 
+  // TODO: Move to separate class, then change setEdge(const Edge<SCALAR>& edge)
   /** 
    * @class Edge
    * @brief Represents an Edge in a Graph.
@@ -173,6 +168,7 @@ public:
     Color color_;  ///< @brief Edge color
   };
 
+  // TODO: Move to separate class, update construct()
   /** 
    * @class Node
    * @brief Represents a Node in a Graph.
@@ -745,44 +741,18 @@ public:
    * This function only exists for MatrixGraphs
    */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  GL_ENABLE_IF_MATRIX_DIRECTED
+  GL_ENABLE_IF_MATRIX
 #endif
-  gl::Graph<SCALAR, gl::List, gl::Directed> toList() const
+  gl::Graph<SCALAR, gl::List, DIRECTION> toList() const
   {
-    gl::Graph<SCALAR, List, Directed> out(numNodes(), getGraphLabel());
-    for (idx_t i = 0; i < numNodes(); ++i)
+    gl::Graph<SCALAR, gl::List, DIRECTION> out(numNodes(), getGraphLabel());
+    for (auto edge = edge_cbegin(); edge != edge_cend(); ++edge)
     {
-      for (idx_t j = 0; j < numNodes(); ++j)
-      {
-        if (hasEdge(i, j))
-        {
-          out.setEdge(i, j, edges_[i * numNodes() + j].weight(), edges_[i * numNodes() + j].color());
-        }
-      }
+      std::cerr << "added " << edge->source() << " " << edge->dest() << "\n";
+      out.setEdge(edge->source(), edge->dest(), edge->weight(), edge->color());
     }
     return out;
   }
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-  /**
-   * @brief Outputs a graph in Adjacency List storage format with the same edges as this.
-   */
-  GL_ENABLE_IF_MATRIX_UNDIRECTED
-  gl::Graph<SCALAR, gl::List, gl::Undirected> toList() const
-  {
-    gl::Graph<SCALAR, List, Undirected> out(numNodes(), getGraphLabel());
-    for (idx_t i = 0; i < numNodes(); ++i)
-    {
-      for (idx_t j = i; j < numNodes(); ++j)
-      {
-        if (hasEdge(i, j))
-        {
-          out.setEdge(i, j, edges_[i * numNodes() + j].weight(), edges_[i * numNodes() + j].color());
-        }
-      }
-    }
-    return out;
-  }
-#endif
   //@}
   /**
    * @name Property interface
@@ -1002,7 +972,7 @@ public:
    * @brief Adds an edge directly from an Edge object.
    * @param[in] edge Edge that will be copied
    */
-  void setEdge(const Edge &edge)
+  void setEdge(const Edge& edge)
   {
     setEdge(edge.source(), edge.dest(), edge.weight(), edge.color());
   }
@@ -1859,7 +1829,6 @@ public:
     }
   }
 
-
   /**
    * @brief NodeIterator to the first node
    * @return Iterator to first node
@@ -1919,16 +1888,43 @@ public:
     checkRange(idx2);
   }
   //@}
-
-  bool operator== (const Graph<SCALAR,STORAGE_KIND,DIRECTION>& rhs)
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  GL_ENABLE_IF_MATRIX
+#endif
+  bool operator== (const Graph<SCALAR,gl::Matrix,DIRECTION>& rhs)
   {
     return property_ == rhs.property_ 
         && edges_ == rhs.edges_
         && nodes_ == rhs.nodes_;
   }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  GL_ENABLE_IF_LIST
+  bool operator== (const Graph<SCALAR,gl::List,DIRECTION>& rhs)
+  {
+    return property_ == rhs.property_ 
+        && nodes_ == rhs.nodes_;
+    // lists are checked more thoroughly, due to potential reordering of elements.
+    if (edges_.size() != rhs.edges_.size()) return false;
+    for (idx_t i = 0; i < numNodes(); ++i)
+    {
+      if (edges_[i].size() != rhs.edges_[i].size()) return false;
+    }
+    for (auto lhs_it = edge_cbegin(); lhs_it != edge_cend(); ++lhs_it)
+    {
+      auto rhs_it = std::find_if(rhs.edges_[lhs_it->source()].begin(), rhs.edges_[lhs_it->source()].end(),
+                           [&lhs_it](const Edge &node) { 
+                             return node.dest() == lhs_it->dest()
+                                 && node.weight() == lhs_it->weight()
+                                 && node.color() == lhs_it->color(); 
+                           });
+      if (rhs_it == rhs.edges_[lhs_it->source()].end())
+        return false;
+    }
+  }
+#endif
   bool operator!= (const Graph<SCALAR,STORAGE_KIND,DIRECTION>& rhs)
   {
-    return !operator!=(rhs);
+    return !operator==(rhs);
   }
 
 

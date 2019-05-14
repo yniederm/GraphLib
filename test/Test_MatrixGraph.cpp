@@ -3,13 +3,13 @@
 int main(int argc, char const *argv[])
 {
 
-  gl::graphMiu g (5);
+  gl::graphMid g (5);
   g.setEdge(0,1,4); // initial set
   g.setEdge(1,2);   // set as simple undirected
   g.setEdge(2,0);
   g.setEdge(2,1,10);
   g.setEdge(2,2,5,gl::Color("aqua"));
-  g.setEdge(gl::graphMiu::Edge(1,4,3,gl::Color("orange")));
+  g.setEdge(1,4,3,gl::Color("orange"));
   g.numNodes();
   std::cout << "numNodes: " << g.numNodes() << std::endl
             << g << std::endl;
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[])
     std::cout << "(" << x.first << "," << x.second << ") ";
   }
   std::cout << std::endl;
-  std::cout << "Degree of 2: " << g.getNodeDegree(2) << std::endl;
+  std::cout << "Out-Degree of 2: " << g.getNodeOutDegree(2) << std::endl;
   g.delEdge(2,0);   // remove edge
   std::cout << "deleted 2->0\n";
   try {
@@ -35,7 +35,7 @@ int main(int argc, char const *argv[])
   } catch (const std::runtime_error& e) {
     std::cout << "Caught exception: " << e.what() << "\n";
   }
-  g.addEdgesFromFile("test/input/singleEdge"); // assumes running from build folder
+  g.addEdgesFromFile("../../test/input/singleEdge"); // assumes running from build/test folder
 
   try {
     g.setEdge(1000,2,1);  // test out of range check

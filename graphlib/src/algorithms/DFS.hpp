@@ -15,6 +15,7 @@ namespace algorithm {
    */
   template <class GRAPH>
   void DFS_recursive (const GRAPH& graph, const typename GRAPH::idx_t node, typename GRAPH::visit_list_t& visited, typename GRAPH::ordered_list_t& out) {
+    graph.checkRange(node);
     typename GRAPH::idx_list_t tempList; // temporary node lists
     typename GRAPH::DFS_queue_t queue; // nodes to check the neighbours of
 
@@ -40,6 +41,7 @@ namespace algorithm {
   typename Graph::ordered_list_t DFS (const Graph& graph, const typename Graph::idx_t node) {
     typename Graph::visit_list_t visited(graph.numNodes(),false);  // list of visited nodes
     typename Graph::ordered_list_t out;      // result node lists
+    graph.checkRange(node);
     DFS_recursive(graph, node, visited, out);
     return out;
   }

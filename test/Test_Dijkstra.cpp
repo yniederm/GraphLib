@@ -4,8 +4,8 @@ int main(int argc, char const *argv[])
 {
   gl::graphLiu dijkstraL(9, "Dijkstra List");
   gl::graphMiu dijkstraM(9, "Dijkstra Matrix");
-  dijkstraL.addEdgesFromFile("test/input/dijkstra9"); // assumes running from project root folder
-  dijkstraM.addEdgesFromFile("test/input/dijkstra9"); // assumes running from project root folder
+  dijkstraL.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from project root folder
+  dijkstraM.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from project root folder
 
   // dijkstraL.updateEdge(0,1,-5);  // uncomment this to test the positive weights requirement
 

@@ -27,9 +27,8 @@ set(TESTS
     MathGLColors
     MathGLPlacing
     MatrixGraph
-    PrintContainer
     ReadYAML
-    SwitzerlandDijkstra
+    StreamOverload
     TransitiveClosure
     Traversal
     UpdateFlaggedEntities
@@ -41,8 +40,8 @@ set(BLAS_TESTS
     MathGL
     MathGLColors
     ReadYAML
-    SwitzerlandDijkstra
     UpdateFlaggedEntities
+    Traversal
     )
 
 set(MATHGL_TESTS

@@ -1,37 +1,40 @@
 #include <graphlib/gl>
+#include "gl_test.hpp"
+
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+void TestCyclic (const std::string& name)
+{
+  GL_TEST_BEGIN("hasCycle(" << name)
+  gl::Graph<SCALAR,STORAGE_KIND,DIRECTION> graph(12);
+  graph.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test root folder
+
+  std::cout << (graph.hasCycle() ? "true" : "false") << "\n";
+  GL_ASSERT_EQUAL(graph.hasCycle(),true)
+  GL_TEST_END()
+}
+
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
+void TestAcyclic (const std::string& name)
+{
+  GL_TEST_BEGIN("hasCycle(" << name)
+  gl::Graph<SCALAR,STORAGE_KIND,DIRECTION> graph(12);
+  graph.addEdgesFromFile("../../test/input/tree12"); // assumes running from build/test root folder
+
+  std::cout << (graph.hasCycle() ? "true" : "false") << "\n";
+  GL_ASSERT_EQUAL(graph.hasCycle(),false)
+  GL_TEST_END()
+}
 
 int main(int argc, char const *argv[])
 {
-  gl::graphMiu Miu_tree(12);
-  gl::graphMid Mid_tree(12);
-  gl::graphMid Liu_tree(12);
-  gl::graphMid Lid_tree(12);
-
-  gl::graphLiu Miu_cycle(10);
-  gl::graphLiu Mid_cycle(10);
-  gl::graphLiu Liu_cycle(10);
-  gl::graphLiu Lid_cycle(10);
-
-  Miu_tree.addEdgesFromFile("test/input/tree12"); // assumes running from project root folder
-  Mid_tree.addEdgesFromFile("test/input/tree12"); // assumes running from project root folder
-  Liu_tree.addEdgesFromFile("test/input/tree12"); // assumes running from project root folder
-  Lid_tree.addEdgesFromFile("test/input/tree12"); // assumes running from project root folder
-
-  Miu_cycle.addEdgesFromFile("test/input/graph10"); // assumes running from project root folder
-  Mid_cycle.addEdgesFromFile("test/input/graph10"); // assumes running from project root folder
-  Liu_cycle.addEdgesFromFile("test/input/graph10"); // assumes running from project root folder
-  Lid_cycle.addEdgesFromFile("test/input/graph10"); // assumes running from project root folder
-
-  // std::cout << Miu_tree;
-  std::cout << "hasCycle(Miu_tree):  " << Miu_tree.hasCycle() << "\n";
-  std::cout << "hasCycle(Mid_tree):  " << Mid_tree.hasCycle() << "\n";
-  std::cout << "hasCycle(Liu_tree):  " << Liu_tree.hasCycle() << "\n";
-  std::cout << "hasCycle(Lid_tree):  " << Lid_tree.hasCycle() << "\n";
-
-  std::cout << "hasCycle(Miu_cycle): " << Miu_cycle.hasCycle() << "\n";
-  std::cout << "hasCycle(Mid_cycle): " << Mid_cycle.hasCycle() << "\n";
-  std::cout << "hasCycle(Liu_cycle): " << Liu_cycle.hasCycle() << "\n";
-  std::cout << "hasCycle(Lid_cycle): " << Lid_cycle.hasCycle() << "\n";
+  TestCyclic<double,gl::Matrix,gl::Directed>("Matrix Directed, Cyclic");
+  TestCyclic<int,gl::Matrix,gl::Undirected>("Matrix Undirected, Cyclic");
+  TestCyclic<double,gl::List,gl::Directed>("List Directed, Cyclic");
+  TestCyclic<int,gl::List,gl::Undirected>("List Directed, Cyclic");
+  TestAcyclic<double,gl::Matrix,gl::Directed>("Matrix Directed, Acyclic");
+  TestAcyclic<int,gl::Matrix,gl::Undirected>("Matrix Undirected, Acyclic");
+  TestAcyclic<double,gl::List,gl::Directed>("List Directed, Acyclic");
+  TestAcyclic<int,gl::List,gl::Undirected>("List Directed, Acyclic");
 
   return 0;
 }

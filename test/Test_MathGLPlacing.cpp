@@ -139,7 +139,7 @@ int main(int argc, char const *argv[])
 
     plotData(g, &gr);
 
-    gr.WritePNG("build/test/mathgl_placing.png");
+    gr.WritePNG("mathgl_placing.png");
     std::cout << "saved to build/test/mathgl_placing.png" << std::endl;
 
     return 0;

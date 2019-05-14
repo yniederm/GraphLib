@@ -67,15 +67,28 @@ public:
    */
   idx_list_t getNodesExactDistance (const idx_t& distance) const;
   /**
+   * @brief Returns the number of edges between 'src' and 'dest'.
+   * @param[in] dest Node whose BFS distance is to be computed.
+   * @return Number of edges between 'src' and 'dest'.
+   */
+  idx_t getNodeDistance (const idx_t& dest) const;
+  /**
    * @brief Computes all nodes that are at within a maximum distance given from the source.
    * @param[in] distance Maximum distance to source of the nodes that are to be found.
    * @return list of nodes within given distance from source.
    */
   idx_list_t getNodesMaxDistance (const idx_t& distance) const;
+  /**
+   * @brief Computes the BFS shortest path from 'src' to 'dest'.
+   * @param[in] dest Destination of the shortest path from 'src'.
+   * @return Node indices representing the shortest src-dest-path.
+   */
+  ordered_list_t getPath (const idx_t& dest) const;
 
 private:
   bool isInitialized_ = false; ///< @brief Boolean storing initialization status
   idx_t src_;                  ///< @brief Source node
+  idx_list_t parents_;         ///< @brief Parents on shortest path tree
   ordered_list_t final_;       ///< @brief BFS Traversal order
   distance_list_t distances_;  ///< @brief List containing distances from source
 };
@@ -96,11 +109,13 @@ BFS<Graph>::BFS(const Graph& graph, const idx_t src) : isInitialized_(false), sr
 template <class Graph>
 void BFS<Graph>::compute (const Graph& graph, const idx_t src) 
 {
+  graph.checkRange(src);
   idx_t INF = std::numeric_limits<idx_t>::max();
 
   BFS_queue_t queue;      // nodes to check the neighbours of
   ordered_list_t out;     // result node lists
   idx_list_t tempList;    // temporary node lists
+  idx_list_t parents(graph.numNodes());  // parents on shortest path tree
   visit_list_t visited(graph.numNodes(),false);  // list of visited nodes
   distance_list_t distances(graph.numNodes(),INF);
   auto v = src;
@@ -109,6 +124,7 @@ void BFS<Graph>::compute (const Graph& graph, const idx_t src)
   queue.push_back(v);
   visited[v] = true;
   distances[v] = 0;
+  parents[v] = v;
   while(!queue.empty()) {
     v = queue.front();
     queue.pop_front();
@@ -117,9 +133,11 @@ void BFS<Graph>::compute (const Graph& graph, const idx_t src)
     for (auto elem : tempList) {
       visited[elem] = true;
       distances[elem] = distances[v] + 1;
+      parents[elem] = v;
       queue.push_back(elem);
     }
   }
+  parents_ = parents;
   final_ = out;
   distances_ = distances;
   isInitialized_ = true;
@@ -127,10 +145,13 @@ void BFS<Graph>::compute (const Graph& graph, const idx_t src)
 
 template <class Graph>
 typename Graph::ordered_list_t BFS<Graph>::getTraversalOrder () const {
+  GL_ASSERT(isInitialized_,"BFS::getTraversalOrder | BFS has not been initialized with a graph.")
   return final_;
 }
+
 template <class Graph>
 typename Graph::ordered_list_t BFS<Graph>::getTraversalOrderMaxDistance (const idx_t& distance) const {
+  GL_ASSERT(isInitialized_,"BFS::getTraversalOrderMaxDistance | BFS has not been initialized with a graph.")
   ordered_list_t result;
   for (auto x : final_) {
     if (distances_[x] > distance) continue;
@@ -141,6 +162,7 @@ typename Graph::ordered_list_t BFS<Graph>::getTraversalOrderMaxDistance (const i
 
 template <class Graph>
 typename Graph::idx_list_t BFS<Graph>::getNodesExactDistance (const idx_t& distance) const {
+  GL_ASSERT(isInitialized_,"BFS::getNodesExactDistance | BFS has not been initialized with a graph.")
   idx_list_t result;
   for (auto elem : final_) {
     if (distances_[elem] == distance) result.push_back(elem);
@@ -149,10 +171,41 @@ typename Graph::idx_list_t BFS<Graph>::getNodesExactDistance (const idx_t& dista
 }
 
 template <class Graph>
+typename Graph::idx_t BFS<Graph>::getNodeDistance (const idx_t& dest) const {
+  GL_ASSERT(isInitialized_,"BFS::getNodeDistance | BFS has not been initialized with a graph.")
+  GL_ASSERT((0 <= dest), (std::string("Negative index: ") + std::to_string(dest) + std::string(" < 0")))
+  GL_ASSERT((dest < distances_.size()), ("Index " + std::to_string(dest) + " is larger than the max: " + std::to_string(distances_.size() - 1)))
+  
+  return distances_[dest];
+}
+
+template <class Graph>
 typename Graph::idx_list_t BFS<Graph>::getNodesMaxDistance (const idx_t& distance) const {
+  GL_ASSERT(isInitialized_,"BFS::getNodesMaxDistance | BFS has not been initialized with a graph.")
   idx_list_t result;
   for (auto elem : final_) {
     if (distances_[elem] <= distance) result.push_back(elem);
+  }
+  return result;
+}
+
+template <class Graph>
+typename Graph::ordered_list_t BFS<Graph>::getPath (const idx_t& dest) const {
+  GL_ASSERT(isInitialized_,"BFS::getPath | BFS has not been initialized with a graph.")
+  GL_ASSERT((0 <= dest), (std::string("Negative index: ") + std::to_string(dest) + std::string(" < 0")))
+  GL_ASSERT((dest < distances_.size()), ("Index " + std::to_string(dest) + " is larger than the max: " + std::to_string(distances_.size() - 1)))
+  if (dest == src_) 
+  {
+    return {src_};
+  }
+  ordered_list_t result;
+  idx_t parent = parents_[dest];
+  result.push_front(dest);
+  result.push_front(parent);
+  while (parent != src_)
+  {
+    parent = parents_[parent];
+    result.push_front(parent);
   }
   return result;
 }

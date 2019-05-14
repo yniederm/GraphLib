@@ -15,6 +15,13 @@ if(BUILD_DOC)
   add_subdirectory(doc)
 endif()
 
+# Example build by default ON
+option(BUILD_EXAMPLES "Build examples" ON)
+if(BUILD_EXAMPLES)
+  # Build examples
+  add_subdirectory(examples)
+endif()
+
 # Option whether the tests should be built or not. default ON
 option(ENABLE_TESTING "The tests will be built" ON)
 if(ENABLE_TESTING) 

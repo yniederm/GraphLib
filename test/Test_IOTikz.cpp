@@ -38,16 +38,12 @@ int main(int argc, char const *argv[])
   g.setEdge(6, 19, 1, gl::Color(0.18066572831732597, 0.4763249455490929, 0.9454023196586794));
   g.setEdge(3, 13, 1, gl::Color(0.36376376463902516, 0.9434075364792681, 0.10837703956648426));
 
+  
   gl::algorithm::SpectralPlacing(g);
-  std::ofstream out("build/test/IOTikz_sparse.tex");
-  gl::external::writeTikzToStream2(out, g);
+  std::ofstream out("IOTikz.tex");
+  gl::external::writeTikzNetwork(out, g);
   out.close();
-  gl::io::compileLatex("build/test/IOTikz_sparse.tex", "--output-directory=build/test/");
-  gl::algorithm::SpectralPlacing(g);
-  std::ofstream out2("build/test/IOTikz_dense.tex");
-  gl::external::writeTikzToStream2(out2, g);
-  out2.close();
-  gl::io::compileLatex("build/test/IOTikz_dense.tex", "--output-directory=build/test/");
+  // gl::io::compileLatex("IOTikz.tex");
 
   return 0;
 }
