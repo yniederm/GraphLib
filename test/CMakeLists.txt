@@ -34,20 +34,15 @@ set(TESTS
     UpdateFlaggedEntities
     )
 
-set(BLAS_TESTS
+set(EXTERNAL_TESTS
     IOTikz
     Laplacian
     MathGL
     MathGLColors
+    MathGLPlacing
     ReadYAML
     UpdateFlaggedEntities
     Traversal
-    )
-
-set(MATHGL_TESTS
-    MathGL
-    MathGLColors
-    MathGLPlacing
     )
 
 foreach(TEST_NAME ${TESTS})
@@ -56,24 +51,22 @@ foreach(TEST_NAME ${TESTS})
 endforeach()
 
 
-# Add the BLAS library to the tests that require it
+# Add external libraries to the tests that require them
+# currently using BLAS and MathGL
 find_package(BLAS REQUIRED)
-if(NOT BLAS_INCLUDE_DIR)
-  message("BLAS package path not found.")
-endif(NOT BLAS_INCLUDE_DIR)
-if(BLAS_INCLUDE_DIR)
-  foreach(TEST_NAME ${BLAS_TESTS})
-  target_link_libraries(${TEST_NAME} ${BLAS_LIBRARIES})
-  endforeach()
-endif()
-
-# Add the MathGL library to the tests that require it
 find_package(MathGL)
+if(NOT BLAS_FOUND)
+  message("BLAS package path not found.")
+endif()
+message("-- Blas library path: " ${BLAS_LIBRARIES})
 if(NOT MathGL_INCLUDE_DIRS)
   message("MathGL package path not found.")
 endif(NOT MathGL_INCLUDE_DIRS)
-if(MathGL_INCLUDE_DIRS)
-  foreach(TEST_NAME ${MATHGL_TESTS})
-    target_link_libraries(${TEST_NAME} ${MathGL_LIBRARIES})
-  endforeach()
+
+if(BLAS_FOUND)
+  if(MathGL_INCLUDE_DIRS)
+    foreach(TEST_NAME ${EXTERNAL_TESTS})
+      target_link_libraries(${TEST_NAME} ${MathGL_LIBRARIES} ${BLAS_LIBRARIES})
+    endforeach()
+  endif()
 endif()

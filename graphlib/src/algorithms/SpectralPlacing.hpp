@@ -3,6 +3,7 @@
 
 #include "../structures/Graph.hpp"
 #include "PositionsFromLaplacian.hpp"
+#include "LaplacianSTL.hpp"
 
 namespace gl
 {

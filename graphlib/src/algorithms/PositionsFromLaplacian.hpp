@@ -10,7 +10,7 @@ namespace algorithm
   
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /**
- * @brief Signature of blas function, see LAPACK guide for information about variables
+ * @brief Signature of BLAS function, see LAPACK guide for information about variables
  */
 extern "C" void sgeev_(
     const char &, const char &, const int &, float *,

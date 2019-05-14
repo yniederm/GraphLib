@@ -1,6 +1,5 @@
 #include <iostream>
 #include <graphlib/gl>
-#include <graphlib/external>
 
 int main(int argc, char const *argv[])
 {
@@ -18,6 +17,8 @@ int main(int argc, char const *argv[])
      */
     std::string source_label (argc == 3 ? " " + std::string(argv[1]) : " 5000");
     std::string target_label (argc == 3 ? " " + std::string(argv[2]) : " 7000");
+
+    g.setGraphLabel("Route from " + source_label + " to " + target_label);
 
     for (auto it = g.node_cbegin(); it != g.node_cend(); it++)
     {

@@ -6,7 +6,6 @@
 #include "src/partial_specialization_on"
 
 #include "src/io/WriteImage.hpp"
-#include "src/io/WriteTikz.hpp"
 #include "src/algorithms/LaplacianSTL.hpp"
 #include "src/algorithms/PositionsFromLaplacian.hpp"
 #include "src/algorithms/SpectralPlacing.hpp"
