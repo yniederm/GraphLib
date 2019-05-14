@@ -10,7 +10,7 @@ namespace algorithm
   
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /**
- * @brief Signature of blas function
+ * @brief Signature of blas function, see LAPACK guide for information about variables
  */
 extern "C" void sgeev_(
     const char &, const char &, const int &, float *,
@@ -23,22 +23,23 @@ extern "C" void sgeev_(
  * @param factor Stretching-factor for positions
  * @return a pair of the first two eigenvectors scaled by degree and factor
  */
-std::pair<std::vector<float>, std::vector<float>> PositionsFromLaplacian(std::vector<float> laplacian, double factor = 2.0)
+std::pair<std::vector<float>, std::vector<float>> PositionsFromLaplacian(std::vector<float> laplacian, double factor = 5.0)
 {
   int N = std::sqrt(laplacian.size());
   int NN = N * N;
-  float wr[N];
+  float wr[N]; // 
   float wi[N];
   float eigenvectorsL[NN];
-  float work[4 * N];
-  int info;
   float eigenvectorsR[NN];
+  float work[4 * N]; // aquire enough work space, 3*N is needed
+  int info; // whether it worked
   float data[NN];
   for (int i = 0; i < NN; i++)
   {
     data[i] = laplacian.data()[i];
   }
   sgeev_('V', 'N', N, data, N, wr, wi, eigenvectorsR, N, eigenvectorsL, N, work, NN, &info);
+  GL_ASSERT(info == 0, "BLAS call was not correct, got " + std::to_string(info) + " instead of 0.");
   std::vector<float> ev1(N);
   std::vector<float> ev2(N);
 
