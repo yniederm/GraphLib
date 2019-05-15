@@ -54,22 +54,26 @@ The following software is required:
 - lualatex (+ tikz-network package)
 - convert (built in on linux)
 
-# Pre-written programs
+# Programs in this repository
 To build all tests & examples, run `install.sh` from within the root folder of this repository. 
 Executables can then be found in the `build/test` and `build/examples` folders.
 
-# Tests
+### Tests
 This repository features unit tests in the 'test' folder.
 
 To build a specific test, run `install.sh $1` where `$1` is the name of a test.
+
 Test names can be deduced as follows: `test/Test_Color.cpp` <-> `install.sh Color`
 
 This will create executables in the `build/test` folder for you to run (make sure you navigate into that folder).
+
 Alternatively you can directly build & run all tests by invoking `./test/test.sh` from the root folder.
 
-# Examples
+### Examples
 This repository also has a few example programs that demonstrate certain features of the library.
-They can be found in the 'examples' folder.
+
+They can be found in the `examples` folder.
+
 Example names can be deduced as follows: `examples/SwitzerlandDijkstra.cpp` <-> `install.sh SwitzerlandDijkstra`
 
 ![Shortest Path Visualization](doc/img/switzerland.png "Dijkstra Shortest Path")
