@@ -74,6 +74,11 @@ public:
    * @return SPT Graph.
    */
   Graph getSPT() const;
+  /**
+   * @brief Returns the index of the source node on which the algorithm was run.
+   * @return Source index.
+   */
+  idx_t getSource() const;
 
 private:  
   bool isInitialized_ = false; ///< @brief Boolean storing initialization status
@@ -151,7 +156,7 @@ void Dijkstra<Graph>::compute(const Graph& graph, const idx_t src)
       {
         if (!result.hasEdge(path[i],path[j])) 
         {
-          result.setEdge(path[i],path[j]);
+          result.setEdge(path[i],path[j],graph.getEdgeWeight(path[i],path[j]),graph.getEdgeColor(path[i],path[j]));
         }
       }
     }
@@ -216,6 +221,13 @@ Graph Dijkstra<Graph>::getSPT () const
 
   auto result = result_;
   return result;
+}
+
+template <class Graph>
+typename Graph::idx_t Dijkstra<Graph>::getSource() const
+{
+  GL_ASSERT(isInitialized_,"Dijkstra::getSource | Dijkstra has not been initialized with a graph.")
+  return src_;
 }
 
 } // namespace gl::algorithm  

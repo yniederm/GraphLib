@@ -199,34 +199,6 @@ for (auto at = Actual.begin(); at != Actual.end(); ++at, ++et)          \
 }
 
 /**
- * @brief Comparison operator that can be used for testing numerical equality of two Eigen Matrices.
- * @param A First Eigen Matrix for comparison
- * @param A Second Eigen Matrix for comparison
- * @param AbsTol Absolute tolerance for numerical error.
- */
-#define GL_EIGEN_MATRIX_COMPARE(A,B,AbsTol)                      \
-{                                                                \
-  if( (A - B).norm() >= AbsTol )                                 \
-  {                                                              \
-    std::stringstream ssA, ssB;                                  \
-    ssA << A;                                                    \
-    ssB << B;                                                    \
-    throw std::runtime_error(   std::string(__FILE__)            \
-                              + std::string(":")                 \
-                              + std::to_string(__LINE__)         \
-                              + std::string(" in ")              \
-                              + std::string(__PRETTY_FUNCTION__) \
-                              + std::string(" (Norm Tolerance: ")\
-                              + std::to_string(AbsTol)           \
-                              + std::string("):\n")              \
-                              + ssA.str()                        \
-                              + std::string("\n != \n")          \
-                              + ssB.str()                        \
-    );                                                           \
-  }                                                              \
-}
-
-/**
  * @brief Macro that encapsulates a try/catch block and compares the producederror messages.
  * @param Expression Code block that is expected to produce an exception.
  * @param ExceptionType Expected Exception type.
@@ -247,5 +219,31 @@ catch (...)                                                       \
 {                                                                 \
   GL_FAIL("Wrong exception type")                                 \
 }
+
+/**
+ * @brief Macro that encapsulates a try/catch block and compares the producederror messages.
+ * @param Expression Code block that is expected to produce an exception.
+ * @param ExceptionType Expected Exception type.
+ * @param ExpectedError Expected error message.
+ */
+#define GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(FunctionName,...)              \
+FunctionName<gl::Matrix,gl::Directed  >("Matrix Directed",  ##__VA_ARGS__); \
+FunctionName<gl::List,  gl::Directed  >("List Directed",    ##__VA_ARGS__);
+
+#define GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(FunctionName,...)            \
+FunctionName<gl::Matrix,gl::Undirected>("Matrix Undirected",##__VA_ARGS__); \
+FunctionName<gl::List,  gl::Undirected>("List Undirected",  ##__VA_ARGS__);
+
+#define GL_TEST_FUNCTION_WITH_MATRIX_TYPES(FunctionName,...)                \
+FunctionName<gl::Matrix,gl::Directed  >("Matrix Directed",  ##__VA_ARGS__); \
+FunctionName<gl::Matrix,gl::Undirected>("Matrix Undirected",##__VA_ARGS__);
+
+#define GL_TEST_FUNCTION_WITH_LIST_TYPES(FunctionName,...)                  \
+FunctionName<gl::List,  gl::Directed  >("List Directed",    ##__VA_ARGS__); \
+FunctionName<gl::List,  gl::Undirected>("List Undirected",  ##__VA_ARGS__);
+
+#define GL_TEST_FUNCTION_WITH_ALL_TYPES(FunctionName,...)                   \
+GL_TEST_FUNCTION_WITH_MATRIX_TYPES(FunctionName,##__VA_ARGS__)              \
+GL_TEST_FUNCTION_WITH_LIST_TYPES  (FunctionName,##__VA_ARGS__)
 
 #endif // GL_TEST_HPP

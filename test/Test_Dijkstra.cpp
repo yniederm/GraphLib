@@ -1,32 +1,178 @@
 #include <graphlib/gl>
+#include "gl_test.hpp"
+
+template <class STORAGE, class DIRECTION>
+void TestEmptyConstructor (const std::string& type)
+{
+  GL_TEST_BEGIN("Empty contructor " << type)
+  gl::algorithm::Dijkstra<gl::Graph<int,STORAGE,DIRECTION>> d;
+  GL_TEST_CATCH_ERROR(d.getSource();,std::runtime_error,"Dijkstra::getSource | Dijkstra has not been initialized with a graph.")
+  GL_TEST_CATCH_ERROR(d.pathLength(3);,std::runtime_error,"Dijkstra::pathLength | Dijkstra has not been initialized with a graph.")
+  GL_TEST_CATCH_ERROR(d.getPath(3);,std::runtime_error,"Dijkstra::getPath | Dijkstra has not been initialized with a graph.")
+  GL_TEST_CATCH_ERROR(d.getSPT();,std::runtime_error,"Dijkstra::getSPT | Dijkstra has not been initialized with a graph.")
+  GL_TEST_CATCH_ERROR(d.NodeSelector();,std::runtime_error,"Dijkstra::NodeSelector | Dijkstra has not been initialized with a graph.")
+  GL_TEST_CATCH_ERROR(d.EdgeSelector();,std::runtime_error,"Dijkstra::EdgeSelector | Dijkstra has not been initialized with a graph.")
+  GL_TEST_END()
+}
+
+template <class STORAGE, class DIRECTION>
+void TestComputeConstructor (const std::string& type)
+{
+  GL_TEST_BEGIN("Compute contructor " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,7);
+  GL_ASSERT_EQUAL_DESC(d.getSource(),7,"Source should be 7.")
+
+  // source index out of range check
+  GL_TEST_CATCH_ERROR({gl::algorithm::Dijkstra<decltype(g)> d2(g,9);},std::runtime_error,"Index 9 is larger than the max: 8")
+
+  // positive weights requirement check
+  g.updateEdge(0,1,-5);
+  GL_TEST_CATCH_ERROR({gl::algorithm::Dijkstra<decltype(g)> d3(g,0);},std::runtime_error,"Dijkstra::compute | Found non-positive edge weights in the graph.")
+  GL_TEST_END()
+}
+
+template <class STORAGE, class DIRECTION>
+void TestPathLengthUndirected (const std::string& type)
+{
+  GL_TEST_BEGIN("Path length " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+  GL_ASSERT_EQUAL_DESC(d.pathLength(0),0,"Path length to 0 should be 0")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(1),4,"Path length to 1 should be 4")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(2),12,"Path length to 2 should be 12")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(3),19,"Path length to 3 should be 19")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(4),21,"Path length to 4 should be 21")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(5),11,"Path length to 5 should be 11")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(6),9,"Path length to 6 should be 9")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(7),8,"Path length to 7 should be 8")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(8),14,"Path length to 8 should be 14")
+  GL_TEST_END()
+}
+template <class STORAGE, class DIRECTION>
+void TestPathLengthDirected (const std::string& type)
+{
+  GL_TEST_BEGIN("Path length " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+  GL_ASSERT_EQUAL_DESC(d.pathLength(0),0,"Path length to 0 should be 0")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(1),4,"Path length to 1 should be 4")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(2),12,"Path length to 2 should be 12")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(3),19,"Path length to 3 should be 19")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(4),28,"Path length to 4 should be 28")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(5),16,"Path length to 5 should be 16")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(6),18,"Path length to 6 should be 18")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(7),8,"Path length to 7 should be 8")
+  GL_ASSERT_EQUAL_DESC(d.pathLength(8),14,"Path length to 8 should be 14")
+  GL_TEST_END()
+}
+
+template <class STORAGE, class DIRECTION>
+void TestGetPathUndirected (const std::string& type)
+{
+  GL_TEST_BEGIN("Path reconstruction " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+
+  GL_ASSERT_EQUAL_STREAM(d.getPath(0),"[ 0 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(1),"[ 0 1 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(2),"[ 0 1 2 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(3),"[ 0 1 2 3 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(4),"[ 0 7 6 5 4 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(5),"[ 0 7 6 5 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(6),"[ 0 7 6 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(7),"[ 0 7 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(8),"[ 0 1 2 8 ]\n")
+  GL_TEST_END()
+}
+
+template <class STORAGE, class DIRECTION>
+void TestGetPathDirected (const std::string& type)
+{
+  GL_TEST_BEGIN("Path reconstruction " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+
+  GL_ASSERT_EQUAL_STREAM(d.getPath(0),"[ 0 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(1),"[ 0 1 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(2),"[ 0 1 2 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(3),"[ 0 1 2 3 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(4),"[ 0 1 2 3 4 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(5),"[ 0 1 2 5 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(6),"[ 0 1 2 5 6 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(7),"[ 0 7 ]\n")
+  GL_ASSERT_EQUAL_STREAM(d.getPath(8),"[ 0 1 2 8 ]\n")
+  GL_TEST_END()
+}
+
+template <class STORAGE, class DIRECTION>
+void TestGetSPTUndirected (const std::string& type)
+{
+  GL_TEST_BEGIN("SPT Graph " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+
+  gl::Graph<int,STORAGE,DIRECTION> g0(9,std::string(std::string("SPT of node 0 in ")+type));
+  g0.setEdge(0,1,4);
+  g0.setEdge(0,7,8);
+  g0.setEdge(1,2,8);
+  g0.setEdge(2,3,7);
+  g0.setEdge(2,8,2);
+  g0.setEdge(4,5,10);
+  g0.setEdge(5,6,2);
+  g0.setEdge(6,7,1);
+
+  GL_ASSERT_EQUAL_GRAPH(d.getSPT(),g0)
+
+  GL_TEST_END()
+}
+
+template <class STORAGE, class DIRECTION>
+void TestGetSPTDirected (const std::string& type)
+{
+  GL_TEST_BEGIN("SPT Graph " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+
+  gl::Graph<int,STORAGE,DIRECTION> g0(9,std::string(std::string("SPT of node 0 in ")+type));
+  g0.setEdge(0,1,4);
+  g0.setEdge(0,7,8);
+  g0.setEdge(1,2,8);
+  g0.setEdge(2,3,7);
+  g0.setEdge(2,5,4);
+  g0.setEdge(2,8,2);
+  g0.setEdge(3,4,9);
+  g0.setEdge(5,6,2);
+
+  GL_ASSERT_EQUAL_GRAPH(d.getSPT(),g0)
+
+  GL_TEST_END()
+}
 
 int main(int argc, char const *argv[])
 {
-  gl::graphLiu dijkstraL(9, "Dijkstra List");
-  gl::graphMiu dijkstraM(9, "Dijkstra Matrix");
-  dijkstraL.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from project root folder
-  dijkstraM.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from project root folder
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestEmptyConstructor)
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestComputeConstructor)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestPathLengthUndirected)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestPathLengthDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetPathUndirected)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetPathDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetSPTUndirected)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetSPTDirected)
 
-  // dijkstraL.updateEdge(0,1,-5);  // uncomment this to test the positive weights requirement
-
-  std::cout << "\n" << dijkstraL << std::endl;
-  gl::algorithm::dijkstraLiu pathL5(dijkstraL,0);
-
-  std::cout << "dest\tlength\tpath" << std::endl;
-  for (int i = 0; i < dijkstraL.numNodes(); ++i) {
-    std::cout << i << ": " << pathL5.pathLength(i) << "\t";
-    gl::io::printContainer(pathL5.getPath(i));
-  }
-
-  std::cout << "\n" << dijkstraM << std::endl;
-  gl::algorithm::dijkstraMiu pathM5(dijkstraM,0);
-
-  std::cout << "dest\tlength\tpath" << std::endl;
-  for (int i = 0; i < dijkstraM.numNodes(); ++i) {
-    std::cout << i << "\t" << pathM5.pathLength(i) << "\t";
-    gl::io::printContainer(pathM5.getPath(i));
-  }
-
-  std::cout << pathM5.getSPT();
   return 0;
 }

@@ -177,66 +177,36 @@ void TestDFSCyclic (const std::string& name, const std::string& expected)
 
 void TestBFSWrapper ()
 {
-  // TODO: All type macro
-  std::string md ("Matrix Directed ");  
-  std::string mu ("Matrix Undirected ");  
-  std::string ld ("List Directed "); 
-  std::string lu ("List Undirected ");
-  TestBFSAccessBeforeInitialization<gl::Matrix,gl::Directed>(md);
-  TestBFSAccessBeforeInitialization<gl::Matrix,gl::Undirected>(mu);
-  TestBFSAccessBeforeInitialization<gl::List,gl::Directed>(ld);
-  TestBFSAccessBeforeInitialization<gl::List,gl::Undirected>(lu);
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestBFSAccessBeforeInitialization);
   TestBFSIndexOutOfRange(); 
+
   std::string CyclicDirected ("[ 0 1 2 3 7 6 9 5 4 8 ]\n");
   std::string CyclicUndirected ("[ 0 1 2 3 7 6 5 4 8 9 ]\n");
-  TestBFSCyclicTraversalOrder<gl::Matrix,gl::Directed>(md,CyclicDirected);
-  TestBFSCyclicTraversalOrder<gl::Matrix,gl::Undirected>(mu,CyclicUndirected);
-  TestBFSCyclicTraversalOrder<gl::List,gl::Directed>(ld,CyclicDirected);
-  TestBFSCyclicTraversalOrder<gl::List,gl::Undirected>(lu,CyclicUndirected);
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestBFSCyclicTraversalOrder,CyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestBFSCyclicTraversalOrder,CyclicUndirected)
+
   std::string AcyclicDirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
   std::string AcyclicUndirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
-  TestBFSAcyclicTraversalOrder<gl::Matrix,gl::Directed>(md,AcyclicDirected);
-  TestBFSAcyclicTraversalOrder<gl::Matrix,gl::Undirected>(mu,AcyclicUndirected);
-  TestBFSAcyclicTraversalOrder<gl::List,gl::Directed>(ld,AcyclicDirected);
-  TestBFSAcyclicTraversalOrder<gl::List,gl::Undirected>(lu,AcyclicUndirected);
-  TestBFSGetTraversalOrderMaxDistance<gl::Matrix,gl::Directed>(md);
-  TestBFSGetTraversalOrderMaxDistance<gl::Matrix,gl::Undirected>(mu);
-  TestBFSGetTraversalOrderMaxDistance<gl::List,gl::Directed>(ld);
-  TestBFSGetTraversalOrderMaxDistance<gl::List,gl::Undirected>(lu);
-  TestBFSGetNodesExactDistance<gl::List,gl::Undirected>(lu);
-  TestBFSGetNodesExactDistance<gl::Matrix,gl::Directed>(md);
-  TestBFSGetNodesExactDistance<gl::Matrix,gl::Undirected>(mu);
-  TestBFSGetNodesExactDistance<gl::List,gl::Directed>(ld);
-  TestBFSGetNodeDistance<gl::List,gl::Undirected>(lu);
-  TestBFSGetNodeDistance<gl::Matrix,gl::Directed>(md);
-  TestBFSGetNodeDistance<gl::Matrix,gl::Undirected>(mu);
-  TestBFSGetNodeDistance<gl::List,gl::Directed>(ld);
-  TestBFSGetPathToNode<gl::List,gl::Undirected>(lu);
-  TestBFSGetPathToNode<gl::Matrix,gl::Directed>(md);
-  TestBFSGetPathToNode<gl::Matrix,gl::Undirected>(mu);
-  TestBFSGetPathToNode<gl::List,gl::Directed>(ld);
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestBFSAcyclicTraversalOrder,AcyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestBFSAcyclicTraversalOrder,AcyclicUndirected)
+
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestBFSGetTraversalOrderMaxDistance)
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestBFSGetNodesExactDistance)
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestBFSGetNodeDistance)
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestBFSGetPathToNode)
 }
 
 void TestDFSWrapper ()
 {
-  // TODO: All type macro
   TestDFSIndexOutOfRange();
-  std::string md ("Matrix Directed ");  
-  std::string mu ("Matrix Undirected ");  
-  std::string ld ("List Directed "); 
-  std::string lu ("List Undirected "); 
   std::string CyclicDirected ("[ 0 1 2 3 7 6 9 5 4 8 ]\n");
   std::string CyclicUndirected ("[ 0 1 2 3 7 6 5 4 8 9 ]\n");
-  TestDFSCyclic<gl::Matrix,gl::Directed>(md,CyclicDirected);
-  TestDFSCyclic<gl::Matrix,gl::Undirected>(mu,CyclicUndirected);
-  TestDFSCyclic<gl::List,gl::Directed>(ld,CyclicDirected);
-  TestDFSCyclic<gl::List,gl::Undirected>(lu,CyclicUndirected);
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestDFSCyclic,CyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestDFSCyclic,CyclicUndirected)
   std::string AcyclicDirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
   std::string AcyclicUndirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
-  TestDFSAcyclic<gl::Matrix,gl::Directed>(md,AcyclicDirected);
-  TestDFSAcyclic<gl::Matrix,gl::Undirected>(mu,AcyclicUndirected);
-  TestDFSAcyclic<gl::List,gl::Directed>(ld,AcyclicDirected);
-  TestDFSAcyclic<gl::List,gl::Undirected>(lu,AcyclicUndirected);
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestDFSAcyclic,AcyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestDFSAcyclic,AcyclicUndirected)
 }
 
 
