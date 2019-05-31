@@ -16,6 +16,6 @@ namespace gl
   class Undirected;
   
   using index_type = std::size_t;
-} // namespace gl
+} /* namespace gl */
 
 #endif // GL_BASE_HPP

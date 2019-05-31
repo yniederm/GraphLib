@@ -58,7 +58,7 @@ The following software is required:
 To build all tests & examples, run `install.sh` from within the root folder of this repository. 
 Executables can then be found in the `build/test` and `build/examples` folders.
 
-### Tests
+## Tests
 This repository features unit tests in the 'test' folder.
 
 To build a specific test, run `install.sh $1` where `$1` is the name of a test.
@@ -69,7 +69,7 @@ This will create executables in the `build/test` folder for you to run (make sur
 
 Alternatively you can directly build & run all tests by invoking `./test/test.sh` from the root folder.
 
-### Examples
+## Examples
 This repository also has a few example programs that demonstrate certain features of the library.
 
 They can be found in the `examples` folder.

@@ -1,9 +1,9 @@
 #ifndef GL_DISJOINT_SETS_HPP
 #define GL_DISJOINT_SETS_HPP
 
-#include <vector>
-
 #include "../gl_base.hpp"
+
+#include <vector>
 
 namespace gl
 {
@@ -49,6 +49,10 @@ private:
   std::vector<idx_t> rank_;   ///< Ranks of every element in their set.
 };
 
+///////////////////////////////////////////////////////////
+//    Member function implementations
+///////////////////////////////////////////////////////////
+
 DisjointSets::DisjointSets (idx_t numElems) :
 numElems_(numElems), rank_(numElems,0), parent_(numElems) {
   for (idx_t i = 0; i < numElems; ++i) {
@@ -57,12 +61,16 @@ numElems_(numElems), rank_(numElems,0), parent_(numElems) {
 }
 
 typename DisjointSets::idx_t DisjointSets::find (idx_t elem) {
+  GL_ASSERT(elem < numElems_,std::string(std::string("DisjointSets::find || Element ")+std::to_string(elem)+std::string(" is larger than the max: ")+std::to_string(numElems_-1)));
   if (elem != parent_[elem])
     parent_[elem] = find(parent_[elem]);
   return parent_[elem];
 }
 
 void DisjointSets::merge (idx_t one, idx_t two) {
+  GL_ASSERT(one < numElems_,std::string(std::string("DisjointSets::find || Element ")+std::to_string(one)+std::string(" is larger than the max: ")+std::to_string(numElems_-1)));
+  GL_ASSERT(two < numElems_,std::string(std::string("DisjointSets::find || Element ")+std::to_string(two)+std::string(" is larger than the max: ")+std::to_string(numElems_-1)));
+
   one = find(one);
   two = find(two); 
   if (rank_[one] > rank_[two]) {

@@ -17,6 +17,7 @@ set(TESTS
     CycleDetection
     DegreeSequence
     Dijkstra
+    DisjointSets
     FloydWarshall
     GraphicSequence
     IOTikz

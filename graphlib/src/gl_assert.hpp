@@ -1,6 +1,7 @@
 #ifndef GL_ASSERT_HPP
 
-#include <cassert>
+#include <stdexcept>
+#include <string>
 
 #ifdef NDEBUG
 #define GL_ASSERT(EXPR_ERROR_MSG) ((void)0)
