@@ -34,20 +34,15 @@ set(TESTS
     UpdateFlaggedEntities
     )
 
-set(EIGEN_TESTS
+set(EXTERNAL_TESTS
     IOTikz
     Laplacian
     MathGL
     MathGLColors
+    MathGLPlacing
     ReadYAML
     UpdateFlaggedEntities
     Traversal
-    )
-
-set(MATHGL_TESTS
-    MathGL
-    MathGLColors
-    MathGLPlacing
     )
 
 foreach(TEST_NAME ${TESTS})
@@ -55,24 +50,30 @@ foreach(TEST_NAME ${TESTS})
   add_test(${TEST_NAME} ${TEST_NAME})
 endforeach()
 
-# Add the Eigen library to the tests that require it
-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-if(NOT EIGEN3_INCLUDE_DIR)
-  message("Eigen3 package path not found.")
-endif(NOT EIGEN3_INCLUDE_DIR)
-if(EIGEN3_INCLUDE_DIR)
-  foreach(TEST_NAME ${EIGEN_TESTS})
-  target_link_libraries(${TEST_NAME} Eigen3::Eigen)
-  endforeach()
-endif()
 
-# Add the MathGL library to the tests that require it
+# Add external libraries to the tests that require them
+# currently using BLAS and MathGL
+find_package(BLAS)
+find_package(LAPACK)
+if(LAPACK_FOUND AND BLAS_FOUND)
+   set(LAPACKBLAS_LIBRARIES ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+endif()
 find_package(MathGL)
+
+if(NOT LAPACK_FOUND)
+  message("BLAS package path not found.")
+endif(NOT LAPACK_FOUND)
+
+if(NOT BLAS_FOUND)
+  message("BLAS package path not found.")
+endif(NOT BLAS_FOUND)
+
 if(NOT MathGL_INCLUDE_DIRS)
   message("MathGL package path not found.")
 endif(NOT MathGL_INCLUDE_DIRS)
-if(MathGL_INCLUDE_DIRS)
-  foreach(TEST_NAME ${MATHGL_TESTS})
-    target_link_libraries(${TEST_NAME} ${MathGL_LIBRARIES})
+
+if(LAPACK_FOUND AND BLAS_FOUND AND MathGL_FOUND)
+  foreach(TEST_NAME ${EXTERNAL_TESTS})
+    target_link_libraries(${TEST_NAME} ${MathGL_LIBRARIES} ${LAPACKBLAS_LIBRARIES})
   endforeach()
 endif()
