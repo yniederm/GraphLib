@@ -1,6 +1,9 @@
 #include <graphlib/gl>
 #include "gl_test.hpp"
 
+#include <vector>
+#include <utility> // for std::pair
+
 template <class STORAGE, class DIRECTION>
 void TestEmptyConstructor (const std::string& type)
 {
@@ -163,6 +166,62 @@ void TestGetSPTDirected (const std::string& type)
   GL_TEST_END()
 }
 
+template <class STORAGE, class DIRECTION>
+void TestEdgeSelector (const std::string& type)
+{
+  GL_TEST_BEGIN("Edge Selector " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.readPositionsFromFile("../../test/input/dijkstra9_positions");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+  auto edgeSel = d.EdgeSelector(gl::Color("lime"), gl::Color("pink"));
+
+  std::pair<bool,gl::Color> truePair {true,"lime"};
+  std::pair<bool,gl::Color> falsePair {false,"pink"};
+  gl::interface::colorFlaggedEdges(g,edgeSel);
+  
+  auto spt = d.getSPT();
+  for (auto edge = g.edge_cbegin(); edge != g.edge_cend(); ++edge) 
+  {
+    auto i = edge->source();
+    auto j = edge->dest();
+    auto selectedPair = edgeSel(i,j);
+    bool selected = selectedPair.first;
+    auto color = selectedPair.second;
+    if (spt.hasEdge(i,j)) 
+    {
+      GL_ASSERT(selectedPair == truePair,std::string(std::string("(")+std::to_string(i)+std::string(",")+std::to_string(j)+std::string(") should be true and lime, but is ")+(selected ? "true" : "false")+std::string(" and ")+color.RGBA()))
+    }
+    else
+    {
+      GL_ASSERT(selectedPair == falsePair,std::string(std::string("(")+std::to_string(i)+std::string(",")+std::to_string(j)+std::string(") should be false and pink, but is ")+(selected ? "true" : "false")+std::string(" and ")+color.RGBA()))
+    }
+    
+  }
+  GL_TEST_END()
+}
+
+template <class STORAGE, class DIRECTION>
+void TestNodeSelector (const std::string& type)
+{
+  GL_TEST_BEGIN("Node Selector " << type)
+  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  g.addEdgesFromFile("../../test/input/dijkstra9");
+  // working constructor
+  gl::algorithm::Dijkstra<decltype(g)> d(g,0);
+  auto nodeSel = d.NodeSelector(gl::Color("aqua"), gl::Color("pink"));
+
+  std::pair<bool,gl::Color> truePair {true,gl::Color("aqua")};
+  std::pair<bool,gl::Color> falsePair {false,gl::Color("pink")};
+  for (gl::index_type i = 0; i < g.numNodes(); ++i) {
+    GL_ASSERT(nodeSel(i) == truePair,std::string(std::to_string(i)+std::string(" should be true and aqua, but is ")+(nodeSel(i).first ? "true" : "false")+std::string(" and ")+nodeSel(i).second.RGBA()))
+  }
+  GL_ASSERT(nodeSel(10) == falsePair,std::string(std::string("10 should be false and pink, but is ")+std::to_string(nodeSel(10).first)+std::string(" and ")+nodeSel(10).second.RGBA()))
+
+  GL_TEST_END()
+}
+
 int main(int argc, char const *argv[])
 {
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestEmptyConstructor)
@@ -173,6 +232,13 @@ int main(int argc, char const *argv[])
   GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetPathDirected)
   GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetSPTUndirected)
   GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetSPTDirected)
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestNodeSelector)
+
+  std::vector<std::pair<typename gl::index_type,typename gl::index_type>> UndirectedSPTEdges {std::make_pair(0,1),std::make_pair(0,7),std::make_pair(1,2),std::make_pair(2,3),std::make_pair(2,8),std::make_pair(4,5),std::make_pair(5,6),std::make_pair(6,7)};
+
+  std::vector<std::pair<typename gl::index_type,typename gl::index_type>> DirectedSPTEdges {std::make_pair(0,1),std::make_pair(0,7),std::make_pair(1,2),std::make_pair(2,3),std::make_pair(2,5),std::make_pair(2,8),std::make_pair(3,4),std::make_pair(5,6)};
+
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestEdgeSelector)
 
   return 0;
 }

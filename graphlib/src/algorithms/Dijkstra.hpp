@@ -41,16 +41,18 @@ public:
 
   /**
    * @brief Provides a Selector Object to color the edges in the Shortest Path Tree.
-   * @param[in] color New color for the SPT edges.
+   * @param[in] trueColor (optional) New color for the SPT edges.
+   * @param[in] falseColor (optional) New color for all non-SPT edges.
    * @return Selector Object: std::pair<bool,gl::Color>
    */
-  std::function<std::pair<bool,gl::Color>(const idx_t src, const idx_t dest)> EdgeSelector(const gl::Color& color = gl::Color("red")) const;
+  std::function<std::pair<bool,gl::Color>(const idx_t src, const idx_t dest)> EdgeSelector(const gl::Color& trueColor = gl::Color("red"), const gl::Color& falseColor = gl::Color("black")) const;
   /**
    * @brief Provides a Selector Object to color the nodes in the Shortest Path Tree.
-   * @param[in] color New color for the SPT nodes.
+   * @param[in] trueColor (optional) New color for the SPT nodes.
+   * @param[in] falseColor (optional) New color for all non-SPT nodes.
    * @return Selector Object: std::pair<bool,gl::Color>
    */
-  std::function<std::pair<bool,gl::Color>(const idx_t node)> NodeSelector(const gl::Color& color = gl::Color("red")) const;
+  std::function<std::pair<bool,gl::Color>(const idx_t node)> NodeSelector(const gl::Color& trueColor = gl::Color("red"), const gl::Color& falseColor = gl::Color("white")) const;
   /**
    * @brief Computation. This is where the shortest distances and the predecessors of each node on the shortest path tree get computed.
    * @param graph Input graph on which the shortest paths will be computed.
@@ -165,32 +167,35 @@ void Dijkstra<Graph>::compute(const Graph& graph, const idx_t src)
 }
 
 template <class Graph>
-std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const typename Graph::idx_t dest)> Dijkstra<Graph>::EdgeSelector (const gl::Color& color) const 
+std::function<std::pair<bool,gl::Color>(const typename Graph::idx_t src, const typename Graph::idx_t dest)> Dijkstra<Graph>::EdgeSelector (const gl::Color& trueColor, const gl::Color& falseColor) const 
 {
   GL_ASSERT(isInitialized_,"Dijkstra::EdgeSelector | Dijkstra has not been initialized with a graph.")
-  return [&color, this](const idx_t src, const idx_t dest) -> std::pair<bool,gl::Color> {
+  return [trueColor, falseColor, this](const idx_t src, const idx_t dest) -> std::pair<bool,gl::Color> {
     if (result_.hasEdge(src,dest)) 
-      return {true,color};
+    {
+      return {true,trueColor};
+    }
     else
-      return {false,gl::Color()};
+      return {false,falseColor};
   };
 }
 
 template <class Graph>
-std::function<std::pair<bool,gl::Color>(const typename Dijkstra<Graph>::idx_t node)> Dijkstra<Graph>::NodeSelector (const gl::Color& color) const 
+std::function<std::pair<bool,gl::Color>(const typename Dijkstra<Graph>::idx_t node)> Dijkstra<Graph>::NodeSelector (const gl::Color& trueColor, const gl::Color& falseColor) const 
 {
   GL_ASSERT(isInitialized_,"Dijkstra::NodeSelector | Dijkstra has not been initialized with a graph.")
 
-  return [&color, this](const idx_t node) -> std::pair<bool,gl::Color> {
+  return [trueColor, falseColor, this](const idx_t node) -> std::pair<bool,gl::Color> {
     if (pathLength(node) != val_t(-1))
-      return {true,color};
-    else return {false,gl::Color("white")};
+      return {true,trueColor};
+    else return {false,falseColor};
   };
 }
 
 template <class Graph>
 typename Graph::val_t Dijkstra<Graph>::pathLength (const idx_t dest) const {
   GL_ASSERT(isInitialized_,"Dijkstra::pathLength | Dijkstra has not been initialized with a graph.")
+  if (dest >= final_.size()) return val_t(-1);
 
   return final_[dest].first!=GL_INF(val_t) ? final_[dest].first : val_t(-1);
 }
