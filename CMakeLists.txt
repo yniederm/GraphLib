@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 project(GraphLibrary)
 set(CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
@@ -17,18 +17,42 @@ endif()
 
 # Example build by default ON
 option(BUILD_EXAMPLES "Build examples" ON)
+# Unit test build by default ON
+option(ENABLE_TESTING "Build unit tests" ON)
+
+if (BUILD_EXAMPLES OR ENABLE_TESTING)
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules/")
+  message(STATUS ${CMAKE_MODULE_PATH})
+  # Add external libraries to the exectuables that require them
+  # currently using BLAS and MathGL
+  find_package(BLAS)
+  find_package(LAPACK)
+  if(LAPACK_FOUND AND BLAS_FOUND)
+    set(LAPACKBLAS_LIBRARIES ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+  endif()
+  find_package(MathGL)
+
+  if(NOT LAPACK_FOUND)
+    message("BLAS package path not found.")
+  endif(NOT LAPACK_FOUND)
+
+  if(NOT BLAS_FOUND)
+    message("BLAS package path not found.")
+  endif(NOT BLAS_FOUND)
+
+  if(NOT MathGL_INCLUDE_DIRS)
+    message("MathGL package path not found.")
+  endif(NOT MathGL_INCLUDE_DIRS)
+endif()
+
 if(BUILD_EXAMPLES)
   # Build examples
   add_subdirectory(examples)
 endif()
 
-# Option whether the tests should be built or not. default ON
-option(ENABLE_TESTING "The tests will be built" ON)
 if(ENABLE_TESTING) 
   # Enable testing
   enable_testing()
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules/")
-  message(STATUS ${CMAKE_MODULE_PATH})
   add_subdirectory(test)
 endif()
 

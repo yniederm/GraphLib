@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 
 include_directories(
   ${PROJECT_SOURCE_DIR}
@@ -11,32 +11,29 @@ link_directories(
 
 set(EXAMPLES
     SwitzerlandDijkstra
-    )
+    ColoredDijkstraKruskal
+    IOTikz
+    MathGL
+    MathGLColors
+    MathGLPlacing
+    YAMLReader
+)
 
-#set (EXTERNAL_EXAMPLES
-#
-#)
+set(EXTERNAL_EXAMPLES
+    ColoredDijkstraKruskal
+    IOTikz
+    MathGL
+    MathGLColors
+    MathGLPlacing
+    YAMLReader
+)
 
 foreach(EXAMPLE_NAME ${EXAMPLES})
   add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
 endforeach()
 
-
-#find_package(BLAS REQUIRED)
-#find_package(MathGL)
-#if(NOT BLAS_INCLUDE_DIR)
-#  message("BLAS package path not found.")
-#endif(NOT BLAS_INCLUDE_DIR)
-
-#if(NOT MathGL_INCLUDE_DIRS)
-#  message("MathGL package path not found.")
-#endif(NOT MathGL_INCLUDE_DIRS)
-
-#if(BLAS_INCLUDE_DIR)
-#  if(MathGL_INCLUDE_DIRS)
-#    foreach(TEST_NAME ${EXTERNAL_TESTS})
-#      target_link_libraries(${TEST_NAME} ${BLAS_LIBRARIES} ${MathGL_LIBRARIES})
-#    endforeach()
-#  endif()
-#endif()
-
+if(LAPACK_FOUND AND BLAS_FOUND AND MathGL_FOUND)
+  foreach(EXAMPLE_NAME ${EXTERNAL_EXAMPLES})
+    target_link_libraries(${EXAMPLE_NAME} ${MathGL_LIBRARIES} ${LAPACKBLAS_LIBRARIES})
+  endforeach()
+endif()
