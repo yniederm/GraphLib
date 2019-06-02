@@ -154,24 +154,30 @@ void TestInequalityOperator ()
 void TestRGBString ()
 {
   GL_TEST_BEGIN("RBG String output")
-  gl::Color c (1,2,3,4);
-  GL_ASSERT_EQUAL_STRING(c.RGB(),"010203")
+  gl::Color c1 (1,2,3,4);
+  GL_ASSERT_EQUAL_STRING(c1.RGB(),"010203")
+  gl::Color c2 (0,0,3,4);
+  GL_ASSERT_EQUAL_STRING(c2.RGB(),"000003")
   GL_TEST_END()
 }
 
 void TestRGBAString ()
 {
   GL_TEST_BEGIN("RBGA String output")
-  gl::Color c (1,2,3,4);
-  GL_ASSERT_EQUAL_STRING(c.RGBA(),"01020304")
+  gl::Color c1 (1,2,3,4);
+  GL_ASSERT_EQUAL_STRING(c1.RGBA(),"01020304")
+  gl::Color c2 (0,0,3,4);
+  GL_ASSERT_EQUAL_STRING(c2.RGBA(),"00000304")
   GL_TEST_END()
 }
 
 void TestHexInt ()
 {
   GL_TEST_BEGIN("Hex Int output")
-  gl::Color c (1,2,3,4);
-  GL_ASSERT_EQUAL(c.hex(),01020304)
+  gl::Color c1 (1,2,3,4);
+  GL_ASSERT_EQUAL(c1.hex(),01020304)
+  gl::Color c2 (0,0,3,4);
+  GL_ASSERT_EQUAL(c2.hex(),00000304)
   GL_TEST_END()
 }
 

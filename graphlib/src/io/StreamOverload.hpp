@@ -142,11 +142,12 @@ std::ostream& operator<< (std::ostream& os, std::stack<idx_t> rhs)
  */
 std::ostream& operator<< (std::ostream& os, const gl::Color& rhs) 
 {
-  os << "[" << std::hex << +rhs.hex() 
-     << ";(" << std::dec 
+  os << "[Hex: #" << std::setw(8) << std::right 
+     << std::hex << +rhs.hex() << std::setfill('0'); 
+  os << ";(RGB: " << std::dec 
      << +rhs.r() << ","
      << +rhs.g() << "," 
-     << +rhs.b() << ")," 
+     << +rhs.b() << "), Opacity: " 
      << +rhs.a() << "%]";
   return os;
 }

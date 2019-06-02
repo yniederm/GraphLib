@@ -7,7 +7,7 @@
 template <class STORAGE, class DIRECTION>
 void TestEmptyConstructor (const std::string& type)
 {
-  GL_TEST_BEGIN("Empty contructor " << type)
+  GL_TEST_BEGIN("Empty constructor " << type)
   gl::algorithm::Dijkstra<gl::Graph<int,STORAGE,DIRECTION>> d;
   GL_TEST_CATCH_ERROR(d.getSource();,std::runtime_error,"Dijkstra::getSource | Dijkstra has not been initialized with a graph.")
   GL_TEST_CATCH_ERROR(d.pathLength(3);,std::runtime_error,"Dijkstra::pathLength | Dijkstra has not been initialized with a graph.")
@@ -21,7 +21,7 @@ void TestEmptyConstructor (const std::string& type)
 template <class STORAGE, class DIRECTION>
 void TestComputeConstructor (const std::string& type)
 {
-  GL_TEST_BEGIN("Compute contructor " << type)
+  GL_TEST_BEGIN("Compute constructor " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
   g.addEdgesFromFile("../../test/input/dijkstra9");
   // working constructor
@@ -172,14 +172,12 @@ void TestEdgeSelector (const std::string& type)
   GL_TEST_BEGIN("Edge Selector " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
   g.addEdgesFromFile("../../test/input/dijkstra9");
-  g.readPositionsFromFile("../../test/input/dijkstra9_positions");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
   auto edgeSel = d.EdgeSelector(gl::Color("lime"), gl::Color("pink"));
 
   std::pair<bool,gl::Color> truePair {true,"lime"};
   std::pair<bool,gl::Color> falsePair {false,"pink"};
-  gl::interface::colorFlaggedEdges(g,edgeSel);
   
   auto spt = d.getSPT();
   for (auto edge = g.edge_cbegin(); edge != g.edge_cend(); ++edge) 
@@ -191,6 +189,7 @@ void TestEdgeSelector (const std::string& type)
     auto color = selectedPair.second;
     if (spt.hasEdge(i,j)) 
     {
+      std::cout << edge->color()<<"\n";
       GL_ASSERT(selectedPair == truePair,std::string(std::string("(")+std::to_string(i)+std::string(",")+std::to_string(j)+std::string(") should be true and lime, but is ")+(selected ? "true" : "false")+std::string(" and ")+color.RGBA()))
     }
     else
@@ -233,11 +232,6 @@ int main(int argc, char const *argv[])
   GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetSPTUndirected)
   GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetSPTDirected)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestNodeSelector)
-
-  std::vector<std::pair<typename gl::index_type,typename gl::index_type>> UndirectedSPTEdges {std::make_pair(0,1),std::make_pair(0,7),std::make_pair(1,2),std::make_pair(2,3),std::make_pair(2,8),std::make_pair(4,5),std::make_pair(5,6),std::make_pair(6,7)};
-
-  std::vector<std::pair<typename gl::index_type,typename gl::index_type>> DirectedSPTEdges {std::make_pair(0,1),std::make_pair(0,7),std::make_pair(1,2),std::make_pair(2,3),std::make_pair(2,5),std::make_pair(2,8),std::make_pair(3,4),std::make_pair(5,6)};
-
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestEdgeSelector)
 
   return 0;
