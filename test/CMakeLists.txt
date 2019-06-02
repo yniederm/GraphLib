@@ -12,14 +12,14 @@ link_directories(
 set(TESTS
     Centrality
     Color
-    ConstructFromDegSeq
-    Conversion
+    # Conversion
     CycleDetection
     DegreeSequence
     Dijkstra
     DisjointSets
     Edge
     FloydWarshall
+    GraphConstructor
     GraphicSequence
     Kruskal
     Laplacian

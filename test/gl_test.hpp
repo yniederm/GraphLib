@@ -221,29 +221,34 @@ catch (...)                                                       \
 }
 
 /**
- * @brief Macro that encapsulates a try/catch block and compares the producederror messages.
- * @param Expression Code block that is expected to produce an exception.
- * @param ExceptionType Expected Exception type.
- * @param ExpectedError Expected error message.
+ * @brief Macros that run a test function with all different types of graphs.
+ * @param FunctionName Function that will be run.
+ * @param ScalarType Scalar type that shall be used for the graph.
+ * @param ... (optional) Any function arguments that need to be provided.
  */
-#define GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(FunctionName,...)              \
-FunctionName<gl::Matrix,gl::Directed  >("Matrix Directed",  ##__VA_ARGS__); \
-FunctionName<gl::List,  gl::Directed  >("List Directed",    ##__VA_ARGS__);
+#define GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(FunctionName,ScalarType,...)                           \
+FunctionName<ScalarType,gl::Matrix,gl::Directed  >(std::string(#ScalarType+std::string(" Matrix Directed")),  ##__VA_ARGS__); \
+FunctionName<ScalarType,gl::List,  gl::Directed  >(std::string(#ScalarType+std::string(" List Directed")),    ##__VA_ARGS__);
 
-#define GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(FunctionName,...)            \
-FunctionName<gl::Matrix,gl::Undirected>("Matrix Undirected",##__VA_ARGS__); \
-FunctionName<gl::List,  gl::Undirected>("List Undirected",  ##__VA_ARGS__);
+#define GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(FunctionName,ScalarType,...)                         \
+FunctionName<ScalarType,gl::Matrix,gl::Undirected>(std::string(#ScalarType+std::string(" Matrix Undirected")),##__VA_ARGS__); \
+FunctionName<ScalarType,gl::List,  gl::Undirected>(std::string(#ScalarType+std::string(" List Undirected")),  ##__VA_ARGS__);
 
-#define GL_TEST_FUNCTION_WITH_MATRIX_TYPES(FunctionName,...)                \
-FunctionName<gl::Matrix,gl::Directed  >("Matrix Directed",  ##__VA_ARGS__); \
-FunctionName<gl::Matrix,gl::Undirected>("Matrix Undirected",##__VA_ARGS__);
+#define GL_TEST_FUNCTION_WITH_MATRIX_TYPES(FunctionName,ScalarType,...)                             \
+FunctionName<ScalarType,gl::Matrix,gl::Directed  >(std::string(#ScalarType+std::string(" Matrix Directed")),  ##__VA_ARGS__); \
+FunctionName<ScalarType,gl::Matrix,gl::Undirected>(std::string(#ScalarType+std::string(" Matrix Undirected")),##__VA_ARGS__);
 
-#define GL_TEST_FUNCTION_WITH_LIST_TYPES(FunctionName,...)                  \
-FunctionName<gl::List,  gl::Directed  >("List Directed",    ##__VA_ARGS__); \
-FunctionName<gl::List,  gl::Undirected>("List Undirected",  ##__VA_ARGS__);
+#define GL_TEST_FUNCTION_WITH_LIST_TYPES(FunctionName,ScalarType,...)                               \
+FunctionName<ScalarType,gl::List,  gl::Directed  >(std::string(#ScalarType+std::string(" List Directed")),    ##__VA_ARGS__); \
+FunctionName<ScalarType,gl::List,  gl::Undirected>(std::string(#ScalarType+std::string(" List Undirected")),  ##__VA_ARGS__);
 
-#define GL_TEST_FUNCTION_WITH_ALL_TYPES(FunctionName,...)                   \
-GL_TEST_FUNCTION_WITH_MATRIX_TYPES(FunctionName,##__VA_ARGS__)              \
-GL_TEST_FUNCTION_WITH_LIST_TYPES  (FunctionName,##__VA_ARGS__)
+#define GL_TEST_FUNCTION_WITH_ALL_STRUCTURE_TYPES(FunctionName,ScalarType,...) \
+GL_TEST_FUNCTION_WITH_MATRIX_TYPES(FunctionName,ScalarType,##__VA_ARGS__)      \
+GL_TEST_FUNCTION_WITH_LIST_TYPES  (FunctionName,ScalarType,##__VA_ARGS__)
+
+#define GL_TEST_FUNCTION_WITH_ALL_TYPES(FunctionName,...)                      \
+GL_TEST_FUNCTION_WITH_ALL_STRUCTURE_TYPES(FunctionName,int,   ##__VA_ARGS__)   \
+GL_TEST_FUNCTION_WITH_ALL_STRUCTURE_TYPES(FunctionName,float, ##__VA_ARGS__)   \
+GL_TEST_FUNCTION_WITH_ALL_STRUCTURE_TYPES(FunctionName,double,##__VA_ARGS__)
 
 #endif // GL_TEST_HPP

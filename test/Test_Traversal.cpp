@@ -1,7 +1,7 @@
 #include <graphlib/gl>
 #include "gl_test.hpp"
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestBFSGetTraversalOrderMaxDistance (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getTraversalOrderMaxDistance " << name)
@@ -17,7 +17,7 @@ void TestBFSGetTraversalOrderMaxDistance (const std::string& name)
   GL_TEST_END()
 }
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestBFSGetNodesExactDistance (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getNodesExactDistance " << name)
@@ -32,7 +32,7 @@ void TestBFSGetNodesExactDistance (const std::string& name)
   
   GL_TEST_END()
 }
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestBFSGetNodeDistance (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getNodeDistance " << name)
@@ -54,7 +54,7 @@ void TestBFSGetNodeDistance (const std::string& name)
   GL_TEST_END()
 }
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestBFSGetPathToNode (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getPathToNode " << name)
@@ -83,7 +83,7 @@ void TestBFSGetPathToNode (const std::string& name)
   GL_TEST_END()
 }
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestBFSAccessBeforeInitialization (const std::string& name)
 {
   GL_TEST_BEGIN("BFS Access before initialization " << name)
@@ -110,7 +110,7 @@ void TestBFSIndexOutOfRange ()
   GL_TEST_END()
 }
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestBFSAcyclicTraversalOrder (const std::string& name, const std::string& expected)
 {
   GL_TEST_BEGIN("BFS Acyclic Traversal Order " << name)
@@ -124,7 +124,7 @@ void TestBFSAcyclicTraversalOrder (const std::string& name, const std::string& e
   GL_TEST_END()
 }
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestBFSCyclicTraversalOrder (const std::string& name, const std::string& expected)
 {
   GL_TEST_BEGIN("BFS Cyclic Traversal Order " << name)
@@ -147,7 +147,7 @@ void TestDFSIndexOutOfRange ()
   GL_TEST_END()
 }
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestDFSAcyclic (const std::string& name, const std::string& expected)
 {
   GL_TEST_BEGIN("DFS Acyclic " << name)
@@ -161,7 +161,7 @@ void TestDFSAcyclic (const std::string& name, const std::string& expected)
   GL_TEST_END()
 }
 
-template <class STORAGE_KIND, class DIRECTION>
+template <class SCALAR, class STORAGE_KIND, class DIRECTION>
 void TestDFSCyclic (const std::string& name, const std::string& expected)
 {
   GL_TEST_BEGIN("DFS Cyclic " << name)
@@ -182,13 +182,13 @@ void TestBFSWrapper ()
 
   std::string CyclicDirected ("[ 0 1 2 3 7 6 9 5 4 8 ]\n");
   std::string CyclicUndirected ("[ 0 1 2 3 7 6 5 4 8 9 ]\n");
-  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestBFSCyclicTraversalOrder,CyclicDirected)
-  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestBFSCyclicTraversalOrder,CyclicUndirected)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestBFSCyclicTraversalOrder,int,CyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestBFSCyclicTraversalOrder,int,CyclicUndirected)
 
   std::string AcyclicDirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
   std::string AcyclicUndirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
-  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestBFSAcyclicTraversalOrder,AcyclicDirected)
-  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestBFSAcyclicTraversalOrder,AcyclicUndirected)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestBFSAcyclicTraversalOrder,int,AcyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestBFSAcyclicTraversalOrder,int,AcyclicUndirected)
 
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestBFSGetTraversalOrderMaxDistance)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestBFSGetNodesExactDistance)
@@ -201,14 +201,13 @@ void TestDFSWrapper ()
   TestDFSIndexOutOfRange();
   std::string CyclicDirected ("[ 0 1 2 3 7 6 9 5 4 8 ]\n");
   std::string CyclicUndirected ("[ 0 1 2 3 7 6 5 4 8 9 ]\n");
-  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestDFSCyclic,CyclicDirected)
-  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestDFSCyclic,CyclicUndirected)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestDFSCyclic,int,CyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestDFSCyclic,int,CyclicUndirected)
   std::string AcyclicDirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
   std::string AcyclicUndirected ("[ 0 1 2 3 4 5 6 7 8 9 10 11 ]\n");
-  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestDFSAcyclic,AcyclicDirected)
-  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestDFSAcyclic,AcyclicUndirected)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestDFSAcyclic,int,AcyclicDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestDFSAcyclic,int,AcyclicUndirected)
 }
-
 
 int main(int argc, char const *argv[])
 {

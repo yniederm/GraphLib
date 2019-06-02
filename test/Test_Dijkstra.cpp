@@ -4,7 +4,7 @@
 #include <vector>
 #include <utility> // for std::pair
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestEmptyConstructor (const std::string& type)
 {
   GL_TEST_BEGIN("Empty constructor " << type)
@@ -18,7 +18,7 @@ void TestEmptyConstructor (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestComputeConstructor (const std::string& type)
 {
   GL_TEST_BEGIN("Compute constructor " << type)
@@ -37,7 +37,7 @@ void TestComputeConstructor (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestPathLengthUndirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path length " << type)
@@ -56,7 +56,7 @@ void TestPathLengthUndirected (const std::string& type)
   GL_ASSERT_EQUAL_DESC(d.pathLength(8),14,"Path length to 8 should be 14")
   GL_TEST_END()
 }
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestPathLengthDirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path length " << type)
@@ -76,7 +76,7 @@ void TestPathLengthDirected (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestGetPathUndirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path reconstruction " << type)
@@ -97,7 +97,7 @@ void TestGetPathUndirected (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestGetPathDirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path reconstruction " << type)
@@ -118,7 +118,7 @@ void TestGetPathDirected (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestGetSPTUndirected (const std::string& type)
 {
   GL_TEST_BEGIN("SPT Graph " << type)
@@ -142,7 +142,7 @@ void TestGetSPTUndirected (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestGetSPTDirected (const std::string& type)
 {
   GL_TEST_BEGIN("SPT Graph " << type)
@@ -166,7 +166,7 @@ void TestGetSPTDirected (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestEdgeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Edge Selector " << type)
@@ -200,7 +200,7 @@ void TestEdgeSelector (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestNodeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Node Selector " << type)
@@ -224,12 +224,12 @@ int main(int argc, char const *argv[])
 {
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestEmptyConstructor)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestComputeConstructor)
-  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestPathLengthUndirected)
-  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestPathLengthDirected)
-  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetPathUndirected)
-  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetPathDirected)
-  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetSPTUndirected)
-  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetSPTDirected)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestPathLengthUndirected,int)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestPathLengthDirected,int)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetPathUndirected,int)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetPathDirected,int)
+  GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestGetSPTUndirected,int)
+  GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestGetSPTDirected,int)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestNodeSelector)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestEdgeSelector)
 

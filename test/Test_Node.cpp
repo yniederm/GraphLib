@@ -7,7 +7,7 @@ void TestConstructor () {
   gl::Node<SCALAR> n1;
   GL_ASSERT_EQUAL(n1.id(), 0)
   GL_ASSERT_EQUAL(n1.capacity(), SCALAR(1))
-  GL_ASSERT(n1.label() == "", std::string(std::string("\"")+n1.label()+std::string("\" != ")))
+  GL_ASSERT_EQUAL_STRING(n1.label(), "")
   GL_ASSERT_THROW(n1.color() == gl::Color("white"))
   GL_ASSERT_EQUAL(n1.inDegree(), 0)
   GL_ASSERT_EQUAL(n1.outDegree(), 0)
@@ -16,7 +16,7 @@ void TestConstructor () {
   gl::Node<SCALAR> n2 (4,SCALAR(8),gl::Color("aqua"),"New node",4.3,5.2);
   GL_ASSERT_EQUAL(n2.id(), 4)
   GL_ASSERT_EQUAL(n2.capacity(), SCALAR(8))
-  GL_ASSERT(n2.label() == "New node", std::string(n2.label()+std::string(" != New node")))
+  GL_ASSERT_EQUAL_STRING(n2.label(),"New node")
   GL_ASSERT_THROW(n2.color() == gl::Color("aqua"))
   GL_ASSERT_EQUAL(n2.inDegree(), 0)
   GL_ASSERT_EQUAL(n2.outDegree(), 0)
@@ -35,7 +35,7 @@ void TestUpdate () {
   n2.color(gl::Color("aqua"));
   GL_ASSERT_EQUAL(n2.id(), 4)
   GL_ASSERT_EQUAL(n2.capacity(), SCALAR(8))
-  GL_ASSERT(n2.label() == "New node", std::string(n2.label()+std::string(" != New node")))
+  GL_ASSERT_EQUAL_STRING(n2.label(), "New node")
   GL_ASSERT_THROW(n2.color() == gl::Color("aqua"))
 
   n2.inDegreeIncrement(5);

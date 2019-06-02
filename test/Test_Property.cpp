@@ -5,12 +5,12 @@ void TestConstructor () {
   GL_TEST_BEGIN("Constructor")
   gl::Property p1;
   GL_ASSERT_EQUAL(p1.numNodes(), 0)
-  GL_ASSERT(p1.label() == "Graph", std::string(p1.label()+std::string(" != Graph")))
+  GL_ASSERT_EQUAL_STRING(p1.label(), "Graph")
   GL_ASSERT_EQUAL(p1.numEdges(), 0)
 
   gl::Property p2(5,"Property test");
   GL_ASSERT_EQUAL(p2.numNodes(), 5)
-  GL_ASSERT(p2.label() == "Property test", std::string(p2.label()+std::string(" != Property test")))
+  GL_ASSERT_EQUAL_STRING(p2.label(), "Property test")
   
   GL_TEST_END()
 }
@@ -23,7 +23,7 @@ void TestUpdate () {
   p1.label("Property test");
   p1.numEdges(27);
   GL_ASSERT_EQUAL(p1.numNodes(), 5)
-  GL_ASSERT(p1.label() == "Property test", std::string(p1.label()+std::string(" != Property test")))
+  GL_ASSERT_EQUAL_STRING(p1.label(), "Property test")
   GL_ASSERT_EQUAL(p1.numEdges(), 27)
 
 

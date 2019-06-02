@@ -269,7 +269,7 @@ public:
    * @param[in] numNodes Number of nodes/vertices in the graph.
    * @param[in] label Label of the graph.
    */
-  Graph(const idx_t &numNodes, const std::string &label = "Graph") : property_(numNodes, label)
+  Graph(const idx_t &numNodes = 0, const std::string &label = "Graph") : property_(numNodes, label)
   {
     construct();
   }
@@ -314,7 +314,6 @@ public:
   {
     construct();
   }
-  Graph() {}
   ~Graph()
   {
   }

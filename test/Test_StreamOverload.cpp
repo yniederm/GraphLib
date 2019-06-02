@@ -63,7 +63,7 @@ void TestStack ()
 template <class SCALAR>
 void TestEdge ()
 {
-  GL_TEST_BEGIN(std::string("gl::Edge")+typeid(SCALAR).name())
+  GL_TEST_BEGIN(std::string("gl::Edge ")+typeid(SCALAR).name())
   gl::Edge<SCALAR> e(2,3,7,gl::Color(0x010203,0x04));
   std::cout << e << "\t";
 

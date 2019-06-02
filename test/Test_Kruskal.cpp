@@ -4,11 +4,11 @@
 #include <vector>
 #include <utility> // for std::pair
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestEmptyConstructor (const std::string& type)
 {
   GL_TEST_BEGIN("Empty constructor " << type)
-  gl::algorithm::Kruskal<gl::Graph<int,STORAGE,DIRECTION>> k;
+  gl::algorithm::Kruskal<gl::Graph<SCALAR,STORAGE,DIRECTION>> k;
   GL_TEST_CATCH_ERROR(k.getCost();,std::runtime_error,"Kruskal::getCost | Kruskal has not been initialized with a graph.")
   GL_TEST_CATCH_ERROR(k.getMST();,std::runtime_error,"Kruskal::getMST | Kruskal has not been initialized with a graph.")
   GL_TEST_CATCH_ERROR(k.NodeSelector();,std::runtime_error,"Kruskal::NodeSelector | Kruskal has not been initialized with a graph.")
@@ -16,16 +16,16 @@ void TestEmptyConstructor (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestComputeConstructor (const std::string& type)
 {
   GL_TEST_BEGIN("Compute constructor " << type)
-  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
   g.addEdgesFromFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
 
-  gl::Graph<int,STORAGE,DIRECTION> g2(4,type);
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g2(4,type);
   g2.setEdge(0,1,5);
   g2.setEdge(2,3,4);
   // unconnected Graph
@@ -34,11 +34,11 @@ void TestComputeConstructor (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestGetCost (const std::string& type)
 {
   GL_TEST_BEGIN("Path length " << type)
-  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
   g.addEdgesFromFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
@@ -46,16 +46,16 @@ void TestGetCost (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestGetMST (const std::string& type)
 {
   GL_TEST_BEGIN("SPT Graph " << type)
-  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
   g.addEdgesFromFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
 
-  gl::Graph<int,STORAGE,DIRECTION> k0(9,std::string(std::string("MST of ")+type));
+  gl::Graph<SCALAR,STORAGE,DIRECTION> k0(9,std::string(std::string("MST of ")+type));
   k0.setEdge(0,1,4);
   k0.setEdge(0,7,8);
   k0.setEdge(2,3,7);
@@ -70,11 +70,11 @@ void TestGetMST (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestEdgeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Edge Selector " << type)
-  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
   g.addEdgesFromFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
@@ -103,11 +103,11 @@ void TestEdgeSelector (const std::string& type)
   GL_TEST_END()
 }
 
-template <class STORAGE, class DIRECTION>
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestNodeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Node Selector " << type)
-  gl::Graph<int,STORAGE,DIRECTION> g(9,type);
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
   g.addEdgesFromFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
