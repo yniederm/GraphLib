@@ -18,6 +18,7 @@ set(TESTS
     DegreeSequence
     Dijkstra
     DisjointSets
+    Edge
     FloydWarshall
     GraphicSequence
     IOTikz
@@ -28,6 +29,8 @@ set(TESTS
     MathGLColors
     MathGLPlacing
     MatrixGraph
+    Node
+    Property
     ReadYAML
     StreamOverload
     TransitiveClosure

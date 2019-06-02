@@ -60,12 +60,29 @@ void TestStack ()
   GL_TEST_END()
 }
 
+template <class SCALAR>
+void TestEdge ()
+{
+  GL_TEST_BEGIN(std::string("gl::Edge")+typeid(SCALAR).name())
+  gl::Edge<SCALAR> e(2,3,7,gl::Color(0x010203,0x04));
+  std::cout << e << "\t";
+
+  std::stringstream ss1 ("[2--(7)->3; #01020304]");
+  std::stringstream ss2;
+  ss2 << e;
+  GL_ASSERT_EQUAL_STRING(ss1.str(),ss2.str())
+  GL_TEST_END()
+}
+
 int main(int argc, char const *argv[])
 {
   TestList();
   TestVector();
   TestDeque();
   TestStack();
+  TestEdge<int>();
+  TestEdge<float>();
+  TestEdge<double>();
 
   return 0;
 }

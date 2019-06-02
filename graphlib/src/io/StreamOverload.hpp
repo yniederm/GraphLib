@@ -136,7 +136,7 @@ std::ostream& operator<< (std::ostream& os, std::stack<idx_t> rhs)
 //@}
 
 /**
- * @brief Prints a gl::Color element. Format: [{Hex code};({R},{G},{B}),{alpha/opacity}]
+ * @brief Prints a gl::Color element. Format: [Hex code;(R,G,B),Opacity]
  * @param os Stream that will be used for output
  * @param[in] rhs Color that will be printed
  */
@@ -149,6 +149,21 @@ std::ostream& operator<< (std::ostream& os, const gl::Color& rhs)
      << +rhs.g() << "," 
      << +rhs.b() << "), Opacity: " 
      << +rhs.a() << "%]";
+  return os;
+}
+/**
+ * @brief Prints a gl::Edge element. Format: [Source-(Weight)->Destination;Weight/Capacity; Color]
+ * @param os Stream that will be used for output
+ * @param[in] rhs Edge that will be printed
+ */
+template<class SCALAR>
+std::ostream& operator<< (std::ostream& os, const gl::Edge<SCALAR>& rhs) 
+{
+  os << "[" <<rhs.source() 
+     << "--(" << rhs.weight() 
+     << ")->" << rhs.dest() 
+     << "; #" << rhs.color().RGBA() 
+     << "]";
   return os;
 }
 

@@ -7,6 +7,4 @@
 
 #include "src/interface/UpdateFlaggedEntities.hpp"
 
-#include "src/partial_specialization_off"
-
 #endif // GL_INTERFACE

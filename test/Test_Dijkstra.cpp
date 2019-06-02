@@ -189,7 +189,6 @@ void TestEdgeSelector (const std::string& type)
     auto color = selectedPair.second;
     if (spt.hasEdge(i,j)) 
     {
-      std::cout << edge->color()<<"\n";
       GL_ASSERT(selectedPair == truePair,std::string(std::string("(")+std::to_string(i)+std::string(",")+std::to_string(j)+std::string(") should be true and lime, but is ")+(selected ? "true" : "false")+std::string(" and ")+color.RGBA()))
     }
     else

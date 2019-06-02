@@ -13,8 +13,6 @@
 #include "src/structures/Graph.hpp"
 #include "src/structures/Color.hpp"
 
-#include "src/partial_specialization_off"
-
 namespace gl {
 
 #define GL_TYPEDEFS_FIXED_SCALAR_DIR(Scalar,ScalarSuffix,Storage,StorageSuffix,Direction,DirectionSuffix) \

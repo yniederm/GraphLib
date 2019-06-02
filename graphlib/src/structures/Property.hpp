@@ -1,83 +1,176 @@
 #ifndef GL_PROPERTY_HPP
 #define GL_PROPERTY_HPP
 
-#include "Graph.hpp"
-
 namespace gl {
 
 ///////////////////////////////////////////////////////////
-//    Graph::Property function implementations
+//    Property Class declaration
+///////////////////////////////////////////////////////////
+
+/** 
+ * @class Property
+ * @brief Stores the properties of a Graph.
+ */
+class Property
+{
+public:
+  using idx_t = gl::index_type;
+
+  Property(const idx_t &numNodes = 0, const std::string &label = "Graph") : numNodes_(numNodes), label_(label), numEdges_(0) {}
+
+  Property(const Property&) = default;                ///< @brief Copy constructor
+  Property(Property&&) noexcept = default;            ///< @brief Move constructor
+  Property &operator=(const Property&) = default;     ///< @brief Copy assignment
+  Property &operator=(Property&&) noexcept = default; ///< @brief Move assignment
+  ~Property() = default;                            ///< @brief Destructor
+
+  /**
+   * @brief Check whether two propertes are equal.
+   * @return true if equal, false otherwise.
+   */
+  bool operator== (const Property& rhs) const;
+  /**
+   * @brief Check whether two propertes are not equal.
+   * @return true if not equal, false otherwise.
+   */
+  bool operator!= (const Property& rhs) const;
+  /**
+   * @name numNodes
+   * @brief Access to the number of nodes in the graph.
+   */
+  //@{
+  /**
+   * @brief Gets the number of nodes in the graph.
+   * @return Number of nodes in the graph.
+   */
+  inline idx_t numNodes() const;
+  /**
+   * @brief Allows changing the number of nodes in the graph.
+   * @param[in] numNodes New value of node count.
+   */
+  inline void numNodes(const idx_t &numNodes);
+  /**
+   * @brief Increments the number of nodes in the graph.
+   * @param[in] increment Number of nodes that will be added to the graph.
+   */
+  inline void numNodesIncrement(const idx_t &increment = 1);
+  /**
+   * @brief Decrements the number of nodes in the graph.
+   * @param[in] decrement Number of nodes that will be removed from the graph.
+   */
+  inline void numNodesDecrement(const idx_t &decrement = 1);
+  //@}
+  /**
+   * @name numEdges
+   * @brief Access to the number of edges in the graph.
+   */
+  //@{
+  /**
+   * @brief Gets the number of edges in the graph.
+   * @return Number of edges in the graph.
+   */
+  inline idx_t numEdges() const;
+  /**
+   * @brief Allows changing the number of edges in the graph.
+   * @param[in] numEdges New value of edge count.
+   */
+  inline void numEdges(const idx_t &numEdges);
+  /**
+   * @brief Increments the number of edges in the graph.
+   * @param[in] increment Number of nodes that will be added to the graph.
+   */
+  inline void numEdgesIncrement(const idx_t &increment = 1);
+  /**
+   * @brief Decrements the number of edges in the graph.
+   * @param[in] decrement Number of edges that will be removed from the graph.
+   */
+  inline void numEdgesDecrement(const idx_t &decrement = 1);
+  //@}
+  /**
+   * @name Label
+   * @brief Access to label of the graph.
+   */
+  //@{
+  /**
+   * @brief Gets the label of the graph.
+   * @return Graph name.
+   */
+  inline std::string label() const;
+  /**
+   * @brief Allows changing the label of the graph.
+   * @param[in] label New graph name.
+   */
+  inline void label(const std::string &label);
+  //@}
+
+private:
+  idx_t numNodes_;    ///< @brief Number of nodes in the graph
+  idx_t numEdges_;    ///< @brief Number of edges in the graph
+  std::string label_; ///< @brief Label of the graph
+};
+
+///////////////////////////////////////////////////////////
+//    Property function implementations
 ///////////////////////////////////////////////////////////
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 // equality operator
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-bool Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::operator== (const Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property& rhs) const
+bool Property::operator== (const Property& rhs) const
 {
   return numNodes_ == rhs.numNodes_ 
       && numEdges_ == rhs.numEdges_
       && label_ == rhs.label_;
 }
 // inequality operator
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-bool Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::operator!= (const Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property& rhs) const
+bool Property::operator!= (const Property& rhs) const
 {
-  return !operator!=(rhs);
+  return !operator==(rhs);
 }
 
 // getter for numNodes
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodes() const {
+inline typename Property::idx_t Property::numNodes() const {
   return numNodes_;
 }
 // setter for numNodes
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodes(const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& numNodes) {
+inline void Property::numNodes(const typename Property::idx_t& numNodes) {
   numNodes_ = numNodes;
 }
 
 // increment for numNodes
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodesIncrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& increment) {
+inline void Property::numNodesIncrement (const typename Property::idx_t& increment) {
   numNodes_ += increment;
 }
 // decrement for numNodes
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numNodesDecrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& decrement) {
+inline void Property::numNodesDecrement (const typename Property::idx_t& decrement) {
+  GL_ASSERT(decrement <= numNodes_,"Property::numNodesDecrement | Decrement results in negative number of nodes")
   numNodes_ -= decrement;
 }
 
 // getter for numEdges
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdges() const {
+inline typename Property::idx_t Property::numEdges() const {
   return numEdges_;
 }
 // setter for numEdges
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdges(const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& numEdges) {
+inline void Property::numEdges(const typename Property::idx_t& numEdges) {
   numEdges_ = numEdges;
 }
 
 // increment for numEdges
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdgesIncrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& increment) {
+inline void Property::numEdgesIncrement (const typename Property::idx_t& increment) {
   numEdges_ += increment;
 }
 // decrement for numEdges
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::numEdgesDecrement (const typename Graph<SCALAR,STORAGE_KIND,DIRECTION>::idx_t& decrement) {
+inline void Property::numEdgesDecrement (const typename Property::idx_t& decrement) {GL_ASSERT(decrement <= numNodes_,"Property::numEdgesDecrement | Decrement results in negative number of edges")
   numEdges_ -= decrement;
 }
 
 // getter for label
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline std::string Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::label() const {
+inline std::string Property::label() const {
   return label_;
 }
 // setter for label
-template <class SCALAR, class STORAGE_KIND, class DIRECTION>
-inline void Graph<SCALAR,STORAGE_KIND,DIRECTION>::Property::label(const std::string& label) {
+inline void Property::label(const std::string& label) {
   label_ = label;
 }
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */

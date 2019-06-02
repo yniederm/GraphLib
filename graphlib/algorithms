@@ -17,8 +17,6 @@
 #include "src/algorithms/Kruskal.hpp"
 #include "src/algorithms/TransitiveClosure.hpp"
 
-#include "src/partial_specialization_off"
-
 namespace gl {
 namespace algorithm {
 

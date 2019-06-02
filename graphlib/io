@@ -13,6 +13,4 @@
 #include "src/io/WriteTikz.hpp"
 #include "src/io/CompileLatex.hpp"
 
-#include "src/partial_specialization_off"
-
 #endif //  GL_IO

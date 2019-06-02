@@ -13,8 +13,11 @@
 #include <stack>
 #include <iterator>
 
-#include "Color.hpp"
 #include "../gl_base.hpp"
+#include "Color.hpp"
+#include "Edge.hpp"
+#include "Node.hpp"
+#include "Property.hpp"
 #include "../algorithms/HavelHakimi.hpp"
 
 namespace gl {
@@ -39,6 +42,8 @@ class Graph
 public:
   using val_t = SCALAR;                                    ///< Value type
   using idx_t = gl::index_type;                            ///< Index type
+  using Edge = gl::Edge<val_t>;                            ///< Edge type
+  using Node = gl::Node<val_t>;                            ///< Node type
   using dest_vec_t = std::vector<std::pair<idx_t, val_t>>; ///< Destination-Vector type
   using idx_list_t = std::vector<idx_t>;                   ///< Index List type
   using ordered_list_t = std::list<idx_t>;                 ///< Ordered List type
@@ -46,385 +51,6 @@ public:
   template <class info_t>
   using BFS_queue_t = std::deque<info_t>; ///< BFS type
   using DFS_queue_t = std::stack<idx_t>;  ///< DFS type
-
-  // TODO: Move to separate class, then change setEdge(const Edge<SCALAR>& edge)
-  /** 
-   * @class Edge
-   * @brief Represents an Edge in a Graph.
-   * @tparam SCALAR Number type used to store edge weights.
-   * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
-   * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
-   */
-  class Edge
-  {
-  public:
-    /**
-     * @brief Construct Edge from data
-     * @param[in] src Source index
-     * @param[in] dest Destination index
-     * @param[in] weight The weight of the %Edge
-     * @param[in] color Color of the %Edge
-     * @param[in] exists Whether the %Edge exists
-     */
-    Edge(const idx_t &src = 0, const idx_t &dest = 0, const val_t &weight = 0, const Color &color = Color("black"), const bool &exists = false) : src_(src), dest_(dest), weight_(weight), exists_(exists), color_(color) {}
-
-    /**
-     * @brief Check whether two edges are equal.
-     * @return true if equal, false otherwise.
-     */
-    bool operator== (const Edge& rhs) const;
-    /**
-     * @brief Check whether two edges are not equal.
-     * @return true if not equal, false otherwise.
-     */
-    bool operator!= (const Edge& rhs) const;
-
-    /**
-     * @name exists
-     * @brief Access to boolean value exists.
-     * This signifies the existance of an edge in the graph.
-     */
-    //@{
-    /**
-     * @brief Checks whether an edge exists.
-     * @return True if exists, false otherwise.
-     */
-    inline bool exists() const;
-    /**
-     * @brief Allows changing of existance status of an edge.
-     * @param[in] exists New value of boolean exists.
-     */
-    inline void exists(bool exists);
-    //@}
-    /**
-     * @name source
-     * @brief Access to index of source node.
-     */
-    //@{
-    /**
-     * @brief Gets the index of the source of the edge.
-     * @return index of edge source node.
-     */
-    inline idx_t source() const;
-    /**
-     * @brief Allows changing the source of an edge.
-     * @param[in] src New value of source index.
-     */
-    inline void source(idx_t src);
-    //@}
-    /**
-     * @name dest
-     * @brief Access to index of destination node.
-     */
-    //@{
-    /**
-     * @brief Gets the index of the destination of the edge.
-     * @return index of edge destination node.
-     */
-    inline idx_t dest() const;
-    /**
-     * @brief Allows changing the destination of an edge.
-     * @param[in] dest New value of destination index.
-     */
-    inline void dest(idx_t dest);
-    //@}
-    /**
-     * @name weight
-     * @brief Access to weight of the edge.
-     */
-    //@{
-    /**
-     * @brief Gets the weight of the edge.
-     * @return Weight of the edge.
-     */
-    inline val_t weight() const;
-    /**
-     * @brief Allows changing the weight of an edge.
-     * @param[in] weight New value of edge weight.
-     */
-    inline void weight(val_t weight);
-    /**
-     * @name color
-     * @brief Access to the edge's RGBA color value.
-     */
-    //@{
-    /**
-     * @brief Gets the edge's color.
-     * @return Color of the edge.
-     */
-    inline Color color() const;
-    /**
-     * @brief Allows changing the edge's RGBA color value.
-     * @param[in] color New color object. 
-     */
-    inline void color(const Color &color);
-    //@}
-
-  private:
-    idx_t src_;    ///< @brief Source index
-    idx_t dest_;   ///< @brief Destination index
-    val_t weight_; ///< @brief Edge weight
-    bool exists_;  ///< @brief Edge existance
-    Color color_;  ///< @brief Edge color
-  };
-
-  // TODO: Move to separate class, update construct()
-  /** 
-   * @class Node
-   * @brief Represents a Node in a Graph.
-   * @tparam SCALAR Number type used to store node capacities.
-   * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
-   * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
-   */
-  class Node
-  {
-
-  public:
-    Node(const idx_t &id = 0, const val_t &capacity = 1, const std::string &label = "") : id_(id), label_(label), capacity_(capacity),
-                                                                                          color_(Color("white")), inDegree_(0), outDegree_(0) {}
-
-    /**
-     * @brief Check whether two nodes are equal.
-     * @return true if equal, false otherwise.
-     */
-    bool operator== (const Node& rhs) const;
-    /**
-     * @brief Check whether two nodes are not equal.
-     * @return true if not equal, false otherwise.
-     */
-    bool operator!= (const Node& rhs) const;
-
-    /**
-     * @name id
-     * @brief Access to node ID.
-     */
-    //@{
-    /**
-     * @brief Checks whether an edge exists.
-     * @return True if exists, false otherwise.
-     */
-    inline idx_t id() const;
-    /**
-     * @brief Allows changing of node ID.
-     * @param[in] id New value of node ID.
-     */
-    inline void id(const idx_t &id);
-    //@}
-    /**
-     * @name name
-     * @brief Access to the label of a node.
-     */
-    //@{
-    /**
-     * @brief Gets the label of a node.
-     * @return label of the node.
-     */
-    inline std::string label() const;
-    /**
-     * @brief Allows changing the label of a node.
-     * @param[in] label New value of node label.
-     */
-    inline void label(const std::string &label);
-    //@}
-    /**
-     * @name capacity
-     * @brief Access to capacity of the edge.
-     */
-    //@{
-    /**
-     * @brief Gets the capacity of the node.
-     * @return Capacity of the node.
-     */
-    inline val_t capacity() const;
-    /**
-     * @brief Allows changing the capacity of a node.
-     * @param[in] capacity New value of node capacity.
-     */
-    inline void capacity(const val_t &capacity);
-    //@}
-    /**
-     * @name color
-     * @brief Access to the edge's RGBA color value.
-     */
-    //@{
-    /**
-     * @brief Gets the edge's color.
-     * @return Color of the edge.
-     */
-    inline Color color() const;
-    /**
-     * @brief Allows changing the edge's RGBA color value.
-     * @param[in] color New color object. 
-     */
-    inline void color(const Color &color);
-    //@}
-    /**
-     * @name inDegree
-     * @brief Access to node in-degree.
-     */
-    //@{
-    /**
-     * @brief Gets the in-degree of a node.
-     * @return In-degree of a node.
-     */
-    inline idx_t inDegree() const;
-    /**
-     * @brief Increments the node in-degree.
-     * @param[in] increment number that will be added
-     */
-    inline void inDegreeIncrement(const idx_t &increment = 1);
-    /**
-     * @brief Decrements the node in-degree.
-     * @param[in] decrement number that will be subtracted
-     */
-    inline void inDegreeDecrement(const idx_t &decrement = 1);
-    //@}
-    /**
-     * @name outDegree
-     * @brief Access to node out-degree.
-     */
-    //@{
-    /**
-     * @brief Gets the out-degree of a node.
-     * @return Out-degree of a node.
-     */
-    inline idx_t outDegree() const;
-    /**
-     * @brief Increments the node out-degree.
-     * @param[in] increment number that will be added
-     */
-    inline void outDegreeIncrement(const idx_t &increment = 1);
-    /**
-     * @brief Decrements the node out-degree.
-     * @param[in] decrement number that will be subtracted
-     */
-    inline void outDegreeDecrement(const idx_t &decrement = 1);
-    //@}
-    //@{
-    /**
-     * @name position
-     * @brief Access to node position.
-     */
-    /**
-     * @brief Get Position of this node
-     * @return Position of node
-     */
-    inline std::pair<float, float> position() const;
-    /**
-     * @brief Set Position of node
-     * @param pos The position of the node
-     */
-    inline void position(const std::pair<float, float> &pos);
-    //@}
-
-  private:
-    idx_t id_;                         ///< @brief Node ID */
-    std::string label_;                ///< @brief Node label */
-    val_t capacity_;                   ///< @brief Node capacity */
-    Color color_;                      ///< @brief Node color */
-    idx_t inDegree_;                   ///< @brief In-degree */
-    idx_t outDegree_;                  ///< @brief Out-degree */
-    std::pair<float, float> position_; ///< @brief Position of node
-  };
-
-  /** 
-   * @class Property
-   * @brief Stores the properties of a Graph.
-   * @tparam SCALAR Number type used to store edge weights.
-   * @tparam STORAGE_KIND Class type used to signify that a matrix shall be stored in either Adjacency Matrix or Adjacency List format. Accepted Values: gl::Matrix, gl::List 
-   * @tparam DIRECTION Class type used to signify that the graph is either directed or undirected. Accepted Values: gl::Directed, gl::Undirected 
-   */
-  class Property
-  {
-  public:
-    Property() = default;
-    Property(const idx_t &numNodes, const std::string &label = "Graph", const idx_t &numEdges = 0) : numNodes_(numNodes), label_(label), numEdges_(0) {}
-    Property(const Property &property) : numNodes_(property.numNodes_), label_(property.label_), numEdges_(property.numEdges_) {}
-
-    /**
-     * @brief Check whether two propertes are equal.
-     * @return true if equal, false otherwise.
-     */
-    bool operator== (const Property& rhs) const;
-    /**
-     * @brief Check whether two propertes are not equal.
-     * @return true if not equal, false otherwise.
-     */
-    bool operator!= (const Property& rhs) const;
-    /**
-     * @name numNodes
-     * @brief Access to the number of nodes in the graph.
-     */
-    //@{
-    /**
-     * @brief Gets the number of nodes in the graph.
-     * @return Number of nodes in the graph.
-     */
-    inline idx_t numNodes() const;
-    /**
-     * @brief Allows changing the number of nodes in the graph.
-     * @param[in] numNodes New value of node count.
-     */
-    inline void numNodes(const idx_t &numNodes);
-    /**
-     * @brief Increments the number of nodes in the graph.
-     * @param[in] increment Number of nodes that will be added to the graph.
-     */
-    inline void numNodesIncrement(const idx_t &increment = 1);
-    /**
-     * @brief Decrements the number of nodes in the graph.
-     * @param[in] decrement Number of nodes that will be removed from the graph.
-     */
-    inline void numNodesDecrement(const idx_t &decrement = 1);
-    //@}
-    /**
-     * @name numEdges
-     * @brief Access to the number of edges in the graph.
-     */
-    //@{
-    /**
-     * @brief Gets the number of edges in the graph.
-     * @return Number of edges in the graph.
-     */
-    inline idx_t numEdges() const;
-    /**
-     * @brief Allows changing the number of edges in the graph.
-     * @param[in] numEdges New value of edge count.
-     */
-    inline void numEdges(const idx_t &numEdges);
-    /**
-     * @brief Increments the number of edges in the graph.
-     * @param[in] increment Number of nodes that will be added to the graph.
-     */
-    inline void numEdgesIncrement(const idx_t &increment = 1);
-    /**
-     * @brief Decrements the number of edges in the graph.
-     * @param[in] decrement Number of edges that will be removed from the graph.
-     */
-    inline void numEdgesDecrement(const idx_t &decrement = 1);
-    //@}
-    /**
-     * @name Label
-     * @brief Access to label of the graph.
-     */
-    //@{
-    /**
-     * @brief Gets the label of the graph.
-     * @return Graph name.
-     */
-    inline std::string label() const;
-    /**
-     * @brief Allows changing the label of the graph.
-     * @param[in] label New graph name.
-     */
-    inline void label(const std::string &label);
-    //@}
-
-  private:
-    idx_t numNodes_;    ///< @brief Number of nodes in the graph
-    idx_t numEdges_;    ///< @brief Number of edges in the graph
-    std::string label_; ///< @brief Label of the graph
-  };
 
   /* Data structure typedefs */
   using matrix_t = std::vector<Edge>;         ///< @brief Matrix Representation type
@@ -643,7 +269,7 @@ public:
    * @param[in] numNodes Number of nodes/vertices in the graph.
    * @param[in] label Label of the graph.
    */
-  Graph(const idx_t &numNodes, const std::string &label = "Graph") : property_(numNodes, label, 0)
+  Graph(const idx_t &numNodes, const std::string &label = "Graph") : property_(numNodes, label)
   {
     construct();
   }
@@ -663,7 +289,7 @@ public:
     GL_ASSERT(gl::algorithm::havelHakimi(degrees), "Degree Sequence is not graphic.")
 
     idx_t numNodes = degrees.size();
-    property_ = Property(numNodes, label, 0);
+    property_ = Property(numNodes, label);
     property_.numNodes(numNodes);
     construct();
 

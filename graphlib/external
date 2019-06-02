@@ -10,6 +10,4 @@
 #include "src/algorithms/PositionsFromLaplacian.hpp"
 #include "src/algorithms/SpectralPlacing.hpp"
 
-#include "src/partial_specialization_off"
-
 #endif // GL_EXTERNAL
