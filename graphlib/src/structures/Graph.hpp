@@ -373,7 +373,6 @@ public:
     gl::Graph<SCALAR, gl::List, DIRECTION> out(numNodes(), getGraphLabel());
     for (auto edge = edge_cbegin(); edge != edge_cend(); ++edge)
     {
-      std::cerr << "added " << edge->source() << " " << edge->dest() << "\n";
       out.setEdge(edge->source(), edge->dest(), edge->weight(), edge->color());
     }
     return out;
@@ -587,6 +586,7 @@ public:
    * @brief Adds edges in the format "<start> <end> <weight>" found in inFile to the graph.
    * @param[in] inFile file name of input file
    */
+  // TODO: Add matrix format function
   void addEdgesFromFile(const std::string &inFile)
   {
     std::ifstream is;
@@ -644,7 +644,7 @@ public:
     updateEdgeInternal(edges_.data()+start * numNodes() + end, args...);
     updateEdgeInternal(edges_.data()+end * numNodes() + start, args...);
   }
-
+private:
   template <typename Target, typename First, typename ... OtherArgs>
   inline void updateEdgeInternal (const Target& it, First arg, const OtherArgs&... rest)
   {
@@ -671,6 +671,7 @@ public:
   inline void updateEdgeInternal (const Target& it)
   {
   }
+public:
 #endif
   /**
    * @brief Deletes the edge going from start to end.

@@ -117,7 +117,7 @@ throw std::runtime_error(   std::string(__FILE__)               \
                               + std::string(__PRETTY_FUNCTION__) \
                               + std::string(":\n")               \
                               + A                                \
-                              + std::string("!=\n")              \
+                              + std::string("\n!=\n")            \
                               + B                                \
     );                                                           \
   }                                                              \
@@ -188,14 +188,14 @@ throw std::runtime_error(   std::string(__FILE__)               \
  * @param Actual Computed container that will be compared to the expected container.
  * @param Expected Expected Value for the computed result.
  * @param AbsTol Absolute tolerance for numerical error.
- * @param TestName A string that can be used as an identifier for which test case is executed.
  */
 #define GL_NUMERIC_CONTAINER_COMPARE(Actual,Expected,AbsTol)            \
 GL_ASSERT_EQUAL_DESC(Actual.size(),Expected.size(),"Container sizes")   \
-auto et = Expected.begin();                                             \
-for (auto at = Actual.begin(); at != Actual.end(); ++at, ++et)          \
 {                                                                       \
-  GL_ASSERT_EQUAL_ABSTOL(*at,*et,AbsTol)                                \
+  for (std::pair<typename decltype(Actual)::const_iterator,typename decltype(Expected)::const_iterator> it(Actual.cbegin(),Expected.cbegin()); it.first != Actual.cend(); ++it.first, ++it.second)        \
+  {                                                                     \
+    GL_ASSERT_EQUAL_ABSTOL(*(it.first),*(it.second),AbsTol)             \
+  }                                                                     \
 }
 
 /**

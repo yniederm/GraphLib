@@ -12,19 +12,18 @@ link_directories(
 set(TESTS
     Centrality
     Color
-    # Conversion
     CycleDetection
     DegreeSequence
     Dijkstra
     DisjointSets
     Edge
     FloydWarshall
+    GraphBase
     GraphConstructor
     GraphicSequence
+    GraphInterface
     Kruskal
     Laplacian
-    ListGraph
-    MatrixGraph
     Node
     Property
     StreamOverload
