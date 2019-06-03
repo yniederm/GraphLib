@@ -421,8 +421,8 @@ public:
   GL_ENABLE_IF_UNDIRECTED
 #endif
   /**
-   * @brief Returns true if the graph is undirected, false if not.
-   * @return true if the graph is undirected, false if not.
+   * @brief Returns true if the graph is directed, false if not.
+   * @return true if the graph is directed, false if not.
    */
   inline bool isDirected() const
   {
@@ -438,48 +438,31 @@ public:
     return true;
   }
 #endif
-  /**
-   * A quick algorithm that finds cycles in a graph.
-   * A cycle in a graph is defined by a back edge (self-loop or edge connecting to an ancestor of the tree given by DFS).
-   * An acyclic graph is also known as a tree.
-   * @brief Checks whether the given graph containes cycles.
-   * @return true if cyclic, false if acyclic
-   */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  /**
-   * @brief Checks whether the given directed graph containes cycles using an iterative DFS approach.
-   * @return true if cyclic, false if acyclic
-   */
-  GL_ENABLE_IF_DIRECTED
+  GL_ENABLE_IF_UNDIRECTED
 #endif
-  bool hasCycle() const
+  /**
+   * @brief Returns true if the graph is undirected, false if not.
+   * @return true if the graph is undirected, false if not.
+   */
+  inline bool isUndirected() const
   {
-    visit_list_t visited(numNodes(), false);
-    idx_list_t neighbourList;
-
-    for (idx_t i = 0; i < numNodes(); i++)
-    {
-      neighbourList = getNeighbours(i);
-      for (auto neighbour : neighbourList)
-      {
-        if (visited[neighbour])
-        {
-          return true;
-        }
-        else
-        {
-          visited[neighbour] = true;
-        }
-      }
-    }
-    return false;
+    return true;
   }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
+  /**
+   * @brief Version for directed graphs.
+   */
+  GL_ENABLE_IF_DIRECTED
+  inline bool isUndirected() const
+  {
+    return false;
+  }
+#endif
   /**
    * @brief Checks whether the given undirected graph containes cycles using an iterative BFS approach.
    * @return true if cyclic, false if acyclic
    */
-  GL_ENABLE_IF_UNDIRECTED
   bool hasCycle() const
   {
     idx_t v = 0;
@@ -510,7 +493,6 @@ public:
     }
     return false;
   }
-#endif  
   /**
    * @name Edge interface
    * Provides access to the properties of the edges in a Graph.
@@ -626,197 +608,70 @@ public:
    * @param[in] weight (Optional) New edge weight
    * @param[in] color (Optional) New edge color
    */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-  /**
-   * @brief Updates the weight & color of an edge from start to end.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_LIST_DIRECTED
+#ifdef DOXYGEN_SHOULD_SKIP_THIS
+  inline void updateEdge(const idx_t& start, const idx_t& end, const val_t& weight, const gl::Color& color) {}
 #endif
-  void updateEdge(const idx_t &start, const idx_t &end, const val_t &weight, const Color &color)
-  {
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-                           [&end](const Edge &node) { return node.dest() == end; });
-    (*it).color(color);
-    (*it).weight(weight);
-  }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  /**
-   * @brief Updates edge weight in a Directed List Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   */
-  GL_ENABLE_IF_LIST_DIRECTED
-  void updateEdge(const idx_t &start, const idx_t &end, const val_t &weight)
+  template <typename ... Args, typename STORAGE = STORAGE_KIND, typename DIR = DIRECTION, GL_ENABLE_IF_LIST_DIRECTED_T>
+  inline void updateEdge(const idx_t& start, const idx_t& end, const Args&... args)
   {
     GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
                            [&end](const Edge &node) { return node.dest() == end; });
-    (*it).weight(weight);
+    updateEdgeInternal(it, args...);
   }
-  /**
-   * @brief Updates edge color in a Directed List Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_LIST_DIRECTED
-  void updateEdge(const idx_t &start, const idx_t &end, const Color &color)
+  template <typename ... Args, typename STORAGE = STORAGE_KIND, typename DIR = DIRECTION, GL_ENABLE_IF_LIST_UNDIRECTED_T>
+  inline void updateEdge(const idx_t& start, const idx_t& end, const Args&... args)
   {
     GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
                            [&end](const Edge &node) { return node.dest() == end; });
-    (*it).color(color);
-  }
-
-  /**
-   * @brief Updates edge weight & color in an Undirected List Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_LIST_UNDIRECTED
-  void updateEdge(const idx_t &start, const idx_t &end, const val_t &weight, const Color &color)
-  {
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-                           [&end](const Edge &node) { return node.dest() == end; });
-    (*it).weight(weight);
-    (*it).color(color);
-
+    updateEdgeInternal(it, args...);
     it = std::find_if(edges_[end].begin(), edges_[end].end(),
                       [&start](const Edge &node) { return node.dest() == start; });
-    (*it).weight(weight);
-    (*it).color(color);
+    updateEdgeInternal(it, args...);
   }
-  /**
-   * @brief Updates edge weight in an Undirected List Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   */
-  GL_ENABLE_IF_LIST_UNDIRECTED
-  void updateEdge(const idx_t &start, const idx_t &end, const val_t &weight)
+  template <typename ... Args, typename STORAGE = STORAGE_KIND, typename DIR = DIRECTION, GL_ENABLE_IF_MATRIX_DIRECTED_T>
+  inline void updateEdge(const idx_t& start, const idx_t& end, const Args&... args)
   {
     GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-                           [&end](const Edge &node) { return node.dest() == end; });
-    (*it).weight(weight);
-
-    it = std::find_if(edges_[end].begin(), edges_[end].end(),
-                      [&start](const Edge &node) { return node.dest() == start; });
-    (*it).weight(weight);
+    updateEdgeInternal(edges_.data()+start * numNodes() + end, args...);
   }
-  /**
-   * @brief Updates edge color in an Undirected List Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_LIST_UNDIRECTED
-  void updateEdge(const idx_t &start, const idx_t &end, const Color &color)
+  template <typename ... Args, typename STORAGE = STORAGE_KIND, typename DIR = DIRECTION, GL_ENABLE_IF_MATRIX_UNDIRECTED_T>
+  inline void updateEdge(const idx_t& start, const idx_t& end, const Args&... args)
   {
     GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-                           [&end](const Edge &node) { return node.dest() == end; });
-    (*it).color(color);
-
-    it = std::find_if(edges_[end].begin(), edges_[end].end(),
-                      [&start](const Edge &node) { return node.dest() == start; });
-    (*it).color(color);
+    updateEdgeInternal(edges_.data()+start * numNodes() + end, args...);
+    updateEdgeInternal(edges_.data()+end * numNodes() + start, args...);
   }
 
-  /**
-   * @brief Updates edge weight & color in a Directed Matrix Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_MATRIX_DIRECTED
-  inline void updateEdge(const idx_t &start, const idx_t &end, const val_t &weight, const Color &color)
+  template <typename Target, typename First, typename ... OtherArgs>
+  inline void updateEdgeInternal (const Target& it, First arg, const OtherArgs&... rest)
   {
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start * numNodes() + end].weight(weight);
-    edges_[start * numNodes() + end].color(color);
+    throw std::runtime_error(  std::string(__FILE__)
+                             + std::string(":")
+                             + std::to_string(__LINE__)
+                             + std::string(" in ")
+                             + std::string(__PRETTY_FUNCTION__)
+                             + std::string(": Unknown argument type."));
   }
-  /**
-   * @brief Updates edge weight in a Directed Matrix Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   */
-  GL_ENABLE_IF_MATRIX_DIRECTED
-  inline void updateEdge(const idx_t &start, const idx_t &end, const val_t &weight)
+  template <typename Target, typename ... OtherArgs>
+  inline void updateEdgeInternal (const Target& it, const val_t& arg, const OtherArgs&... rest)
   {
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start * numNodes() + end].weight(weight);
+    (*it).weight(arg);
+    updateEdgeInternal(it,rest...);
   }
-  /**
-   * @brief Updates edge color in a Directed Matrix Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_MATRIX_DIRECTED
-  inline void updateEdge(const idx_t &start, const idx_t &end, const Color &color)
+  template <typename Target, typename ... OtherArgs>
+  inline void updateEdgeInternal (const Target& it, const gl::Color& arg, const OtherArgs&... rest)
   {
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start * numNodes() + end].color(color);
+    (*it).color(arg);
+    updateEdgeInternal(it,rest...);
   }
-
-  /**
-   * @brief Updates edge weight & color in an Undirected Matrix Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline void updateEdge(idx_t start, idx_t end, const val_t &weight, const Color &color)
+  template <typename Target>
+  inline void updateEdgeInternal (const Target& it)
   {
-    if (start > end)
-      std::swap(end, start);
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start * numNodes() + end].weight(weight);
-    edges_[start * numNodes() + end].color(color);
-  }
-  /**
-   * @brief Updates edge weight in an Undirected Matrix Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] weight New edge weight
-   */
-  GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline void updateEdge(idx_t start, idx_t end, const val_t &weight)
-  {
-    if (start > end)
-      std::swap(end, start);
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start * numNodes() + end].weight(weight);
-  }
-  /**
-   * @brief Updates edge color in an Undirected Matrix Graph.
-   * @param[in] start Edge origin point
-   * @param[in] end Edge end point
-   * @param[in] color New edge color
-   */
-  GL_ENABLE_IF_MATRIX_UNDIRECTED
-  inline void updateEdge(idx_t start, idx_t end, const Color &color)
-  {
-    if (start > end)
-      std::swap(end, start);
-    GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
-    edges_[start * numNodes() + end].color(color);
   }
 #endif
-
   /**
    * @brief Deletes the edge going from start to end.
    * @param[in] start edge origin point
@@ -837,23 +692,26 @@ public:
   }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   /**
-   * @brief Deletes edge in an Undrected List Graph.
+   * @brief Deletes edge in an Undirected List Graph.
    */
   GL_ENABLE_IF_LIST_UNDIRECTED
   void delEdge(const idx_t &start, const idx_t &end)
   {
     GL_ASSERT((hasEdge(start, end)), std::string("No edge from ") + std::to_string(start) + std::string(" to ") + std::to_string(end));
     auto it = std::find_if(edges_[start].begin(), edges_[start].end(),
-                           [&end](const Edge &node) { return node.dest() == end; });
+                          [&end](const Edge &node) { return node.dest() == end; });
     edges_[start].erase(it);
-    it = std::find_if(edges_[end].begin(), edges_[end].end(),
-                      [&start](const Edge &node) { return node.dest() == start; });
-    edges_[end].erase(it);
     property_.numEdgesDecrement();
     nodes_[start].inDegreeDecrement();
     nodes_[start].outDegreeDecrement();
-    nodes_[end].inDegreeDecrement();
-    nodes_[end].outDegreeDecrement();
+    // only do the following if the edge is not a self-loop
+    if (start != end) {
+      it = std::find_if(edges_[end].begin(), edges_[end].end(),
+                        [&start](const Edge &node) { return node.dest() == start; });
+      edges_[end].erase(it);
+      nodes_[end].inDegreeDecrement();
+      nodes_[end].outDegreeDecrement();
+    }
   }
 
   /**
@@ -1278,82 +1136,56 @@ public:
    * @param[in] label (Optional) New label for the node.
    * @param[in] capacity (Optional) New flow capacity for the node.
    * @param[in] color (Optional) New color for the node.
+   * @param[in] position (Optional) New x/y position for the node.
    */
-  inline void updateNode(const idx_t &id, const std::string &label, const val_t &capacity, const Color &color)
+#ifdef DOXYGEN_SHOULD_SKIP_THIS
+  inline void updateNode(const idx_t& id, const std::string& label, const val_t& capacity, const gl::Color& color, const std::pair<float,float>& position)
+#endif
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  /* Unspecialized template for error throwing */
+  template <typename First, typename ... OtherArgs>
+  inline void updateNode (const idx_t& id, First arg, const OtherArgs&... rest)
+#endif 
   {
-    updateNode(id, label);
-    updateNode(id, capacity);
-    updateNode(id, color);
+    throw std::runtime_error(  std::string(__FILE__)
+                             + std::string(":")
+                             + std::to_string(__LINE__)
+                             + std::string(" in ")
+                             + std::string(__PRETTY_FUNCTION__)
+                             + std::string(": Unknown argument type."));
   }
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-  /**
-   * @brief Updates node label & flow capacity.
-   * @param[in] id ID of the node that should be updated.
-   * @param[in] label New label for the node.
-   * @param[in] capacity New flow capacity for the node.
-   */
-  inline void updateNode(const idx_t &id, const std::string &label, const val_t &capacity)
+  template <typename ... OtherArgs>
+  inline void updateNode (const idx_t& id, const std::string& arg, const OtherArgs&... rest) 
   {
-    updateNode(id, label);
-    updateNode(id, capacity);
+    nodes_[id].label(arg);
+    updateNode(id, rest...);
+  }template <typename ... OtherArgs>
+  inline void updateNode (const idx_t& id, const char* arg, const OtherArgs&... rest) 
+  {
+    nodes_[id].label(arg);
+    updateNode(id, rest...);
   }
-  /**
-   * @brief Updates node flow capacity & color.
-   * @param[in] id ID of the node that should be updated.
-   * @param[in] capacity New flow capacity for the node.
-   * @param[in] color New color for the node.
-   */
-  inline void updateNode(const idx_t &id, const val_t &capacity, const Color &color)
+  template <typename ... OtherArgs>
+  inline void updateNode (const idx_t& id, const val_t& arg, const OtherArgs&... rest) 
   {
-    updateNode(id, capacity);
-    updateNode(id, color);
+    nodes_[id].capacity(arg);
+    updateNode(id, rest...);
   }
-  /**
-   * @brief Updates node label & color.
-   * @param[in] id ID of the node that should be updated.
-   * @param[in] label New label for the node.
-   * @param[in] color New color for the node.
-   */
-  inline void updateNode(const idx_t &id, const std::string &label, const Color &color)
+  template <typename ... OtherArgs>
+  inline void updateNode (const idx_t& id, const gl::Color& arg, const OtherArgs&... rest) 
   {
-    updateNode(id, label);
-    updateNode(id, color);
+    nodes_[id].color(arg);
+    updateNode(id, rest...);
   }
-  /**
-   * @brief Updates node label.
-   * @param[in] id ID of the node that should be updated.
-   * @param[in] label New label for the node.
-   */
-  inline void updateNode(const idx_t &id, const std::string &label)
+  template <typename ... OtherArgs>
+  inline void updateNode (const idx_t& id, const std::pair<float,float>& arg, const OtherArgs&... rest) 
   {
-    nodes_[id].label(label);
+    nodes_[id].position(arg);
+    updateNode(id, rest...);
   }
-  /**
-   * @brief Updates node flow capacity.
-   * @param[in] id ID of the node that should be updated.
-   * @param[in] capacity New flow capacity for the node.
-   */
-  inline void updateNode(const idx_t &id, const val_t &capacity)
+  inline void updateNode (const idx_t& id) 
   {
-    nodes_[id].capacity(capacity);
-  }
-  /**
-   * @brief Updates node color.
-   * @param[in] id ID of the node that should be updated.
-   * @param[in] color New color for the node.
-   */
-  inline void updateNode(const idx_t &id, const Color &color)
-  {
-    nodes_[id].color(color);
-  }
-  /**
-   * @brief Updates node position
-   * @param[in] id ID of the node that should be updated
-   * @param[in] position New position for the node
-   */
-  inline void updateNode(const idx_t &id, const std::pair<float, float> &position)
-  {
-    nodes_[id].position(position);
   }
 #endif
 
