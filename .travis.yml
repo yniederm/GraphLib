@@ -1,28 +1,14 @@
-language: cpp
-compiler: gcc
-
-dist: trusty
 sudo: false
 
 branches:
   except:
     - gh-pages
 
-matrix:
-  include:
-    os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-8
-          - gcc-8
-      env:
-         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+os: linux
+dist: trusty
 
-before_install:
-    - eval "${MATRIX_EVAL}"
+language: cpp
+compiler: gcc
 
 env:
   global:
@@ -32,7 +18,11 @@ env:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
+      - g++-8
+      - gcc-8
       - doxygen-doc 
       - doxygen-latex 
       - doxygen-gui 
@@ -48,20 +38,17 @@ jobs:
       os: linux
       compiler: gcc
       env:
-      - COMPILER=g++-8
       - BUILD_TYPE='Debug'
-      addons:
-        apt:
-          update: true
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - g++-8
-          - gcc-8
-      script: ./tests.sh
+      script: 
+        - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+            export CC=gcc-8 ;
+            export CXX=g++-8 ;
+          fi
+        # Check versions of gcc, g++ and cmake
+        - gcc -v && g++ -v && cmake --version
+        - ./tests.sh
     - stage: doxygen-doc
       script: doxygen doc/Doxyfile.in
-
 
 deploy:
   provider: pages
