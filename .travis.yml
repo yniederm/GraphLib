@@ -10,29 +10,6 @@ dist: trusty
 language: cpp
 compiler: gcc
 
-env:
-  global:
-    - GH_REPO_NAME: GraphLib
-    - DOXYFILE: $TRAVIS_BUILD_DIR/doc/Doxyfile.in
-    - GH_REPO_REF: github.com/guetzli32/GraphLib.git
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-8
-      - gcc-8
-      - doxygen-doc 
-      - doxygen-latex 
-      - doxygen-gui 
-      - graphviz
-      - mathgl
-      - libmgl-dev
-      - liblapack-dev
-      - libblas-dev
-      - gfortran
-
 jobs:
   include:
     - stage: make-and-test
@@ -40,6 +17,22 @@ jobs:
       compiler: gcc
       env:
       - BUILD_TYPE='Debug'
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+            - gcc-8
+            - doxygen-doc 
+            - doxygen-latex 
+            - doxygen-gui 
+            - graphviz
+            - mathgl
+            - libmgl-dev
+            - liblapack-dev
+            - libblas-dev
+            - gfortran
       script: 
         - export CC=gcc-8 ;
         - export CXX=g++-8 ;
@@ -47,12 +40,10 @@ jobs:
         - gcc -v && g++ -v && cmake --version
         - ./tests.sh
     - stage: doxygen-doc
-      script: doxygen doc/Doxyfile.in
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  local_dir: build/doc/html
-  github_token: $GH_REPO_TOKEN
-  on:
-    branch: master
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        local_dir: build/doc/html
+        github_token: $GH_REPO_TOKEN
+        on:
+          branch: master
