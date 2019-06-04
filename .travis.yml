@@ -39,7 +39,6 @@ jobs:
         # Check versions of gcc, g++ and cmake
         - gcc -v && g++ -v && cmake --version
         - ./tests.sh
-    - stage: doxygen-doc
       deploy:
         provider: pages
         skip_cleanup: true
