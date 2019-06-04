@@ -1,5 +1,4 @@
 language: cpp
-install: make get-deps
 compiler: gcc
 
 sudo: false
@@ -16,7 +15,7 @@ addons:
 deploy:
   provider: pages
   skip_cleanup: true
-  local_dir: docs/html
+  local_dir: doc/html
   github_token: $GH_REPO_TOKEN
   on:
     branch: master
