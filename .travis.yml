@@ -1,0 +1,31 @@
+language: cpp
+install: make get-deps
+compiler: gcc
+
+sudo: false
+
+branches:
+  only:
+    - master
+
+addons:
+  apt:
+    packages:
+      - doxygen
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: docs/html
+  github_token: $GH_REPO_TOKEN
+  on:
+    branch: master
+
+jobs:
+  include:
+    - stage: make
+      script: ./make.sh
+    - stage: test
+      script: ./test/test.sh
+    - stage: doxygen-doc
+      script: doxygen doc/Doxyfile.in

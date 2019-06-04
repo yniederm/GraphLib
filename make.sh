@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 mkdir -p build
 set -e
