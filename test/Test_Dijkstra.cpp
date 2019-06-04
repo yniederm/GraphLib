@@ -23,7 +23,7 @@ void TestComputeConstructor (const std::string& type)
 {
   GL_TEST_BEGIN("Compute constructor " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,7);
   GL_ASSERT_EQUAL_DESC(d.getSource(),7,"Source should be 7.")
@@ -42,7 +42,7 @@ void TestPathLengthUndirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path length " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
   GL_ASSERT_EQUAL_DESC(d.pathLength(0),0,"Path length to 0 should be 0")
@@ -61,7 +61,7 @@ void TestPathLengthDirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path length " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
   GL_ASSERT_EQUAL_DESC(d.pathLength(0),0,"Path length to 0 should be 0")
@@ -81,7 +81,7 @@ void TestGetPathUndirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path reconstruction " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
 
@@ -102,7 +102,7 @@ void TestGetPathDirected (const std::string& type)
 {
   GL_TEST_BEGIN("Path reconstruction " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
 
@@ -123,7 +123,7 @@ void TestGetSPTUndirected (const std::string& type)
 {
   GL_TEST_BEGIN("SPT Graph " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
 
@@ -147,7 +147,7 @@ void TestGetSPTDirected (const std::string& type)
 {
   GL_TEST_BEGIN("SPT Graph " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
 
@@ -171,7 +171,7 @@ void TestEdgeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Edge Selector " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
   auto edgeSel = d.EdgeSelector(gl::Color("lime"), gl::Color("pink"));
@@ -205,7 +205,7 @@ void TestNodeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Node Selector " << type)
   gl::Graph<int,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Dijkstra<decltype(g)> d(g,0);
   auto nodeSel = d.NodeSelector(gl::Color("aqua"), gl::Color("pink"));

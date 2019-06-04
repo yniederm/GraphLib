@@ -431,6 +431,31 @@ void TestSetEdge (const std::string& type) {
 }
 
 template <class SCALAR, class STORAGE, class DIRECTION>
+void TestSetEdgesFromFile (const std::string& type) {
+  GL_TEST_BEGIN("Edge Input from files " << type)
+
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g1 (9);
+  g1.setEdgesFromListFile("../../test/input/dijkstra9");
+  GL_ASSERT_EQUAL(g1.numEdges(), 14)
+  GL_ASSERT(g1.hasEdge(3,4),"Edge from 3 to 4")
+  GL_ASSERT_EQUAL(g1.getEdgeWeight(3,4), 9)
+  std::cout << "List input succeeded" << std::endl;
+
+  gl::Graph<SCALAR,STORAGE,DIRECTION> g2 (4);
+  g2.setEdgesFromMatrixFile("../../test/input/sample_matrix");
+
+  if (std::is_same_v<DIRECTION,gl::Directed>)
+    GL_ASSERT_EQUAL(g2.numEdges(), 11)
+  else 
+    GL_ASSERT_EQUAL(g2.numEdges(), 9)
+  GL_ASSERT(g2.hasEdge(2,3),"Edge from 2 to 3")
+  GL_ASSERT_EQUAL(g2.getEdgeWeight(2,3), 6)
+  std::cout << "Matrix input succeeded" << std::endl;
+
+  GL_TEST_END()
+}
+
+template <class SCALAR, class STORAGE, class DIRECTION>
 void TestUpdateEdge (const std::string& type) {
   GL_TEST_BEGIN("Updating Edge " << type)
   gl::Graph<SCALAR,STORAGE,DIRECTION> g (5);
@@ -485,6 +510,7 @@ int main(int argc, char const *argv[])
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestSetEdge)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestUpdateEdge)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestDeleteEdge)
+  GL_TEST_FUNCTION_WITH_ALL_TYPES(TestSetEdgesFromFile)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestUpdateNode)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestPropertyInterface)
   GL_TEST_FUNCTION_WITH_DIRECTED_TYPES(TestDirectedNodeDegrees,int)
@@ -494,8 +520,6 @@ int main(int argc, char const *argv[])
   GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestUndirectedNodeDegrees,float)
   GL_TEST_FUNCTION_WITH_UNDIRECTED_TYPES(TestUndirectedNodeDegrees,double)
   GL_TEST_FUNCTION_WITH_ALL_TYPES(TestNeighbours)
-
-  // TODO: read positions & edges from file
 
   return 0;
 }

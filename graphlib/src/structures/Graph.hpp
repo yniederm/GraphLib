@@ -583,11 +583,18 @@ public:
     setEdge(edge.source(), edge.dest(), edge.weight(), edge.color());
   }
   /**
-   * @brief Adds edges in the format "<start> <end> <weight>" found in inFile to the graph.
+   * The edges shall be in a line delimited list format, e.g.:
+   * @code    
+   *     1 2 3
+   *     7 4 6.7
+   * @endcode
+   * Where the three numbers per line represent the start, end and weight of the new edge.
+   * This adds the two edges (1->2 with weight 3) and (7->4 with weight 6.7) to the graph.
+   * @warning The start and end indices have be valid inside the graph.
+   * @brief Adds edges found in inFile to the graph.
    * @param[in] inFile file name of input file
    */
-  // TODO: Add matrix format function
-  void addEdgesFromFile(const std::string &inFile)
+  void setEdgesFromListFile(const std::string &inFile)
   {
     std::ifstream is;
     is.open(inFile, std::ios::in);
@@ -595,9 +602,59 @@ public:
 
     idx_t start, end;
     val_t weight;
-    while (is >> start >> end >> weight)
+    while (!is.eof()) {
+      if (is >> start >> end >> weight)
+      {
+        setEdge(start, end, weight);
+      }
+    }
+  }
+  /**
+   * The edges shall be in a comma delimited adjacency matrix format, e.g.:
+   * @code    
+   *     1, ,3,6
+   *     4,5,7, 
+   *      , ,4,6
+   *     9, ,2,1
+   * @endcode
+   * This adds the 11 edges (0->0 with weight 1), (0->2 with weight 3) etc. to the graph.
+   * @warning The matrix dimensions have to match with the number of nodes in the graph squared. If they do not match, faulty input may be generated.
+   * @brief Adds edges found in inFile to the graph.
+   * @param[in] inFile file name of input file
+   */
+  void setEdgesFromMatrixFile(const std::string &inFile)
+  {
+    std::ifstream is;
+    is.open(inFile, std::ios::in);
+    GL_ASSERT(is.is_open(),std::string(std::string("Error: failed to open ")+inFile))
+
+    idx_t i = 0, j = 0;
+    val_t weight = 0;
+    std::string line;
+    std::string field;
+    while (std::getline(is,line))
     {
-      setEdge(start, end, weight);
+      std::stringstream ss(line);
+      while (std::getline(ss,field,','))
+      {
+        std::stringstream fs(field);
+        val_t weight;
+        if (!(fs >> weight)) {
+          fs.clear();
+          fs.ignore();
+        }
+        else {
+          if (!hasEdge(i,j)) {
+            setEdge(i, j, weight); 
+          }
+        }
+        ++j;
+        if (j == numNodes()) {
+          j = 0;
+          ++i;
+        }
+        if (i == numNodes()) break;
+      }
     }
   }
 

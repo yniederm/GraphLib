@@ -6,7 +6,7 @@
 int main(int argc, char const *argv[])
 {
     gl::graphMdd g(10);
-    g.addEdgesFromFile("../../examples/input/edges"); // assumes running from build/test folder
+    g.setEdgesFromListFile("../../examples/input/edges"); // assumes running from build/test folder
     mglGraph gr;
     gr.SetSize(1000, 1000);
     gl::external::saveImage(&gr, g, "k-"); // black lines

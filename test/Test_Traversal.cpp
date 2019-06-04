@@ -6,7 +6,7 @@ void TestBFSGetTraversalOrderMaxDistance (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getTraversalOrderMaxDistance " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> connected(10,"Cyclic");
-  connected.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test folder
+  connected.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test folder
 
   gl::algorithm::BFS<decltype(connected)> bfs (connected,0);
   GL_ASSERT_EQUAL_STREAM(bfs.getTraversalOrderMaxDistance(0),"[ 0 ]\n")
@@ -22,7 +22,7 @@ void TestBFSGetNodesExactDistance (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getNodesExactDistance " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> connected(10,"Cyclic");
-  connected.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test folder
+  connected.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test folder
 
   gl::algorithm::BFS<decltype(connected)> bfs (connected,0);
   GL_ASSERT_EQUAL_STREAM(bfs.getNodesExactDistance(0),"[ 0 ]\n")
@@ -37,7 +37,7 @@ void TestBFSGetNodeDistance (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getNodeDistance " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> connected(10,"Cyclic");
-  connected.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test folder
+  connected.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test folder
 
   gl::algorithm::BFS<decltype(connected)> bfs (connected,0);
   GL_ASSERT_EQUAL_DESC(bfs.getNodeDistance(0),0,"0 should be 0")
@@ -59,7 +59,7 @@ void TestBFSGetPathToNode (const std::string& name)
 {
   GL_TEST_BEGIN("BFS getPathToNode " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> connected(10,"Cyclic");
-  connected.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test folder
+  connected.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test folder
 
   gl::algorithm::BFS<decltype(connected)> bfs (connected,0);
   GL_ASSERT_EQUAL_STREAM(bfs.getPath(0),"[ 0 ]\n")
@@ -115,7 +115,7 @@ void TestBFSAcyclicTraversalOrder (const std::string& name, const std::string& e
 {
   GL_TEST_BEGIN("BFS Acyclic Traversal Order " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> tree(12,"Acyclic");
-  tree.addEdgesFromFile("../../test/input/tree12"); // assumes running from build/test folder
+  tree.setEdgesFromListFile("../../test/input/tree12"); // assumes running from build/test folder
   
   auto traversal = gl::algorithm::BFS(tree, 0).getTraversalOrder();
   std::cout << traversal;
@@ -129,7 +129,7 @@ void TestBFSCyclicTraversalOrder (const std::string& name, const std::string& ex
 {
   GL_TEST_BEGIN("BFS Cyclic Traversal Order " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> connected(10,"Cyclic");
-  connected.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test folder
+  connected.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test folder
   
   auto traversal = gl::algorithm::BFS(connected, 0).getTraversalOrder();
   std::cout << traversal;
@@ -152,7 +152,7 @@ void TestDFSAcyclic (const std::string& name, const std::string& expected)
 {
   GL_TEST_BEGIN("DFS Acyclic " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> tree(12,"Acyclic");
-  tree.addEdgesFromFile("../../test/input/tree12"); // assumes running from build/test folder
+  tree.setEdgesFromListFile("../../test/input/tree12"); // assumes running from build/test folder
 
   auto traversal = gl::algorithm::DFS(tree, 0);
   std::cout << traversal;
@@ -166,7 +166,7 @@ void TestDFSCyclic (const std::string& name, const std::string& expected)
 {
   GL_TEST_BEGIN("DFS Cyclic " << name)
   gl::Graph<int,STORAGE_KIND,DIRECTION> connected(10,"Cyclic");
-  connected.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test folder
+  connected.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test folder
 
   auto traversal = gl::algorithm::DFS(connected, 0);
   std::cout << traversal;

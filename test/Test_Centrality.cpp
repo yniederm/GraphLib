@@ -105,7 +105,7 @@ void TestDirectedInDegreeCentrality ()
 {
   GL_TEST_BEGIN("In-Degree Centrality of directed Graph")
   gl::graphMid dc_d(9, "Directed Matrix");
-  dc_d.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  dc_d.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_d;
 
   std::vector<double> idcd_actual(dc_d.numNodes());
@@ -125,7 +125,7 @@ void TestDirectedOutDegreeCentrality ()
 {
   GL_TEST_BEGIN("Out-Degree Centrality of directed Graph")
   gl::graphMid dc_d(9, "Directed Matrix");
-  dc_d.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  dc_d.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_d;
 
   std::vector<double> odcd_actual(dc_d.numNodes());
@@ -145,7 +145,7 @@ void TestUndirectedInDegreeCentrality ()
 {
   GL_TEST_BEGIN("In-Degree Centrality of undirected Graph")
   gl::graphMiu dc_u(9, "Unirected Matrix");
-  dc_u.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  dc_u.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_u;
 
   std::vector<double> idcu_actual(dc_u.numNodes());
@@ -163,7 +163,7 @@ void TestUndirectedOutDegreeCentrality ()
 {
   GL_TEST_BEGIN("Out-Degree Centrality of undirected Graph")
   gl::graphMiu dc_u(9, "Undirected Matrix");
-  dc_u.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  dc_u.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_u;
 
   std::vector<double> odcu_actual(dc_u.numNodes());
@@ -181,7 +181,7 @@ void TestUndirectedDegreeCentrality ()
 {
   GL_TEST_BEGIN("Degree Centrality of undirected Graph")
   gl::graphMiu dc_u(9, "Undirected Matrix");
-  dc_u.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  dc_u.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   std::cout << dc_u;
 
   std::vector<double> dcu_actual(dc_u.numNodes());

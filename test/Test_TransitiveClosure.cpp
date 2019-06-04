@@ -6,7 +6,7 @@ void TestTransitiveClosure0 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 0)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc0 {0,1,2,3,4,5,6,7};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -22,7 +22,7 @@ void TestTransitiveClosure1 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 1)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc1 {0,1,2,3,4,5,6,7};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -38,7 +38,7 @@ void TestTransitiveClosure2 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 2)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc2 {2,3,5,6,7};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -54,7 +54,7 @@ void TestTransitiveClosure3 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 3)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc3 {2,3,5,6,7};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -70,7 +70,7 @@ void TestTransitiveClosure4 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 4)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc4 {0,1,2,3,4,5,6,7};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -86,7 +86,7 @@ void TestTransitiveClosure5 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 5)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc5 {5,6};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -102,7 +102,7 @@ void TestTransitiveClosure6 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 6)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc6 {5,6};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -118,7 +118,7 @@ void TestTransitiveClosure7 ()
 {
   GL_TEST_BEGIN((std::is_same_v<gl::Matrix,STORAGE_KIND> ? "Matrix" : "List") << ": Transitive closure of node " << 7)
   gl::Graph<S,STORAGE_KIND,D> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
 
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc7 {2,3,5,6,7};
   typename gl::Graph<S,STORAGE_KIND,D>::ordered_list_t tc;
@@ -132,7 +132,7 @@ template <class STORAGE_KIND>
 void PrintGraph ()
 {
   gl::Graph<int,STORAGE_KIND,gl::Directed> g(8);
-  g.addEdgesFromFile("../../test/input/graph8"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/graph8"); // assumes running from build/test folder
   std::cout << g;
 }
 

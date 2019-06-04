@@ -6,7 +6,7 @@ void TestCyclic (const std::string& name)
 {
   GL_TEST_BEGIN("hasCycle(" << name)
   gl::Graph<SCALAR,STORAGE_KIND,DIRECTION> graph(12);
-  graph.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test root folder
+  graph.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test root folder
 
   std::cout << (graph.hasCycle() ? "true" : "false") << "\n";
   GL_ASSERT_EQUAL(graph.hasCycle(),true)
@@ -18,7 +18,7 @@ void TestAcyclic (const std::string& name)
 {
   GL_TEST_BEGIN("hasCycle(" << name)
   gl::Graph<SCALAR,STORAGE_KIND,DIRECTION> graph(12);
-  graph.addEdgesFromFile("../../test/input/tree12"); // assumes running from build/test root folder
+  graph.setEdgesFromListFile("../../test/input/tree12"); // assumes running from build/test root folder
 
   std::cout << (graph.hasCycle() ? "true" : "false") << "\n";
   GL_ASSERT_EQUAL(graph.hasCycle(),false)

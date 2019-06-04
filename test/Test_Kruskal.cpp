@@ -21,7 +21,7 @@ void TestComputeConstructor (const std::string& type)
 {
   GL_TEST_BEGIN("Compute constructor " << type)
   gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
 
@@ -39,7 +39,7 @@ void TestGetCost (const std::string& type)
 {
   GL_TEST_BEGIN("Path length " << type)
   gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
   GL_ASSERT_EQUAL_DESC(k.getCost(),37,"MST cost should be 37")
@@ -51,7 +51,7 @@ void TestGetMST (const std::string& type)
 {
   GL_TEST_BEGIN("SPT Graph " << type)
   gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
 
@@ -75,7 +75,7 @@ void TestEdgeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Edge Selector " << type)
   gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
   auto edgeSel = k.EdgeSelector(gl::Color("lime"), gl::Color("pink"));
@@ -108,7 +108,7 @@ void TestNodeSelector (const std::string& type)
 {
   GL_TEST_BEGIN("Node Selector " << type)
   gl::Graph<SCALAR,STORAGE,DIRECTION> g(9,type);
-  g.addEdgesFromFile("../../test/input/dijkstra9");
+  g.setEdgesFromListFile("../../test/input/dijkstra9");
   // working constructor
   gl::algorithm::Kruskal<decltype(g)> k(g);
   auto nodeSel = k.NodeSelector(gl::Color("aqua"), gl::Color("pink"));

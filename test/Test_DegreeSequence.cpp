@@ -5,7 +5,7 @@ void TestCyclicDegrees ()
 {
   GL_TEST_BEGIN("degrees(cycle)")
   gl::graphLiu cycle(10);
-  cycle.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test root folder
+  cycle.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test root folder
 
   std::cout << gl::algorithm::degrees(cycle);
 
@@ -17,7 +17,7 @@ void TestCyclicDegreeSequence ()
 {
   GL_TEST_BEGIN("degreeSequence(cycle)")
   gl::graphLiu cycle(10);
-  cycle.addEdgesFromFile("../../test/input/graph10"); // assumes running from build/test root folder
+  cycle.setEdgesFromListFile("../../test/input/graph10"); // assumes running from build/test root folder
 
   GL_ASSERT_EQUAL_STREAM(gl::algorithm::degreeSequence(cycle),"[ 4 4 4 4 3 3 3 3 2 2 ]\n")
   GL_TEST_END()
@@ -27,7 +27,7 @@ void TestAcyclicDegrees ()
 {
   GL_TEST_BEGIN("degrees(tree)")
   gl::graphMiu tree(12);
-  tree.addEdgesFromFile("../../test/input/tree12"); // assumes running from build/test root folder
+  tree.setEdgesFromListFile("../../test/input/tree12"); // assumes running from build/test root folder
 
   std::cout << gl::algorithm::degrees(tree);
 
@@ -39,7 +39,7 @@ void TestAcyclicDegreeSequence ()
 {
   GL_TEST_BEGIN("degreeSequence(tree)")
   gl::graphMiu tree(12);
-  tree.addEdgesFromFile("../../test/input/tree12"); // assumes running from build/test root folder
+  tree.setEdgesFromListFile("../../test/input/tree12"); // assumes running from build/test root folder
 
   std::cout << gl::algorithm::degreeSequence(tree);
 

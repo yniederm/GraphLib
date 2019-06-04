@@ -5,11 +5,11 @@ int main(int argc, char const *argv[])
 {
   // prepare test graphs
   gl::graphLiu graph1(9,"Kruskal Minimum Spanning Tree");
-  graph1.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  graph1.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   graph1.readPositionsFromFile("../../test/input/dijkstra9_positions");
 
   gl::graphMiu graph2(9,"Dijkstra Shortest Paths");
-  graph2.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  graph2.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   graph2.readPositionsFromFile("../../test/input/dijkstra9_positions");
 
   // test Kruskal coloring

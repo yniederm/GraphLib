@@ -8,7 +8,7 @@ void TestSTL(const std::string &name, std::vector<float> expected)
 {
   GL_TEST_BEGIN(name)
   gl::Graph<int, STORAGE_KIND, DIRECTION> g(9, "Laplacian source");
-  g.addEdgesFromFile("../../test/input/dijkstra9"); // assumes running from build/test folder
+  g.setEdgesFromListFile("../../test/input/dijkstra9"); // assumes running from build/test folder
   auto stl = gl::algorithm::LaplacianSTL(g);
 
   int i = 0;
