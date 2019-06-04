@@ -28,6 +28,7 @@ addons:
       - doxygen-gui 
       - graphviz
       - mathgl
+      - libmgl-dev
       - liblapack-dev
       - libblas-dev
       - gfortran
@@ -40,10 +41,8 @@ jobs:
       env:
       - BUILD_TYPE='Debug'
       script: 
-        - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-            export CC=gcc-8 ;
-            export CXX=g++-8 ;
-          fi
+        - export CC=gcc-8 ;
+        - export CXX=g++-8 ;
         # Check versions of gcc, g++ and cmake
         - gcc -v && g++ -v && cmake --version
         - ./tests.sh
