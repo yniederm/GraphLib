@@ -2,9 +2,10 @@
 
 A simple header-only C++ library that aims to showcase and implement various data structures and algorithms that are based on graph theory.
 
-An up-to-date documentation of the source code is available here:
 
-[![Documentation](https://codedocs.xyz/guetzli32/GraphLib.svg)](https://codedocs.xyz/guetzli32/GraphLib/)
+The code is documented and built using [Travis CI](https://travis-ci.org/):
+
+[![Documentation](doc/img/code_documented.svg)](https://guetzli32.github.io/GraphLib/)
 [![Build status](https://travis-ci.org/guetzli32/GraphLib.svg?branch=master)](https://travis-ci.org/guetzli32/GraphLib/)
 
 # Details
