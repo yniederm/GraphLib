@@ -10,14 +10,14 @@ branches:
 
 matrix:
   include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-8
-            - gcc-8
+    os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-7
+          - gcc-7
       env:
          - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
@@ -44,10 +44,21 @@ addons:
 
 jobs:
   include:
-    - stage: make
-      script: ./make.sh
-    - stage: test
-      script: ./test/test.sh
+    - stage: make-and-test
+      os: linux
+      compiler: gcc
+      env:
+      - COMPILER=g++-7
+      - BUILD_TYPE='Debug'
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-7
+          - gcc-7
+      script: ./tests.sh
     - stage: doxygen-doc
       script: doxygen doc/Doxyfile.in
 
