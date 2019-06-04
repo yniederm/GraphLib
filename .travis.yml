@@ -24,24 +24,13 @@ jobs:
           packages:
             - g++-8
             - gcc-8
-            - doxygen-doc 
-            - doxygen-latex 
-            - doxygen-gui 
-            - graphviz
             - mathgl
             - libmgl-dev
             - liblapack-dev
             - libblas-dev
             - gfortran
       script: 
-        - if [ ! -d "doxygen-1.8.14" ]; then
-            wget -O - http://doxygen.nl/files/doxygen-1.8.14.src.tar.gz | tar xz
-            cd doxygen-1.8.14
-            mkdir build
-            cd build
-            cmake -Duse_libclang=ON  ..
-            make -j2
-          fi
+        - ./doc/install_doxygen.sh
         - export CC=gcc-8 ;
         - export CXX=g++-8 ;
         # Check versions of gcc, g++ and cmake
