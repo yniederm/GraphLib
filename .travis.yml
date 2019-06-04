@@ -4,21 +4,22 @@ compiler: gcc
 sudo: false
 
 branches:
-  only:
-    - master
+  except:
+    - gh-pages
+
+env:
+  global:
+    - GH_REPO_NAME: GraphLib
+    - DOXYFILE: $TRAVIS_BUILD_DIR/doc/Doxyfile.in
+    - GH_REPO_REF: github.com/guetzli32/GraphLib.git
 
 addons:
   apt:
     packages:
-      - doxygen
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  local_dir: doc/html
-  github_token: $GH_REPO_TOKEN
-  on:
-    branch: master
+      - doxygen-doc 
+      - doxygen-latex 
+      - doxygen-gui 
+      - graphviz
 
 jobs:
   include:
@@ -28,3 +29,12 @@ jobs:
       script: ./test/test.sh
     - stage: doxygen-doc
       script: doxygen doc/Doxyfile.in
+
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: doc/html
+  github_token: $GH_REPO_TOKEN
+  on:
+    branch: master

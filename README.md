@@ -5,6 +5,7 @@ A simple header-only C++ library that aims to showcase and implement various dat
 An up-to-date documentation of the source code is available here:
 
 [![Documentation](https://codedocs.xyz/guetzli32/GraphLib.svg)](https://codedocs.xyz/guetzli32/GraphLib/)
+[![Build status](https://travis-ci.org/guetzli32/GraphLib.svg?branch=master)](https://travis-ci.org/guetzli32/GraphLib/)
 
 # Details
 ## Currently implemented is the following:
