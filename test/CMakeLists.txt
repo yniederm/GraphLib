@@ -29,6 +29,7 @@ set(TESTS
     StreamOverload
     TransitiveClosure
     Traversal
+    UpdateFlaggedEntities
 )
 
 set(EXTERNAL_TESTS
