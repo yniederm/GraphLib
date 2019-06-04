@@ -1,12 +1,12 @@
 language: cpp
 compiler: gcc
 
+dist: trusty
 sudo: false
 
 branches:
   except:
     - gh-pages
-
 
 matrix:
   include:
@@ -16,8 +16,8 @@ matrix:
         sources:
           - ubuntu-toolchain-r-test
         packages:
-          - g++-7
-          - gcc-7
+          - g++-8
+          - gcc-8
       env:
          - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
@@ -48,7 +48,7 @@ jobs:
       os: linux
       compiler: gcc
       env:
-      - COMPILER=g++-7
+      - COMPILER=g++-8
       - BUILD_TYPE='Debug'
       addons:
         apt:
@@ -56,8 +56,8 @@ jobs:
           sources:
           - ubuntu-toolchain-r-test
           packages:
-          - g++-7
-          - gcc-7
+          - g++-8
+          - gcc-8
       script: ./tests.sh
     - stage: doxygen-doc
       script: doxygen doc/Doxyfile.in
