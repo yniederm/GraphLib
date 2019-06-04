@@ -20,6 +20,10 @@ addons:
       - doxygen-latex 
       - doxygen-gui 
       - graphviz
+      - mathgl
+      - liblapack-dev
+      - libblas-dev
+      - gfortran
 
 jobs:
   include:
