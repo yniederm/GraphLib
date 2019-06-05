@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 
 branches:
   except:
@@ -10,6 +10,10 @@ dist: trusty
 language: cpp
 compiler: gcc
 
+cache:
+  directories:
+  - $TRAVIS_BUILD_DIR/dependencies
+
 jobs:
   include:
     - stage: make-and-test
@@ -17,8 +21,10 @@ jobs:
       compiler: gcc
       env:
       - BUILD_TYPE='Debug'
+      - MAKEFLAGS='-j$(nproc)'
       addons:
         apt:
+          update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
@@ -30,16 +36,39 @@ jobs:
             - libblas-dev
             - gfortran
       script: 
-        - ./doc/install_doxygen.sh
         - export CC=gcc-8 ;
         - export CXX=g++-8 ;
-        # Check versions of gcc, g++ and cmake
-        - gcc -v && g++ -v && cmake --version
         - ./tests.sh
+    - stage: doxygen
+      os: linux
+      compiler: gcc
+      env:
+      - MAKEFLAGS='-j$(nproc)'
+      - DEPS_DIR=${TRAVIS_BUILD_DIR}/dependencies
+      addons:
+        apt:
+          update: true
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+            - doxygen
+            - doxygen-doc
+            - doxygen-gui
+            - doxygen-latex
+            - flex
+            - bison
+            - graphviz
+      script:
+        - export CXX=g++-8 ;
+        - mkdir -p $TRAVIS_BUILD_DIR/doc/build
+        - cd $TRAVIS_BUILD_DIR/doc/build
+        - doxygen ../Doxyfile.in
+
       deploy:
         provider: pages
         skip_cleanup: true
-        local_dir: build/doc/html
+        local_dir: $TRAVIS_BUILD_DIR/doc/doc/html
         github_token: $GH_REPO_TOKEN
         on:
           branch: master
