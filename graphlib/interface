@@ -6,5 +6,6 @@
 #include "src/partial_specialization_on"
 
 #include "src/interface/UpdateFlaggedEntities.hpp"
+#include "src/interface/EntitySelector.hpp"
 
 #endif // GL_INTERFACE

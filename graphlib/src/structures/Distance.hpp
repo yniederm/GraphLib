@@ -13,6 +13,7 @@ template <class SCALAR>
 struct Distance
 {
   Distance () : isInfinite_(true), distance_(0) {}     ///< @brief Default constructor
+  Distance (const SCALAR distance) : isInfinite_(false), distance_(distance) {}                                        ///< @brief Constructor with finite distance
   Distance(const Distance &) = default;                ///< @brief Copy constructor
   Distance(Distance &&) noexcept = default;            ///< @brief Move constructor
   Distance &operator=(const Distance &) = default;     ///< @brief Copy assignment
@@ -75,7 +76,7 @@ struct Distance
 
   /**
    * @brief Gets the distance
-   * @return Numerical distance, or 'Inf' if the distance is infinite.
+   * @return String of numerical distance, or 'Inf' if the distance is infinite.
    */
   inline std::string getDistance() const
   {
@@ -84,9 +85,9 @@ struct Distance
   }
   /**
    * @brief Gets the numerical value of the distance. If the distance is infinite, returns the maximum value of the Distance type.
-   * @return Numerical distance
+   * @return Scalar type of numerical distance
    */
-  inline SCALAR getNumericalDistance() const
+  inline SCALAR scalarDistance() const
   {
     return isInfinite_ ? GL_INF(SCALAR) : distance_;
   }

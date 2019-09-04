@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-./make.sh
+./make.sh $1
 ./test/run_tests.sh

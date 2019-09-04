@@ -23,8 +23,10 @@ int main(int argc, char const *argv[])
   // gl::io::compileLatex("UpdateFlaggedKruskal.tex");
 
   // test Dijkstra coloring
-  gl::algorithm::dijkstraMiu dijkstra(graph2,0);
-  gl::interface::colorFlaggedEntities(graph2, dijkstra.EdgeSelector(),dijkstra.NodeSelector(gl::Color("fuchsia")));
+  gl::algorithm::dijkstraMiu dijkstra(graph2);
+  auto edgesel = gl::interface::getEdgeSelectorFromShortestPathTree(dijkstra,0);
+  auto nodesel = gl::interface::getNodeSelectorFromShortestPathTree(dijkstra,0,gl::Color("fuchsia"));
+  gl::interface::colorFlaggedEntities(graph2, edgesel, nodesel);
 
   std::ofstream outDijkstra("UpdateFlaggedDijkstra.tex");
   gl::external::writeTikzNetwork(outDijkstra, graph2, true);

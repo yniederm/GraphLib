@@ -57,19 +57,19 @@ The following software is required:
 - convert (built in on linux)
 
 # Programs in this repository
-To build all tests & examples, run `install.sh` from within the root folder of this repository. 
+To build all tests & examples, run `tests.sh` from within the root folder of this repository. 
 Executables can then be found in the `build/test` and `build/examples` folders.
 
 ## Tests
 This repository features unit tests in the 'test' folder.
 
-To build a specific test, run `install.sh $1` where `$1` is the name of a test.
+To build a specific test, run `make.sh $1` where `$1` is the name of a test.
 
-Test names can be deduced as follows: `test/Test_Color.cpp` <-> `install.sh Color`
+Test names can be deduced as follows: `test/Test_Color.cpp` <-> `make.sh Color`
 
 This will create executables in the `build/test` folder for you to run (make sure you navigate into that folder).
 
-Alternatively you can directly build & run all tests by invoking `./test/test.sh` from the root folder.
+Alternatively you can directly run all tests by invoking `./test/test.sh` from the root folder.
 
 ## Examples
 This repository also has a few example programs that demonstrate certain features of the library.
@@ -108,7 +108,11 @@ Hereafter, the term _finding <sth.>_ stands for some combination of _counting_ a
   - Eulerian paths
   - finding all possible walks from source to destination
 - Network algorithms
-  - Edmonds-Karp
+  - Edmonds-Karp or similar algorithm
+  - single source
+    - single sink
+    - multiple sink (reduce to single sink by adding supersink with edges to every sink)
+  - multi commodity
 - Cliques
   - cliques of size k
 - Huffman tree w/ visualization

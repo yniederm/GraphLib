@@ -107,18 +107,20 @@ void FloydWarshall<Graph>::compute(const Graph& graph)
   distance_matrix_t dist (numNodes*numNodes);
   idx_list_t next (numNodes*numNodes,GL_INF(idx_t));
   // fill initial known edges
-  for (auto edge = graph.edge_cbegin(); edge != graph.edge_cend(); ++edge)
+  for (int i = 0; i < graph.numNodes(); ++i)
   {
-    i = edge->source();
-    j = edge->dest();
-    weight = graph.getEdgeWeight(i,j);
-    // check for negative weights in undirected graphs
-    if (!graph.isDirected()) 
+    for (int j = 0; j < graph.numNodes(); ++j)
     {
-      GL_ASSERT(weight >= 0,"FloydWarshall::compute | Graph is undirected and contains negative weights")
+      if (!graph.hasEdge(i,j)) continue;
+      weight = graph.getEdgeWeight(i,j);
+      // check for negative weights in undirected graphs
+      if (!graph.isDirected()) 
+      {
+        GL_ASSERT(weight >= 0,"FloydWarshall::compute | Graph is undirected and contains negative weights")
+      }
+      dist[i*numNodes+j].setDistance(weight);
+      next[i*numNodes+j] = j;
     }
-    dist[i*numNodes+j].setDistance(weight);
-    next[i*numNodes+j] = j;
   }
   // set diagonals
   for (idx_t i = 0; i < numNodes; ++i)
@@ -181,15 +183,14 @@ std::pair<bool,typename Graph::idx_list_t> FloydWarshall<Graph>::getPath (const 
     return {false,{}};
 
   // backtracking
-  std::pair<bool,idx_list_t> out;
-  out.second.push_back(src);
+  typename Graph::idx_list_t out;
+  out.push_back(src);
   idx_t u = src;
   while (u != dest) {
     u = next_[u*graph_.numNodes()+dest];
-    out.second.push_back(u);
+    out.push_back(u);
   }
-  out.first = true;
-  return out;
+  return {true,out};
 }
 
 template <class Graph>
@@ -203,13 +204,13 @@ Graph FloydWarshall<Graph>::getSPT (const idx_t src) const
   for (idx_t i = 0; i < graph_.numNodes(); ++i)
   {
     auto path = getPath(src,i);
-    if (path.second.size() > 0) {
+    if (path.first) {
       idx_t i = 0;
       for (idx_t j = i+1; j < path.second.size(); ++i, ++j)
       {
         if (!result.hasEdge(path.second[i],path.second[j])) 
         {
-          result.setEdge(path.second[i],path.second[j]);
+          result.setEdge(path.second[i],path.second[j],graph_.getEdgeWeight(path.second[i],path.second[j]));
         }
       }
     }
@@ -234,7 +235,7 @@ double FloydWarshall<Graph>::closenessCentrality (const idx_t id) const
     if (distance.isInfinite()) 
       return 0;
     else
-      result += distance.getNumericalDistance();
+      result += distance.scalarDistance();
   }
   return static_cast<double>((graph_.numNodes()-1)/result);
 }
@@ -256,11 +257,10 @@ double FloydWarshall<Graph>::harmonicCentrality (const idx_t id) const
     if (distance.isInfinite()) 
       continue;
     else
-      result += 1./distance.getNumericalDistance();
+      result += 1./distance.scalarDistance();
   }
   return static_cast<double>(result/(graph_.numNodes()-1));
 }
-
 
 } // namespace algorithm  
 } // namespace gl

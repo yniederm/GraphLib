@@ -45,8 +45,9 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    gl::algorithm::dijkstraLdu dijkstra(g,source);
-    auto path = dijkstra.getPath(dest);
+    gl::algorithm::dijkstraLdu dijkstra(g);
+    auto path = dijkstra.getPath(source,dest).second;
+
 
     for (gl::index_type i = 0; i < path.size() - 2; i++)
     {
