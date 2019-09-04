@@ -1,0 +1,15 @@
+\form#0:$ \{0,\ldots,255\}$
+\form#1:$r \in \{0,\ldots,255\}$
+\form#2:$g \in \{0,\ldots,255\}$
+\form#3:$b \in \{0,\ldots,255\}$
+\form#4:$a \in \{0,\ldots,100\}$
+\form#5:$r \in [0,1]$
+\form#6:$g \in [0,1]$
+\form#7:$b \in [0,1]$
+\form#8:$a \in [0,1]$
+\form#9:$ 0xRRGGBB $
+\form#10:$ RR, GG, BB $
+\form#11:$ 0xAA $
+\form#12:$ AA $
+\form#13:$ \{"black","gray","silver","white","orange","maroon",\\"red","olive","yellow","green","lime","teal",\\"aqua", "navy","blue","purple","fuchsia"\}$
+\form#14:$ a\in\{0,\ldots,100\} $
