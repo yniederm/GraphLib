@@ -27,26 +27,30 @@ std::pair<std::vector<float>, std::vector<float>> PositionsFromLaplacian(std::ve
 {
   int N = std::sqrt(laplacian.size());
   int NN = N * N;
-  float wr[N]; // 
-  float wi[N];
-  float eigenvectorsL[NN];
-  float eigenvectorsR[NN];
-  float work[4 * N]; // aquire enough work space, 3*N is needed
+  float wr[N]; // real part of the eigenvalues
+  float wi[N]; // imaginary part of the eigenvalues
+  float eigenvectors[NN];
+  int LWORK = 5 * N;
+  float work[LWORK]; // aquire enough work space, 3*N is needed
   int info; // whether it worked
   float data[NN];
   for (int i = 0; i < NN; i++)
   {
     data[i] = laplacian.data()[i];
   }
-  sgeev_('V', 'N', N, data, N, wr, wi, eigenvectorsR, N, eigenvectorsL, N, work, NN, &info);
+  sgeev_('V', 'N', N, data, N, wr, wi, eigenvectors, N, nullptr, N, work, LWORK, &info);
   GL_ASSERT(info == 0, "BLAS call was not correct, got " + std::to_string(info) + " instead of 0.");
   std::vector<float> ev1(N);
   std::vector<float> ev2(N);
 
+  for(int i = 0; i < N; i++) {
+	std::cout << "WR(" << i << "): " << wr[i] << "\tWI(" << i << "): " << wi[i] << std::endl;
+  }
+
   for (int i = 0; i < N; i++)
   {
-    ev1[i] = eigenvectorsR[i * N] * (1 + laplacian[N * i + i]) * factor; // and scale by degree
-    ev2[i] = eigenvectorsR[i * N + 1] * (1 + laplacian[N * i + i]) * factor;
+    ev1[i] = eigenvectors[i * N] *(1 + laplacian[N * i + i]) * factor; // and scale by degree
+    ev2[i] = eigenvectors[i * N + 1] * (1 + laplacian[N * i + i]) * factor;
   }
   return std::make_pair(ev1, ev2);
 }
