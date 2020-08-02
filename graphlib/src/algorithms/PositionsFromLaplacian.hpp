@@ -38,7 +38,7 @@ std::pair<std::vector<float>, std::vector<float>> PositionsFromLaplacian(std::ve
   {
     data[i] = laplacian.data()[i];
   }
-  sgeev_('V', 'N', N, data, N, wr, wi, eigenvectors, N, nullptr, N, work, LWORK, &info);
+  sgeev_('N', 'V', N, data, N, wr, wi, nullptr, N, eigenvectors, N, work, LWORK, &info);
   GL_ASSERT(info == 0, "BLAS call was not correct, got " + std::to_string(info) + " instead of 0.");
   std::vector<float> ev1(N);
   std::vector<float> ev2(N);
