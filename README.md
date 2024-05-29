@@ -2,11 +2,7 @@
 
 A simple header-only C++ library that aims to showcase and implement various data structures and algorithms that are based on graph theory.
 
-
-The code is documented and built using [Travis CI](https://travis-ci.org/):
-
 [![Documentation](doc/img/code_documented.svg)](https://yniederm.github.io/GraphLib/)
-[![Build status](https://travis-ci.org/yniederm/GraphLib.svg?branch=master)](https://travis-ci.org/yniederm/GraphLib/)
 
 # Details
 ## Currently implemented is the following:
